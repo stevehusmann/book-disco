@@ -1,0 +1,611 @@
+{
+  "total_checked": 955,
+  "kept": 240,
+  "removed": 876,
+  "unknown_width": 1,
+  "errors": 0,
+  "examples_removed": [
+    {
+      "index": 149,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199553860.png",
+      "reason": "not_found",
+      "status": 404
+    },
+    {
+      "index": 150,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199554096.png",
+      "reason": "not_found",
+      "status": 404
+    },
+    {
+      "index": 151,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199536689.png",
+      "reason": "not_found",
+      "status": 404
+    },
+    {
+      "index": 152,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199203475.png",
+      "reason": "small_width",
+      "width": 165,
+      "height": 251,
+      "size": 11235
+    },
+    {
+      "index": 153,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199536559.png",
+      "reason": "small_width",
+      "width": 165,
+      "height": 251,
+      "size": 8815
+    },
+    {
+      "index": 154,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199553983.png",
+      "reason": "small_width",
+      "width": 165,
+      "height": 252,
+      "size": 85642
+    },
+    {
+      "index": 155,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199552344.png",
+      "reason": "small_width",
+      "width": 165,
+      "height": 251,
+      "size": 97842
+    },
+    {
+      "index": 156,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199536955.png",
+      "reason": "small_width",
+      "width": 165,
+      "height": 251,
+      "size": 14578
+    },
+    {
+      "index": 158,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199536566.png",
+      "reason": "small_width",
+      "width": 165,
+      "height": 251,
+      "size": 90056
+    },
+    {
+      "index": 159,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199231959.png",
+      "reason": "not_found",
+      "status": 404
+    },
+    {
+      "index": 160,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199537488.png",
+      "reason": "not_found",
+      "status": 404
+    },
+    {
+      "index": 161,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199540754.png",
+      "reason": "not_found",
+      "status": 404
+    },
+    {
+      "index": 162,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199555116.png",
+      "reason": "small_width",
+      "width": 165,
+      "height": 252,
+      "size": 95203
+    },
+    {
+      "index": 164,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199296989.png",
+      "reason": "small_width",
+      "width": 165,
+      "height": 252,
+      "size": 8142
+    },
+    {
+      "index": 165,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199539260.png",
+      "reason": "not_found",
+      "status": 404
+    },
+    {
+      "index": 166,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199537310.png",
+      "reason": "not_found",
+      "status": 404
+    },
+    {
+      "index": 167,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199587247.png",
+      "reason": "not_found",
+      "status": 404
+    },
+    {
+      "index": 168,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780198861508.png",
+      "reason": "small_width",
+      "width": 76,
+      "height": 115,
+      "size": 4359
+    },
+    {
+      "index": 169,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199558292.png",
+      "reason": "not_found",
+      "status": 404
+    },
+    {
+      "index": 170,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199537129.png",
+      "reason": "not_found",
+      "status": 404
+    },
+    {
+      "index": 172,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199555208.png",
+      "reason": "small_width",
+      "width": 165,
+      "height": 251,
+      "size": 90996
+    },
+    {
+      "index": 173,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199537631.png",
+      "reason": "small_width",
+      "width": 165,
+      "height": 251,
+      "size": 97434
+    },
+    {
+      "index": 174,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199540617.png",
+      "reason": "not_found",
+      "status": 404
+    },
+    {
+      "index": 175,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780198827924.png",
+      "reason": "small_width",
+      "width": 250,
+      "height": 380,
+      "size": 188165
+    },
+    {
+      "index": 176,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199538713.png",
+      "reason": "not_found",
+      "status": 404
+    },
+    {
+      "index": 177,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780198813736.png",
+      "reason": "not_found",
+      "status": 404
+    },
+    {
+      "index": 180,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780198800538.png",
+      "reason": "not_found",
+      "status": 404
+    },
+    {
+      "index": 181,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780192824219.png",
+      "reason": "not_found",
+      "status": 404
+    },
+    {
+      "index": 183,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199540570.png",
+      "reason": "small_width",
+      "width": 250,
+      "height": 380,
+      "size": 213314
+    },
+    {
+      "index": 184,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199535781.png",
+      "reason": "not_found",
+      "status": 404
+    },
+    {
+      "index": 185,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780192806864.png",
+      "reason": "not_found",
+      "status": 404
+    },
+    {
+      "index": 186,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199537174.png",
+      "reason": "not_found",
+      "status": 404
+    },
+    {
+      "index": 187,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199555710.png",
+      "reason": "small_width",
+      "width": 165,
+      "height": 251,
+      "size": 53719
+    },
+    {
+      "index": 188,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780198809944.png",
+      "reason": "not_found",
+      "status": 404
+    },
+    {
+      "index": 189,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199555871.png",
+      "reason": "not_found",
+      "status": 404
+    },
+    {
+      "index": 190,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780192872685.png",
+      "reason": "not_found",
+      "status": 404
+    },
+    {
+      "index": 191,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780192824097.png",
+      "reason": "not_found",
+      "status": 404
+    },
+    {
+      "index": 193,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780198800712.png",
+      "reason": "not_found",
+      "status": 404
+    },
+    {
+      "index": 195,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780198724254.png",
+      "reason": "not_found",
+      "status": 404
+    },
+    {
+      "index": 196,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780192865809.png",
+      "reason": "not_found",
+      "status": 404
+    },
+    {
+      "index": 197,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199639878.png",
+      "reason": "small_width",
+      "width": 165,
+      "height": 251,
+      "size": 65537
+    },
+    {
+      "index": 198,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780198828563.png",
+      "reason": "small_width",
+      "width": 165,
+      "height": 251,
+      "size": 69701
+    },
+    {
+      "index": 200,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199552337.png",
+      "reason": "not_found",
+      "status": 404
+    },
+    {
+      "index": 201,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780198759607.png",
+      "reason": "small_width",
+      "width": 165,
+      "height": 251,
+      "size": 91851
+    },
+    {
+      "index": 202,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199554904.png",
+      "reason": "not_found",
+      "status": 404
+    },
+    {
+      "index": 203,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199675296.png",
+      "reason": "small_width",
+      "width": 165,
+      "height": 251,
+      "size": 58732
+    },
+    {
+      "index": 204,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199536948.png",
+      "reason": "small_width",
+      "width": 165,
+      "height": 251,
+      "size": 91642
+    },
+    {
+      "index": 206,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199540525.png",
+      "reason": "not_found",
+      "status": 404
+    },
+    {
+      "index": 207,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199665860.png",
+      "reason": "small_width",
+      "width": 165,
+      "height": 251,
+      "size": 94407
+    },
+    {
+      "index": 208,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199538201.png",
+      "reason": "small_width",
+      "width": 165,
+      "height": 251,
+      "size": 12704
+    }
+  ],
+  "examples_kept": [
+    {
+      "index": 0,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593080334_p0.jpg?v=1766000837&width=422&height=658&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 1,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082109_p0.jpg?v=1765999848&width=422&height=660&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 2,
+      "url": "https://m.media-amazon.com/images/I/61-+BrJksZL._SY522_.jpg",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 3,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593081386_p0.jpg?v=1768977100&width=422&height=661&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 4,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593081126_p0.jpg?v=1766001099&width=422&height=657&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 5,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593081393_p0.jpg?v=1766001225&width=422&height=655&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 6,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593081430_p0.jpg?v=1765999882&width=422&height=657&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 7,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593083236_p0.jpg?v=1768977108&width=422&height=652&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 8,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593083786_p0.jpg?v=1766001174&width=422&height=651&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 9,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082673_p0.jpg?v=1768977160&width=422&height=651&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 10,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593083373_p0.jpg?v=1766001280&width=422&height=652&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 11,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082666_p0.jpg?v=1766001145&width=422&height=655&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 12,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082536_p0.jpg?v=1766001140&width=422&height=651&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 13,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593083113_p0.jpg?v=1771133426&width=422&height=653&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 14,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082734_p0.jpg?v=1766000934&width=422&height=647&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 15,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593080280_p0.jpg?v=1768976920&width=422&height=657&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 16,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082093_p0.jpg?v=1766001230&width=422&height=651&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 17,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593083878_p0.jpg?v=1766000845&width=422&height=657&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 18,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593081058_p0.jpg?v=1768977492&width=422&height=649&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 19,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082901_p0.jpg?v=1771134054&width=422&height=645&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 20,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593080631_p0.jpg?v=1768977869&width=422&height=650&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 21,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593080921_p0.jpg?v=1771134050&width=422&height=652&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 22,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593080761_p0.jpg?v=1768977908&width=422&height=643&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 23,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593080648_p0.jpg?v=1766000628&width=422&height=652&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 24,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593080907_p0.jpg?v=1768976130&width=422&height=656&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 25,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082604_p0.jpg?v=1766000932&width=422&height=651&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 26,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082239_p0.jpg?v=1768977091&width=422&height=653&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 27,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082611_p0.jpg?v=1771134052&width=422&height=656&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 28,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082918_p0.jpg?v=1768977532&width=422&height=651&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 29,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593080860_p0.jpg?v=1771133881&width=422&height=652&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 30,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082949_p0.jpg?v=1765999891&width=422&height=655&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 31,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593081164_p0.jpg?v=1768976438&width=422&height=658&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 32,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593080563_p0.jpg?v=1768977128&width=422&height=650&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 33,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593081324_p0.jpg?v=1766000885&width=422&height=654&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 34,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593081560_p0.jpg?v=1765999887&width=422&height=651&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 35,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593081232_p0.jpg?v=1766000155&width=422&height=659&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 36,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593080228_p0.jpg?v=1768977455&width=422&height=657&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 37,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082833_p0.jpg?v=1766001264&width=422&height=653&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 38,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082468_p0.jpg?v=1766000778&width=422&height=651&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 39,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593081171_p0.jpg?v=1768977938&width=422&height=654&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 40,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593080358_p0.jpg?v=1768977469&width=422&height=653&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 41,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593081928_p0.jpg?v=1768977519&width=422&height=651&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 42,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082758_p0.jpg?v=1766000794&width=422&height=650&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 43,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082390_p0.jpg?v=1768977033&width=422&height=653&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 44,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593080839_p0.jpg?v=1765999795&width=422&height=656&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 45,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082406_p0.jpg?v=1766001136&width=422&height=653&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 46,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593080662_p0.jpg?v=1768977251&width=422&height=650&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 47,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593081089_p0.jpg?v=1768977072&width=422&height=649&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 48,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593081454_p0.jpg?v=1766000890&width=422&height=658&crop=center",
+      "reason": "skipped_host"
+    },
+    {
+      "index": 49,
+      "url": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593083151_p0.jpg?v=1765999646&width=422&height=654&crop=center",
+      "reason": "skipped_host"
+    }
+  ],
+  "examples_unknown": [
+    {
+      "index": 725,
+      "url": "https://oxfordworldsclassics.com/view/covers/9780199537419.png",
+      "size": 79284
+    }
+  ],
+  "errors_examples": []
+}

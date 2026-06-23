@@ -1,0 +1,5265 @@
+{
+  "attempted": 876,
+  "found": 0,
+  "not_found": 876,
+  "errors": 0,
+  "examples_found": [],
+  "examples_failed": [
+    {
+      "index": 91,
+      "Title": "'Tis Pity She's a Whore and Other Plays",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199553860",
+      "reason": "no_result"
+    },
+    {
+      "index": 92,
+      "Title": "The \"Eclogues\" and \"Georgics\"",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554096",
+      "reason": "no_result"
+    },
+    {
+      "index": 93,
+      "Title": "About Love and Other Stories ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536689",
+      "reason": "no_result"
+    },
+    {
+      "index": 94,
+      "Title": "Adam Bede",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199203475",
+      "reason": "no_result"
+    },
+    {
+      "index": 95,
+      "Title": "Adventures of Huckleberry Finn ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536559",
+      "reason": "no_result"
+    },
+    {
+      "index": 96,
+      "Title": "The Adventures of Pinocchio ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199553983",
+      "reason": "no_result"
+    },
+    {
+      "index": 97,
+      "Title": "The Adventures of Roderick Random ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199552344",
+      "reason": "no_result"
+    },
+    {
+      "index": 98,
+      "Title": "The Adventures of Sherlock Holmes ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536955",
+      "reason": "no_result"
+    },
+    {
+      "index": 100,
+      "Title": "The Adventures of Tom Sawyer ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536566",
+      "reason": "no_result"
+    },
+    {
+      "index": 101,
+      "Title": "Aeneid",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199231959",
+      "reason": "no_result"
+    },
+    {
+      "index": 102,
+      "Title": "The Aeneid ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537488",
+      "reason": "no_result"
+    },
+    {
+      "index": 103,
+      "Title": "Aesop's Fables ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540754",
+      "reason": "no_result"
+    },
+    {
+      "index": 104,
+      "Title": "Against Nature: A Rebours",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555116",
+      "reason": "no_result"
+    },
+    {
+      "index": 106,
+      "Title": "Agnes Grey",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199296989",
+      "reason": "no_result"
+    },
+    {
+      "index": 107,
+      "Title": "Agricola and Germany ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539260",
+      "reason": "no_result"
+    },
+    {
+      "index": 108,
+      "Title": "The Alchemist and Other Plays: \"Volpone, or the Fox\", \"Epicene, or the Silent Woman\", The \"Alchemist\", \"Bartholemew Fair\"",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537310",
+      "reason": "no_result"
+    },
+    {
+      "index": 109,
+      "Title": "Alexander the Great: The Anabasis and the Indica",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199587247",
+      "reason": "no_result"
+    },
+    {
+      "index": 110,
+      "Title": "Alice through the Looking Glass",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198861508",
+      "reason": "no_result"
+    },
+    {
+      "index": 111,
+      "Title": "Alice's Adventures in Wonderland: WITH Through the Looking-glass",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199558292",
+      "reason": "no_result"
+    },
+    {
+      "index": 112,
+      "Title": "All's Well That Ends Well",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537129",
+      "reason": "no_result"
+    },
+    {
+      "index": 114,
+      "Title": "The American ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555208",
+      "reason": "no_result"
+    },
+    {
+      "index": 115,
+      "Title": "The American Senator ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537631",
+      "reason": "no_result"
+    },
+    {
+      "index": 116,
+      "Title": "The Analects ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540617",
+      "reason": "no_result"
+    },
+    {
+      "index": 117,
+      "Title": "Anecdotes and Antidotes: A Medieval Arabic History of Physicians",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198827924",
+      "reason": "no_result"
+    },
+    {
+      "index": 118,
+      "Title": "The Anglo-Saxon World: An Anthology",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538713",
+      "reason": "no_result"
+    },
+    {
+      "index": 119,
+      "Title": "Animal Farm",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198813736",
+      "reason": "no_result"
+    },
+    {
+      "index": 122,
+      "Title": "Anna Karenina",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198800538",
+      "reason": "no_result"
+    },
+    {
+      "index": 123,
+      "Title": "The Annals: The Reigns of Tiberius, Claudius, and Nero",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192824219",
+      "reason": "no_result"
+    },
+    {
+      "index": 125,
+      "Title": "An Anthology of Elizabethan Prose Fiction ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540570",
+      "reason": "no_result"
+    },
+    {
+      "index": 126,
+      "Title": "Anthony and Cleopatra",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535781",
+      "reason": "no_result"
+    },
+    {
+      "index": 127,
+      "Title": "Antigone and other Tragedies: Antigone, Deianeira, Electra",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192806864",
+      "reason": "no_result"
+    },
+    {
+      "index": 128,
+      "Title": "Antigone: WITH Oedipus the King: AND Electra",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537174",
+      "reason": "no_result"
+    },
+    {
+      "index": 129,
+      "Title": "The Antiquary ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555710",
+      "reason": "no_result"
+    },
+    {
+      "index": 130,
+      "Title": "The Apple Cart, Too True to Be Good, On the Rocks, and Millionairess",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198809944",
+      "reason": "no_result"
+    },
+    {
+      "index": 131,
+      "Title": "Arabian Nights' Entertainments ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555871",
+      "reason": "no_result"
+    },
+    {
+      "index": 132,
+      "Title": "Arden of Faversham: The New Oxford Shakespeare",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192872685",
+      "reason": "no_result"
+    },
+    {
+      "index": 133,
+      "Title": "Aristophanes: Frogs and Other Plays: A New Verse Translation, with Introduction and Notes",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192824097",
+      "reason": "no_result"
+    },
+    {
+      "index": 135,
+      "Title": "Arms and the Man, The Devil's Disciple, Caesar and Cleopatra",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198800712",
+      "reason": "no_result"
+    },
+    {
+      "index": 137,
+      "Title": "The Art of Rhetoric",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198724254",
+      "reason": "no_result"
+    },
+    {
+      "index": 138,
+      "Title": "As You Like It: The New Oxford Shakespeare",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192865809",
+      "reason": "no_result"
+    },
+    {
+      "index": 139,
+      "Title": "The Aspern Papers and Other Stories (New Edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199639878",
+      "reason": "no_result"
+    },
+    {
+      "index": 140,
+      "Title": "The Assommoir (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198828563",
+      "reason": "no_result"
+    },
+    {
+      "index": 142,
+      "Title": "Aurora Leigh ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199552337",
+      "reason": "no_result"
+    },
+    {
+      "index": 143,
+      "Title": "Autobiography",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198759607",
+      "reason": "no_result"
+    },
+    {
+      "index": 144,
+      "Title": "Autobiography and Other Writings ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554904",
+      "reason": "no_result"
+    },
+    {
+      "index": 145,
+      "Title": "An Autobiography and Other Writings (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199675296",
+      "reason": "no_result"
+    },
+    {
+      "index": 146,
+      "Title": "The Awakening: And Other Stories",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536948",
+      "reason": "no_result"
+    },
+    {
+      "index": 148,
+      "Title": "Bacchae and Other Plays ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540525",
+      "reason": "no_result"
+    },
+    {
+      "index": 149,
+      "Title": "Barchester Towers (3rd edition) (The Chronicles of Barsetshire)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199665860",
+      "reason": "no_result"
+    },
+    {
+      "index": 150,
+      "Title": "Barnaby Rudge ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538201",
+      "reason": "no_result"
+    },
+    {
+      "index": 151,
+      "Title": "Barry Lyndon ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537464",
+      "reason": "no_result"
+    },
+    {
+      "index": 152,
+      "Title": "Basil ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536702",
+      "reason": "no_result"
+    },
+    {
+      "index": 154,
+      "Title": "The Beggar's Opera and Polly ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199642229",
+      "reason": "no_result"
+    },
+    {
+      "index": 155,
+      "Title": "Bel-Ami ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199553938",
+      "reason": "no_result"
+    },
+    {
+      "index": 156,
+      "Title": "Belinda (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199682133",
+      "reason": "no_result"
+    },
+    {
+      "index": 157,
+      "Title": "The Belly of Paris ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555840",
+      "reason": "no_result"
+    },
+    {
+      "index": 158,
+      "Title": "Beowulf: The Fight at Finnsburh",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555291",
+      "reason": "no_result"
+    },
+    {
+      "index": 159,
+      "Title": "Between the Acts ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536573",
+      "reason": "no_result"
+    },
+    {
+      "index": 160,
+      "Title": "Beyond Good and Evil: Prelude to a Philosophy of the Future",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537075",
+      "reason": "no_result"
+    },
+    {
+      "index": 161,
+      "Title": "The Bhagavad Gita ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538126",
+      "reason": "no_result"
+    },
+    {
+      "index": 163,
+      "Title": "Billy Budd, Sailor and Selected Tales ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538911",
+      "reason": "no_result"
+    },
+    {
+      "index": 164,
+      "Title": "Birds and Other Plays ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555673",
+      "reason": "no_result"
+    },
+    {
+      "index": 165,
+      "Title": "The Birth of Tragedy ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540143",
+      "reason": "no_result"
+    },
+    {
+      "index": 166,
+      "Title": "Black Beauty ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199608522",
+      "reason": "no_result"
+    },
+    {
+      "index": 167,
+      "Title": "The Black Tulip ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540464",
+      "reason": "no_result"
+    },
+    {
+      "index": 168,
+      "Title": "The Blazing World and Other Writings",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192862907",
+      "reason": "no_result"
+    },
+    {
+      "index": 169,
+      "Title": "Bleak House ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536313",
+      "reason": "no_result"
+    },
+    {
+      "index": 170,
+      "Title": "The Blithedale Romance ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554867",
+      "reason": "no_result"
+    },
+    {
+      "index": 171,
+      "Title": "The Bodhicaryavatara ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540433",
+      "reason": "no_result"
+    },
+    {
+      "index": 172,
+      "Title": "The Book of Common Prayer: The Texts of 1549, 1559, and 1662",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199645206",
+      "reason": "no_result"
+    },
+    {
+      "index": 175,
+      "Title": "Boris Godunov and Other Dramatic Works ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554041",
+      "reason": "no_result"
+    },
+    {
+      "index": 176,
+      "Title": "The Bostonians ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539147",
+      "reason": "no_result"
+    },
+    {
+      "index": 177,
+      "Title": "The Bride of Lammermoor ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199552504",
+      "reason": "no_result"
+    },
+    {
+      "index": 178,
+      "Title": "The Bright Side of Life",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198753612",
+      "reason": "no_result"
+    },
+    {
+      "index": 179,
+      "Title": "Britannicus, Phaedra, Athaliah ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555994",
+      "reason": "no_result"
+    },
+    {
+      "index": 180,
+      "Title": "The Buddenbrooks",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198843238",
+      "reason": "no_result"
+    },
+    {
+      "index": 181,
+      "Title": "Burmese Days",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198853701",
+      "reason": "no_result"
+    },
+    {
+      "index": 182,
+      "Title": "Caleb Williams",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199232062",
+      "reason": "no_result"
+    },
+    {
+      "index": 184,
+      "Title": "Camilla: Picture of Youth",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555741",
+      "reason": "no_result"
+    },
+    {
+      "index": 185,
+      "Title": "Can You Forgive Her? (Palliser novels)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199578177",
+      "reason": "no_result"
+    },
+    {
+      "index": 186,
+      "Title": "Candide and Other Stories",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535613",
+      "reason": "no_result"
+    },
+    {
+      "index": 187,
+      "Title": "The Canterbury Tales ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199599028",
+      "reason": "no_result"
+    },
+    {
+      "index": 188,
+      "Title": "Capital (Abridged edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535705",
+      "reason": "no_result"
+    },
+    {
+      "index": 189,
+      "Title": "Carmen and Other Stories ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540440",
+      "reason": "no_result"
+    },
+    {
+      "index": 191,
+      "Title": "The Case-Book of Sherlock Holmes ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555642",
+      "reason": "no_result"
+    },
+    {
+      "index": 193,
+      "Title": "The Castle of Otranto: A Gothic Story (3rd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198704447",
+      "reason": "no_result"
+    },
+    {
+      "index": 194,
+      "Title": "Castle Rackrent ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537556",
+      "reason": "no_result"
+    },
+    {
+      "index": 196,
+      "Title": "Catherine the Great: Selected Letters",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198736462",
+      "reason": "no_result"
+    },
+    {
+      "index": 197,
+      "Title": "Catiline's Conspiracy, The Jugurthine War, Histories ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192823458",
+      "reason": "no_result"
+    },
+    {
+      "index": 198,
+      "Title": "Cecilia: Or Memoirs of an Heiress",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199552382",
+      "reason": "no_result"
+    },
+    {
+      "index": 200,
+      "Title": "The Character of a Trimmer and Other Writings",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198879527",
+      "reason": "no_result"
+    },
+    {
+      "index": 202,
+      "Title": "A Child of the Jago ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199605514",
+      "reason": "no_result"
+    },
+    {
+      "index": 203,
+      "Title": "A Christmas Carol and Other Christmas Books ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536306",
+      "reason": "no_result"
+    },
+    {
+      "index": 204,
+      "Title": "A Christmas Carol: and Other Christmas Stories",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198822394",
+      "reason": "no_result"
+    },
+    {
+      "index": 206,
+      "Title": "The Civil War ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540624",
+      "reason": "no_result"
+    },
+    {
+      "index": 207,
+      "Title": "Civil War ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540686",
+      "reason": "no_result"
+    },
+    {
+      "index": 209,
+      "Title": "Classical Literary Criticism ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199549818",
+      "reason": "no_result"
+    },
+    {
+      "index": 210,
+      "Title": "A Clergyman's Daughter",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198848424",
+      "reason": "no_result"
+    },
+    {
+      "index": 211,
+      "Title": "Collected Ghost Stories",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198797364",
+      "reason": "no_result"
+    },
+    {
+      "index": 212,
+      "Title": "Collected Ghost Stories ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199674893",
+      "reason": "no_result"
+    },
+    {
+      "index": 213,
+      "Title": "Collected Maxims and Other Reflections ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540006",
+      "reason": "no_result"
+    },
+    {
+      "index": 215,
+      "Title": "The Collected Peter Pan",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192847430",
+      "reason": "no_result"
+    },
+    {
+      "index": 216,
+      "Title": "Collected Poems ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538959",
+      "reason": "no_result"
+    },
+    {
+      "index": 217,
+      "Title": "Collected Poems and Other Verse ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537921",
+      "reason": "no_result"
+    },
+    {
+      "index": 218,
+      "Title": "The Collected Poems: With Parallel Greek Text",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555956",
+      "reason": "no_result"
+    },
+    {
+      "index": 219,
+      "Title": "Collected Verse",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198820321",
+      "reason": "no_result"
+    },
+    {
+      "index": 220,
+      "Title": "The Comedies ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199556038",
+      "reason": "no_result"
+    },
+    {
+      "index": 221,
+      "Title": "Comedy of Errors",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536146",
+      "reason": "no_result"
+    },
+    {
+      "index": 222,
+      "Title": "The Comedy of Errors: The New Oxford Shakespeare",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192869036",
+      "reason": "no_result"
+    },
+    {
+      "index": 223,
+      "Title": "Coming Up for Air",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198804819",
+      "reason": "no_result"
+    },
+    {
+      "index": 224,
+      "Title": "The Communist Manifesto",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535712",
+      "reason": "no_result"
+    },
+    {
+      "index": 226,
+      "Title": "The Complete \"Odes\"",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199553907",
+      "reason": "no_result"
+    },
+    {
+      "index": 227,
+      "Title": "The Complete Fairy Tales",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198817970",
+      "reason": "no_result"
+    },
+    {
+      "index": 228,
+      "Title": "The Complete Fairy Tales ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199585809",
+      "reason": "no_result"
+    },
+    {
+      "index": 229,
+      "Title": "The Complete Indian Housekeeper and Cook",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199605767",
+      "reason": "no_result"
+    },
+    {
+      "index": 230,
+      "Title": "Complete Letters ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538942",
+      "reason": "no_result"
+    },
+    {
+      "index": 231,
+      "Title": "The Complete Odes and Epodes ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555277",
+      "reason": "no_result"
+    },
+    {
+      "index": 232,
+      "Title": "Complete Poetry ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554706",
+      "reason": "no_result"
+    },
+    {
+      "index": 233,
+      "Title": "The Complete Short Stories",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535064",
+      "reason": "no_result"
+    },
+    {
+      "index": 234,
+      "Title": "The Complete Sonnets and Poems",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535798",
+      "reason": "no_result"
+    },
+    {
+      "index": 236,
+      "Title": "The Complete Writings",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192862495",
+      "reason": "no_result"
+    },
+    {
+      "index": 237,
+      "Title": "The Condition of the Working Class in England ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555888",
+      "reason": "no_result"
+    },
+    {
+      "index": 238,
+      "Title": "The Confessions ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537822",
+      "reason": "no_result"
+    },
+    {
+      "index": 239,
+      "Title": "Confessions ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540037",
+      "reason": "no_result"
+    },
+    {
+      "index": 241,
+      "Title": "Confessions of an English Opium-Eater and Other Writings ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199600618",
+      "reason": "no_result"
+    },
+    {
+      "index": 242,
+      "Title": "The Confidence-man: His Masquerade",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554850",
+      "reason": "no_result"
+    },
+    {
+      "index": 245,
+      "Title": "The Conquest of Plassans ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199664788",
+      "reason": "no_result"
+    },
+    {
+      "index": 246,
+      "Title": "The Consolation of Philosophy ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540549",
+      "reason": "no_result"
+    },
+    {
+      "index": 247,
+      "Title": "Constellation Myths: With Aratus's Phaenomena",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198716983",
+      "reason": "no_result"
+    },
+    {
+      "index": 248,
+      "Title": "Corinne: or Italy",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554607",
+      "reason": "no_result"
+    },
+    {
+      "index": 249,
+      "Title": "The Count of Monte Cristo",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199219650",
+      "reason": "no_result"
+    },
+    {
+      "index": 251,
+      "Title": "The Country Wife and Other Plays ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555185",
+      "reason": "no_result"
+    },
+    {
+      "index": 253,
+      "Title": "Cousin Henry ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537679",
+      "reason": "no_result"
+    },
+    {
+      "index": 254,
+      "Title": "Cousin Phillis and Other Stories",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199239498",
+      "reason": "no_result"
+    },
+    {
+      "index": 255,
+      "Title": "Cranford ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199558308",
+      "reason": "no_result"
+    },
+    {
+      "index": 256,
+      "Title": "Crime and Punishment",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198709718",
+      "reason": "no_result"
+    },
+    {
+      "index": 257,
+      "Title": "Crime and Punishment",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198709701",
+      "reason": "no_result"
+    },
+    {
+      "index": 258,
+      "Title": "The Crimes of Love: Heroic and Tragic Tales, Preceded by an Essay on Novels",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539987",
+      "reason": "no_result"
+    },
+    {
+      "index": 259,
+      "Title": "Critique of Judgement ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199552467",
+      "reason": "no_result"
+    },
+    {
+      "index": 260,
+      "Title": "Culture and Anarchy ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538744",
+      "reason": "no_result"
+    },
+    {
+      "index": 262,
+      "Title": "Cymbeline",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536504",
+      "reason": "no_result"
+    },
+    {
+      "index": 263,
+      "Title": "Cymbeline: The New Oxford Shakespeare",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192882868",
+      "reason": "no_result"
+    },
+    {
+      "index": 264,
+      "Title": "Cyrano de Bergerac ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539239",
+      "reason": "no_result"
+    },
+    {
+      "index": 265,
+      "Title": "Daisy Miller and An International Episode ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199639885",
+      "reason": "no_result"
+    },
+    {
+      "index": 267,
+      "Title": "Daniel Deronda (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199682867",
+      "reason": "no_result"
+    },
+    {
+      "index": 268,
+      "Title": "Danton's Death, Leonce and Lena, Woyzeck ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540358",
+      "reason": "no_result"
+    },
+    {
+      "index": 269,
+      "Title": "Daodejing",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199208555",
+      "reason": "no_result"
+    },
+    {
+      "index": 270,
+      "Title": "Daphnis and Chloe ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554959",
+      "reason": "no_result"
+    },
+    {
+      "index": 271,
+      "Title": "David Copperfield ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536290",
+      "reason": "no_result"
+    },
+    {
+      "index": 272,
+      "Title": "The Dawn of the Roman Empire: Bks. 31-40",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555680",
+      "reason": "no_result"
+    },
+    {
+      "index": 273,
+      "Title": "A Day in the Country and Other Stories ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555789",
+      "reason": "no_result"
+    },
+    {
+      "index": 274,
+      "Title": "The Dead Secret ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536719",
+      "reason": "no_result"
+    },
+    {
+      "index": 275,
+      "Title": "Dead Souls: A Poem",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554669",
+      "reason": "no_result"
+    },
+    {
+      "index": 276,
+      "Title": "Death Comes for the Archbishop",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192849250",
+      "reason": "no_result"
+    },
+    {
+      "index": 277,
+      "Title": "Death in Venice and Other Stories",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198850076",
+      "reason": "no_result"
+    },
+    {
+      "index": 278,
+      "Title": "The Death of Ivan Ilyich and Other Stories ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199669882",
+      "reason": "no_result"
+    },
+    {
+      "index": 279,
+      "Title": "The Decameron ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540419",
+      "reason": "no_result"
+    },
+    {
+      "index": 280,
+      "Title": "Defence of Socrates, Euthyphro, Crito ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540501",
+      "reason": "no_result"
+    },
+    {
+      "index": 281,
+      "Title": "Defence Speeches ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537907",
+      "reason": "no_result"
+    },
+    {
+      "index": 282,
+      "Title": "Desperate Remedies ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554829",
+      "reason": "no_result"
+    },
+    {
+      "index": 283,
+      "Title": "The Devil and Other Stories ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199553990",
+      "reason": "no_result"
+    },
+    {
+      "index": 284,
+      "Title": "Devils ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540495",
+      "reason": "no_result"
+    },
+    {
+      "index": 285,
+      "Title": "Dhammapada ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555130",
+      "reason": "no_result"
+    },
+    {
+      "index": 287,
+      "Title": "Dialogues and Essays ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199552405",
+      "reason": "no_result"
+    },
+    {
+      "index": 288,
+      "Title": "Dialogues Concerning Natural Religion, and The Natural History of Religion ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538324",
+      "reason": "no_result"
+    },
+    {
+      "index": 289,
+      "Title": "The Diary of a Nobody ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540150",
+      "reason": "no_result"
+    },
+    {
+      "index": 290,
+      "Title": "A Dictionary of Modern English Usage: The Classic First Edition",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199585892",
+      "reason": "no_result"
+    },
+    {
+      "index": 291,
+      "Title": "Discourse on Political Economy and The Social Contract ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538966",
+      "reason": "no_result"
+    },
+    {
+      "index": 292,
+      "Title": "A Discourse on the Method of Correctly Conducting One's Reason and Seeking Truth in the Sciences",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540075",
+      "reason": "no_result"
+    },
+    {
+      "index": 293,
+      "Title": "Discourse on the Origin of Inequality ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555420",
+      "reason": "no_result"
+    },
+    {
+      "index": 294,
+      "Title": "Discourses on Livy ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555550",
+      "reason": "no_result"
+    },
+    {
+      "index": 295,
+      "Title": "Discourses, Fragments, Handbook ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199595181",
+      "reason": "no_result"
+    },
+    {
+      "index": 296,
+      "Title": "The Divine Comedy",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535644",
+      "reason": "no_result"
+    },
+    {
+      "index": 297,
+      "Title": "Doctor Faustus",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198867722",
+      "reason": "no_result"
+    },
+    {
+      "index": 298,
+      "Title": "Doctor Faustus and Other Plays: \"Tamburlaine\" Parts I & II, \"Doctor Faustus\" A and B Texts, The \"Jew of Malta\", \"Edward II\"",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537068",
+      "reason": "no_result"
+    },
+    {
+      "index": 299,
+      "Title": "Doctor Pascal",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198746164",
+      "reason": "no_result"
+    },
+    {
+      "index": 300,
+      "Title": "Doctor Thorne (The Chronicles of Barsetshire)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199662784",
+      "reason": "no_result"
+    },
+    {
+      "index": 301,
+      "Title": "Doctor Thorne: The Chronicles of Barsetshire (Media tie-in)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198785637",
+      "reason": "no_result"
+    },
+    {
+      "index": 302,
+      "Title": "The Doctor's Wife ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199549801",
+      "reason": "no_result"
+    },
+    {
+      "index": 303,
+      "Title": "A Doll's House, Men of Honour, When We Dead Awaken",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198955092",
+      "reason": "no_result"
+    },
+    {
+      "index": 304,
+      "Title": "Dombey and Son (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536283",
+      "reason": "no_result"
+    },
+    {
+      "index": 305,
+      "Title": "Domestic Manners of the Americans ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199676873",
+      "reason": "no_result"
+    },
+    {
+      "index": 306,
+      "Title": "Don Carlos and Mary Stuart ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540747",
+      "reason": "no_result"
+    },
+    {
+      "index": 309,
+      "Title": "Down and Out in Paris and London",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198835219",
+      "reason": "no_result"
+    },
+    {
+      "index": 310,
+      "Title": "Dracula ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199564095",
+      "reason": "no_result"
+    },
+    {
+      "index": 311,
+      "Title": "The Dream",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198745983",
+      "reason": "no_result"
+    },
+    {
+      "index": 313,
+      "Title": "The Duchess of Malfi and Other Plays ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539284",
+      "reason": "no_result"
+    },
+    {
+      "index": 314,
+      "Title": "The Duke's Children (Palliser novels) ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199578382",
+      "reason": "no_result"
+    },
+    {
+      "index": 315,
+      "Title": "The Duke's Children Complete (Extended edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198835875",
+      "reason": "no_result"
+    },
+    {
+      "index": 317,
+      "Title": "Earth ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199677870",
+      "reason": "no_result"
+    },
+    {
+      "index": 318,
+      "Title": "East Lynne",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536030",
+      "reason": "no_result"
+    },
+    {
+      "index": 320,
+      "Title": "The Ecclesiastical History of the English People ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537235",
+      "reason": "no_result"
+    },
+    {
+      "index": 322,
+      "Title": "Effi Briest ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199675647",
+      "reason": "no_result"
+    },
+    {
+      "index": 323,
+      "Title": "Eighteenth-Century Women Dramatists ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554812",
+      "reason": "no_result"
+    },
+    {
+      "index": 325,
+      "Title": "Elective Affinities ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555369",
+      "reason": "no_result"
+    },
+    {
+      "index": 326,
+      "Title": "Elegies of Chu",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198818311",
+      "reason": "no_result"
+    },
+    {
+      "index": 327,
+      "Title": "Elegies: With Parallel Latin Text",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199603312",
+      "reason": "no_result"
+    },
+    {
+      "index": 329,
+      "Title": "The Elements of Law Natural and Politic: With Three Lives: Pt. 1: Human Nature: Pt. 2: De Corpore Politico",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199549702",
+      "reason": "no_result"
+    },
+    {
+      "index": 331,
+      "Title": "Emma (5th edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198837756",
+      "reason": "no_result"
+    },
+    {
+      "index": 332,
+      "Title": "Empire Writing: An Anthology of Colonial Literature 1870-1918",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555598",
+      "reason": "no_result"
+    },
+    {
+      "index": 335,
+      "Title": "An Enemy of the People, The Wild Duck, Rosmersholm ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539130",
+      "reason": "no_result"
+    },
+    {
+      "index": 336,
+      "Title": "The English Constitution ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539017",
+      "reason": "no_result"
+    },
+    {
+      "index": 337,
+      "Title": "An Enquiry concerning Human Understanding ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199549900",
+      "reason": "no_result"
+    },
+    {
+      "index": 338,
+      "Title": "An Enquiry Concerning Political Justice ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199642625",
+      "reason": "no_result"
+    },
+    {
+      "index": 339,
+      "Title": "Epigrams from the Greek Anthology",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198854654",
+      "reason": "no_result"
+    },
+    {
+      "index": 340,
+      "Title": "Epigrams: With Parallel Latin Text",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199645459",
+      "reason": "no_result"
+    },
+    {
+      "index": 341,
+      "Title": "Erotic Poems ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199549726",
+      "reason": "no_result"
+    },
+    {
+      "index": 342,
+      "Title": "An Essay Concerning Human Understanding",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199296620",
+      "reason": "no_result"
+    },
+    {
+      "index": 343,
+      "Title": "An Essay on the Principle of Population ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540457",
+      "reason": "no_result"
+    },
+    {
+      "index": 344,
+      "Title": "The Essential Mozi: Ethical, Political, and Dialectical Writings",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198848103",
+      "reason": "no_result"
+    },
+    {
+      "index": 346,
+      "Title": "Estate Management and Symposium",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198823513",
+      "reason": "no_result"
+    },
+    {
+      "index": 347,
+      "Title": "Esther Waters (New Edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199583010",
+      "reason": "no_result"
+    },
+    {
+      "index": 349,
+      "Title": "The Eudemian Ethics ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199586431",
+      "reason": "no_result"
+    },
+    {
+      "index": 350,
+      "Title": "Eugene Onegin: A Novel in Verse",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538645",
+      "reason": "no_result"
+    },
+    {
+      "index": 351,
+      "Title": "Eugenie Grandet ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555895",
+      "reason": "no_result"
+    },
+    {
+      "index": 352,
+      "Title": "The Europeans: A Sketch",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555635",
+      "reason": "no_result"
+    },
+    {
+      "index": 353,
+      "Title": "The Eustace Diamonds (Palliser novels) ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199587780",
+      "reason": "no_result"
+    },
+    {
+      "index": 354,
+      "Title": "Evelina: Or The History of a Young Lady's Entrance into the World",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536931",
+      "reason": "no_result"
+    },
+    {
+      "index": 355,
+      "Title": "Evolutionary Writings: Including the Autobiographies",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199580149",
+      "reason": "no_result"
+    },
+    {
+      "index": 356,
+      "Title": "Exemplary Stories ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555000",
+      "reason": "no_result"
+    },
+    {
+      "index": 357,
+      "Title": "Exiles",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198800064",
+      "reason": "no_result"
+    },
+    {
+      "index": 358,
+      "Title": "The Expedition of Cyrus ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555987",
+      "reason": "no_result"
+    },
+    {
+      "index": 360,
+      "Title": "The Fall of the Roman Republic: Roman History, Books 36-40",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198822882",
+      "reason": "no_result"
+    },
+    {
+      "index": 361,
+      "Title": "Far from the Madding Crowd ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537013",
+      "reason": "no_result"
+    },
+    {
+      "index": 362,
+      "Title": "Fasti ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192824110",
+      "reason": "no_result"
+    },
+    {
+      "index": 363,
+      "Title": "Father and Son ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539116",
+      "reason": "no_result"
+    },
+    {
+      "index": 364,
+      "Title": "Fathers and Sons",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536047",
+      "reason": "no_result"
+    },
+    {
+      "index": 365,
+      "Title": "Faust: Pt. 1",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536214",
+      "reason": "no_result"
+    },
+    {
+      "index": 366,
+      "Title": "Faust: Pt. 2",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536207",
+      "reason": "no_result"
+    },
+    {
+      "index": 367,
+      "Title": "The Federalist Papers ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192805928",
+      "reason": "no_result"
+    },
+    {
+      "index": 368,
+      "Title": "The Female Quixote: Or the Adventures of Arabella",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540242",
+      "reason": "no_result"
+    },
+    {
+      "index": 369,
+      "Title": "The Figaro Trilogy: \"Barber of Seville\", The \"Marriage of Figaro\", The \"Guilty Mother\"",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539970",
+      "reason": "no_result"
+    },
+    {
+      "index": 370,
+      "Title": "Finnegans Wake ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199695157",
+      "reason": "no_result"
+    },
+    {
+      "index": 371,
+      "Title": "The First Emperor: Selections from the Historical Records",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199574391",
+      "reason": "no_result"
+    },
+    {
+      "index": 372,
+      "Title": "First Love and Other Stories ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540402",
+      "reason": "no_result"
+    },
+    {
+      "index": 373,
+      "Title": "The First Men in the Moon",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198705048",
+      "reason": "no_result"
+    },
+    {
+      "index": 374,
+      "Title": "The First Philosophers: The Presocratics and Sophists",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539093",
+      "reason": "no_result"
+    },
+    {
+      "index": 375,
+      "Title": "Five Plays ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555772",
+      "reason": "no_result"
+    },
+    {
+      "index": 376,
+      "Title": "Five Plays: \"Ivanov\", The \"Seagull\", \"Uncle Vanya\", \"Three Sisters\", and The \"Cherry Orchard\"",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536696",
+      "reason": "no_result"
+    },
+    {
+      "index": 377,
+      "Title": "Flappers and Philosophers",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198851844",
+      "reason": "no_result"
+    },
+    {
+      "index": 380,
+      "Title": "The Flowers of Evil",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535583",
+      "reason": "no_result"
+    },
+    {
+      "index": 381,
+      "Title": "Flush ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539291",
+      "reason": "no_result"
+    },
+    {
+      "index": 383,
+      "Title": "The Fortunate Mistress (Roxana) (3rd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198851028",
+      "reason": "no_result"
+    },
+    {
+      "index": 384,
+      "Title": "The Fortune of the Rougons ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199560998",
+      "reason": "no_result"
+    },
+    {
+      "index": 385,
+      "Title": "Four Comedies: \"The Braggart Soldier\", \"The Brothers Menaechmus\", \"The Haunted House\", \"The Pot of Gold\"",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540563",
+      "reason": "no_result"
+    },
+    {
+      "index": 386,
+      "Title": "Four Major Plays ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537518",
+      "reason": "no_result"
+    },
+    {
+      "index": 387,
+      "Title": "Four Major Plays: \"Doll's House\", \"Ghosts\", \"Hedda Gabler\" and The \"Master Builder\"",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536191",
+      "reason": "no_result"
+    },
+    {
+      "index": 388,
+      "Title": "Four Revenge Tragedies: \"Spanish Tragedy\", The \"Revenger's Tragedy\", The \"Revenge of Bussy D'Ambois\", and The \"Atheist's Tragedy\"",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540532",
+      "reason": "no_result"
+    },
+    {
+      "index": 389,
+      "Title": "Foxe's Book of Martyrs: Select Narratives",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199236848",
+      "reason": "no_result"
+    },
+    {
+      "index": 390,
+      "Title": "Framley Parsonage (The Chronicles of Barsetshire)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199663156",
+      "reason": "no_result"
+    },
+    {
+      "index": 392,
+      "Title": "Frankenstein: or `The Modern Prometheus'",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537167",
+      "reason": "no_result"
+    },
+    {
+      "index": 393,
+      "Title": "Frankenstein: or `The Modern Prometheus': The 1818 Text",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198814047",
+      "reason": "no_result"
+    },
+    {
+      "index": 394,
+      "Title": "Frankenstein: or `The Modern Prometheus': The 1818 Text (3rd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198840824",
+      "reason": "no_result"
+    },
+    {
+      "index": 395,
+      "Title": "French Decadent Tales ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199569274",
+      "reason": "no_result"
+    },
+    {
+      "index": 396,
+      "Title": "The French Revolution",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198815594",
+      "reason": "no_result"
+    },
+    {
+      "index": 398,
+      "Title": "The Gallic War: Seven Commentaries on the Gallic War with an Eighth Commentary by Aulus Hirtius",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540266",
+      "reason": "no_result"
+    },
+    {
+      "index": 399,
+      "Title": "The Gaucho Martín Fierro and Martín Fierro's Return",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198936909",
+      "reason": "no_result"
+    },
+    {
+      "index": 400,
+      "Title": "A Gentle Creature and Other Stories ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555086",
+      "reason": "no_result"
+    },
+    {
+      "index": 401,
+      "Title": "Georgics ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538836",
+      "reason": "no_result"
+    },
+    {
+      "index": 402,
+      "Title": "Gerard Manley Hopkins: The Major Works",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538850",
+      "reason": "no_result"
+    },
+    {
+      "index": 403,
+      "Title": "Germinal ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536894",
+      "reason": "no_result"
+    },
+    {
+      "index": 404,
+      "Title": "The Girl with the Golden Eyes and Other Stories ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199571284",
+      "reason": "no_result"
+    },
+    {
+      "index": 405,
+      "Title": "The Golden Ass ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540556",
+      "reason": "no_result"
+    },
+    {
+      "index": 406,
+      "Title": "The Golden Bough: A Study in Magic and Religion",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538829",
+      "reason": "no_result"
+    },
+    {
+      "index": 407,
+      "Title": "The Golden Bowl ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538584",
+      "reason": "no_result"
+    },
+    {
+      "index": 408,
+      "Title": "The Golden Pot and Other Tales ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199552474",
+      "reason": "no_result"
+    },
+    {
+      "index": 410,
+      "Title": "Gorgias ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540327",
+      "reason": "no_result"
+    },
+    {
+      "index": 411,
+      "Title": "The Gospels: Authorized King James Version",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199541171",
+      "reason": "no_result"
+    },
+    {
+      "index": 412,
+      "Title": "Gothic Tales",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198734307",
+      "reason": "no_result"
+    },
+    {
+      "index": 414,
+      "Title": "The Grasmere and Alfoxden Journals ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536870",
+      "reason": "no_result"
+    },
+    {
+      "index": 415,
+      "Title": "Great Expectations",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199219766",
+      "reason": "no_result"
+    },
+    {
+      "index": 418,
+      "Title": "The Great God Pan and Other Horror Stories",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198805106",
+      "reason": "no_result"
+    },
+    {
+      "index": 419,
+      "Title": "The Great God Pan and Other Horror Stories",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198813163",
+      "reason": "no_result"
+    },
+    {
+      "index": 420,
+      "Title": "Greek Lives ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540051",
+      "reason": "no_result"
+    },
+    {
+      "index": 421,
+      "Title": "Greek Lyric Poetry: The Poems and Fragments of the Greek Iambic, Elegiac, and Melic Poets (excluding Pindar and Bacchylides) Down to 450 BC",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540396",
+      "reason": "no_result"
+    },
+    {
+      "index": 422,
+      "Title": "Green Tea: and Other Weird Stories",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198835882",
+      "reason": "no_result"
+    },
+    {
+      "index": 424,
+      "Title": "Grettir's Saga ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192801524",
+      "reason": "no_result"
+    },
+    {
+      "index": 425,
+      "Title": "Groundwork for the Metaphysics of Morals",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198786191",
+      "reason": "no_result"
+    },
+    {
+      "index": 427,
+      "Title": "Guide to the Lakes",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198848097",
+      "reason": "no_result"
+    },
+    {
+      "index": 428,
+      "Title": "Gulliver's Travels ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536849",
+      "reason": "no_result"
+    },
+    {
+      "index": 429,
+      "Title": "Hamlet",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535811",
+      "reason": "no_result"
+    },
+    {
+      "index": 431,
+      "Title": "Hannibal's War: Bks. 21-30",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555970",
+      "reason": "no_result"
+    },
+    {
+      "index": 432,
+      "Title": "Hans Andersen's Fairy Tales: A Selection",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555857",
+      "reason": "no_result"
+    },
+    {
+      "index": 433,
+      "Title": "Hard Times ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536276",
+      "reason": "no_result"
+    },
+    {
+      "index": 434,
+      "Title": "He Knew He Was Right ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537709",
+      "reason": "no_result"
+    },
+    {
+      "index": 435,
+      "Title": "Heart of Darkness and Other Tales (Revised edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536016",
+      "reason": "no_result"
+    },
+    {
+      "index": 436,
+      "Title": "The Heart of Midlothian ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538393",
+      "reason": "no_result"
+    },
+    {
+      "index": 437,
+      "Title": "Hellenistic Lives: Including Alexander the Great",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199664337",
+      "reason": "no_result"
+    },
+    {
+      "index": 438,
+      "Title": "Henry IV Part I: The New Oxford Shakespeare",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192865823",
+      "reason": "no_result"
+    },
+    {
+      "index": 439,
+      "Title": "Henry IV, Part II",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537136",
+      "reason": "no_result"
+    },
+    {
+      "index": 440,
+      "Title": "Henry V",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536511",
+      "reason": "no_result"
+    },
+    {
+      "index": 441,
+      "Title": "Henry VI, Part I",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537105",
+      "reason": "no_result"
+    },
+    {
+      "index": 442,
+      "Title": "Henry VI, Part I: The New Oxford Shakespeare",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192873569",
+      "reason": "no_result"
+    },
+    {
+      "index": 443,
+      "Title": "Henry VI, Part II",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537426",
+      "reason": "no_result"
+    },
+    {
+      "index": 444,
+      "Title": "Henry VI, Part II: The New Oxford Shakespeare",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198915348",
+      "reason": "no_result"
+    },
+    {
+      "index": 445,
+      "Title": "Henry VI, Part III",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537112",
+      "reason": "no_result"
+    },
+    {
+      "index": 446,
+      "Title": "Heracles and Other Plays ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555093",
+      "reason": "no_result"
+    },
+    {
+      "index": 447,
+      "Title": "A Hero of Our Time ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199652686",
+      "reason": "no_result"
+    },
+    {
+      "index": 448,
+      "Title": "Hester ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555499",
+      "reason": "no_result"
+    },
+    {
+      "index": 449,
+      "Title": "Hide and Seek ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555611",
+      "reason": "no_result"
+    },
+    {
+      "index": 450,
+      "Title": "His Excellency Eugène Rougon",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198748250",
+      "reason": "no_result"
+    },
+    {
+      "index": 452,
+      "Title": "The Histories",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535668",
+      "reason": "no_result"
+    },
+    {
+      "index": 453,
+      "Title": "The Histories",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199534708",
+      "reason": "no_result"
+    },
+    {
+      "index": 454,
+      "Title": "The Histories ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540709",
+      "reason": "no_result"
+    },
+    {
+      "index": 455,
+      "Title": "History of A Six Weeks' Tour",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192858276",
+      "reason": "no_result"
+    },
+    {
+      "index": 456,
+      "Title": "The History of King Lear",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535828",
+      "reason": "no_result"
+    },
+    {
+      "index": 457,
+      "Title": "The History of Rasselas, Prince of Abissinia",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199229970",
+      "reason": "no_result"
+    },
+    {
+      "index": 458,
+      "Title": "The History of the English People 1000-1154 ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554805",
+      "reason": "no_result"
+    },
+    {
+      "index": 459,
+      "Title": "The History of the Rebellion: A New Selection",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199228171",
+      "reason": "no_result"
+    },
+    {
+      "index": 460,
+      "Title": "Hobson-Jobson: The Definitive Glossary of British India",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198718000",
+      "reason": "no_result"
+    },
+    {
+      "index": 461,
+      "Title": "Homage to Catalonia",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198838418",
+      "reason": "no_result"
+    },
+    {
+      "index": 462,
+      "Title": "The Homeric Hymns ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554751",
+      "reason": "no_result"
+    },
+    {
+      "index": 463,
+      "Title": "Horror Stories: Classic Tales from Hoffmann to Hodgson",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199685448",
+      "reason": "no_result"
+    },
+    {
+      "index": 466,
+      "Title": "The House of the Seven Gables ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539123",
+      "reason": "no_result"
+    },
+    {
+      "index": 469,
+      "Title": "The Idiot ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536399",
+      "reason": "no_result"
+    },
+    {
+      "index": 470,
+      "Title": "Idylls ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199552429",
+      "reason": "no_result"
+    },
+    {
+      "index": 471,
+      "Title": "The Iliad ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536795",
+      "reason": "no_result"
+    },
+    {
+      "index": 472,
+      "Title": "The Iliad ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199645213",
+      "reason": "no_result"
+    },
+    {
+      "index": 473,
+      "Title": "The Importance of Being Earnest and Other Plays (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192848024",
+      "reason": "no_result"
+    },
+    {
+      "index": 474,
+      "Title": "The Importance of Being Earnest and Other Plays: Lady Windermere's Fan; Salome; A Woman of No Importance; An Ideal Husband; The Importance of Being Earnest: \"Lady Windermere's Fan\", \"Salome\", \"A Woman of No Importance\", \"An Ideal Husband\", \"The Importance of Being Earnest\"",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535972",
+      "reason": "no_result"
+    },
+    {
+      "index": 475,
+      "Title": "Imre",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198884477",
+      "reason": "no_result"
+    },
+    {
+      "index": 478,
+      "Title": "Incidents in the Life of a Slave Girl ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198709879",
+      "reason": "no_result"
+    },
+    {
+      "index": 479,
+      "Title": "Indiana ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540488",
+      "reason": "no_result"
+    },
+    {
+      "index": 480,
+      "Title": "An Inquiry into the Nature and Causes of the Wealth of Nations: A Selected Edition",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535927",
+      "reason": "no_result"
+    },
+    {
+      "index": 481,
+      "Title": "The Interesting Narrative",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198707523",
+      "reason": "no_result"
+    },
+    {
+      "index": 482,
+      "Title": "The Interpretation of Dreams",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198797951",
+      "reason": "no_result"
+    },
+    {
+      "index": 484,
+      "Title": "The Invisible Man: A Grotesque Romance",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198702672",
+      "reason": "no_result"
+    },
+    {
+      "index": 485,
+      "Title": "Irish Writing: An Anthology of Irish Literature in English 1789-1939",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199549825",
+      "reason": "no_result"
+    },
+    {
+      "index": 486,
+      "Title": "The Island of Doctor Moreau",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198702665",
+      "reason": "no_result"
+    },
+    {
+      "index": 487,
+      "Title": "The Italian (3rd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198704430",
+      "reason": "no_result"
+    },
+    {
+      "index": 488,
+      "Title": "Italian Renaissance Tales",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198794967",
+      "reason": "no_result"
+    },
+    {
+      "index": 489,
+      "Title": "Ivanhoe ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538409",
+      "reason": "no_result"
+    },
+    {
+      "index": 491,
+      "Title": "Jacques the Fatalist ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537952",
+      "reason": "no_result"
+    },
+    {
+      "index": 492,
+      "Title": "Jane Eyre (3rd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198804970",
+      "reason": "no_result"
+    },
+    {
+      "index": 493,
+      "Title": "Jason and the Golden Fleece (The Argonautica) ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538720",
+      "reason": "no_result"
+    },
+    {
+      "index": 494,
+      "Title": "The Jewish War",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199646029",
+      "reason": "no_result"
+    },
+    {
+      "index": 495,
+      "Title": "Jezebel's Daughter ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198703211",
+      "reason": "no_result"
+    },
+    {
+      "index": 497,
+      "Title": "John Donne - The Major Works ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537945",
+      "reason": "no_result"
+    },
+    {
+      "index": 498,
+      "Title": "John Keats: Major Works ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554881",
+      "reason": "no_result"
+    },
+    {
+      "index": 499,
+      "Title": "Jonathan Wild ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199549757",
+      "reason": "no_result"
+    },
+    {
+      "index": 501,
+      "Title": "A Journal of the Plague Year (Revised edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199572830",
+      "reason": "no_result"
+    },
+    {
+      "index": 503,
+      "Title": "Journey to the Centre of the Earth ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538072",
+      "reason": "no_result"
+    },
+    {
+      "index": 505,
+      "Title": "A Journey to the Western Islands of Scotland and the Journal of a Tour to the Hebrides",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198798743",
+      "reason": "no_result"
+    },
+    {
+      "index": 506,
+      "Title": "Jude the Obscure (New Edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537020",
+      "reason": "no_result"
+    },
+    {
+      "index": 507,
+      "Title": "Julius Caesar",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536122",
+      "reason": "no_result"
+    },
+    {
+      "index": 508,
+      "Title": "Julius Caesar: The New Oxford Shakespeare",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192872661",
+      "reason": "no_result"
+    },
+    {
+      "index": 509,
+      "Title": "The Jungle Books ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536450",
+      "reason": "no_result"
+    },
+    {
+      "index": 510,
+      "Title": "Just So Stories for Little Children ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538607",
+      "reason": "no_result"
+    },
+    {
+      "index": 511,
+      "Title": "Justine, or the Misfortunes of Virtue ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199572847",
+      "reason": "no_result"
+    },
+    {
+      "index": 512,
+      "Title": "The Kalevala ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538867",
+      "reason": "no_result"
+    },
+    {
+      "index": 513,
+      "Title": "Kamasutra ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539161",
+      "reason": "no_result"
+    },
+    {
+      "index": 514,
+      "Title": "The Karamazov Brothers ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536375",
+      "reason": "no_result"
+    },
+    {
+      "index": 515,
+      "Title": "Keep the Aspidistra Flying",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198858317",
+      "reason": "no_result"
+    },
+    {
+      "index": 517,
+      "Title": "Kidnapped ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199674213",
+      "reason": "no_result"
+    },
+    {
+      "index": 518,
+      "Title": "The Kill ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536924",
+      "reason": "no_result"
+    },
+    {
+      "index": 519,
+      "Title": "Kim ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536467",
+      "reason": "no_result"
+    },
+    {
+      "index": 520,
+      "Title": "King Henry VIII (or All is True)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537433",
+      "reason": "no_result"
+    },
+    {
+      "index": 521,
+      "Title": "King Henry VIII; or All is True: The New Oxford Shakespeare",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198872023",
+      "reason": "no_result"
+    },
+    {
+      "index": 522,
+      "Title": "King John",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537143",
+      "reason": "no_result"
+    },
+    {
+      "index": 523,
+      "Title": "King Lear: The New Oxford Shakespeare",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192865830",
+      "reason": "no_result"
+    },
+    {
+      "index": 524,
+      "Title": "King Solomon's Mines (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198722953",
+      "reason": "no_result"
+    },
+    {
+      "index": 525,
+      "Title": "The Koran ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537327",
+      "reason": "no_result"
+    },
+    {
+      "index": 526,
+      "Title": "The Kreutzer Sonata and Other Stories ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555796",
+      "reason": "no_result"
+    },
+    {
+      "index": 527,
+      "Title": "La Bete humaine ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538669",
+      "reason": "no_result"
+    },
+    {
+      "index": 528,
+      "Title": "La Dame aux Camelias ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540341",
+      "reason": "no_result"
+    },
+    {
+      "index": 529,
+      "Title": "La Débâcle (Reissue)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198801894",
+      "reason": "no_result"
+    },
+    {
+      "index": 530,
+      "Title": "La Reine Margot ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538447",
+      "reason": "no_result"
+    },
+    {
+      "index": 533,
+      "Title": "Lady Anna ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537716",
+      "reason": "no_result"
+    },
+    {
+      "index": 534,
+      "Title": "Lady Audley's Secret ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199577033",
+      "reason": "no_result"
+    },
+    {
+      "index": 535,
+      "Title": "Lady Susan, The Watsons, and Sanditon: Unfinished Fictions and Other Writings",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198835899",
+      "reason": "no_result"
+    },
+    {
+      "index": 536,
+      "Title": "Lark Rise to Candleford",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198796695",
+      "reason": "no_result"
+    },
+    {
+      "index": 537,
+      "Title": "The Last Chronicles of Barset (The Chronicles of Barsetshire)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199675999",
+      "reason": "no_result"
+    },
+    {
+      "index": 538,
+      "Title": "The Last Man ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199552351",
+      "reason": "no_result"
+    },
+    {
+      "index": 539,
+      "Title": "The Last Man and The Journal of Sorrow",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198892793",
+      "reason": "no_result"
+    },
+    {
+      "index": 540,
+      "Title": "The Last of the Mohicans ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538195",
+      "reason": "no_result"
+    },
+    {
+      "index": 541,
+      "Title": "Late Victorian Gothic Tales ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538874",
+      "reason": "no_result"
+    },
+    {
+      "index": 542,
+      "Title": "The Law and the Lady ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538164",
+      "reason": "no_result"
+    },
+    {
+      "index": 543,
+      "Title": "The Law Code of Manu ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555338",
+      "reason": "no_result"
+    },
+    {
+      "index": 544,
+      "Title": "Le Morte Darthur: The Winchester Manuscript",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537341",
+      "reason": "no_result"
+    },
+    {
+      "index": 545,
+      "Title": "Leaves from the Journal of Our Life in the Highlands, 1848-1861 & More Leaves, 1862-1882",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192893864",
+      "reason": "no_result"
+    },
+    {
+      "index": 546,
+      "Title": "Leaves from the Journal of Our Life in the Highlands, 1848-1861 & More Leaves, 1862-1882",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192893857",
+      "reason": "no_result"
+    },
+    {
+      "index": 547,
+      "Title": "Leaves of Grass ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539000",
+      "reason": "no_result"
+    },
+    {
+      "index": 548,
+      "Title": "Leaves of Grass (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192894441",
+      "reason": "no_result"
+    },
+    {
+      "index": 549,
+      "Title": "Les Liaisons dangereuses ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536481",
+      "reason": "no_result"
+    },
+    {
+      "index": 550,
+      "Title": "Letters concerning the English Nation ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555321",
+      "reason": "no_result"
+    },
+    {
+      "index": 551,
+      "Title": "Letters from an American Farmer ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554744",
+      "reason": "no_result"
+    },
+    {
+      "index": 552,
+      "Title": "Letters of a Peruvian Woman",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199208173",
+      "reason": "no_result"
+    },
+    {
+      "index": 553,
+      "Title": "Letters of the Late Ignatius Sancho, an African",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192869609",
+      "reason": "no_result"
+    },
+    {
+      "index": 554,
+      "Title": "Letters Written in Sweden, Norway, and Denmark",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199230631",
+      "reason": "no_result"
+    },
+    {
+      "index": 555,
+      "Title": "Leucippe and Clitophon ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555475",
+      "reason": "no_result"
+    },
+    {
+      "index": 556,
+      "Title": "Leviathan ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537280",
+      "reason": "no_result"
+    },
+    {
+      "index": 557,
+      "Title": "Leviathan (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192868749",
+      "reason": "no_result"
+    },
+    {
+      "index": 558,
+      "Title": "The Liberation of Jerusalem",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535354",
+      "reason": "no_result"
+    },
+    {
+      "index": 559,
+      "Title": "The Library of Greek Mythology ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536320",
+      "reason": "no_result"
+    },
+    {
+      "index": 560,
+      "Title": "The Library,  Books 16-20: Philip II, Alexander the Great, and the Successors",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198759881",
+      "reason": "no_result"
+    },
+    {
+      "index": 561,
+      "Title": "The Life and Opinions of Tristram Shandy, Gentleman (Revised edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199532896",
+      "reason": "no_result"
+    },
+    {
+      "index": 562,
+      "Title": "Life and Times of Frederick Douglass: Written by Himself",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198835325",
+      "reason": "no_result"
+    },
+    {
+      "index": 563,
+      "Title": "The Life of Charlotte Bronte ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554768",
+      "reason": "no_result"
+    },
+    {
+      "index": 564,
+      "Title": "The Life of Christina of Markyate ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199556052",
+      "reason": "no_result"
+    },
+    {
+      "index": 565,
+      "Title": "Life of Johnson ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540211",
+      "reason": "no_result"
+    },
+    {
+      "index": 566,
+      "Title": "Life, Letters, and Poetry ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537365",
+      "reason": "no_result"
+    },
+    {
+      "index": 567,
+      "Title": "Life: The Humble Truth",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555512",
+      "reason": "no_result"
+    },
+    {
+      "index": 568,
+      "Title": "The Lifted Veil: WITH Brother Jacob",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555055",
+      "reason": "no_result"
+    },
+    {
+      "index": 569,
+      "Title": "Literature and Science in the Nineteenth Century ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554652",
+      "reason": "no_result"
+    },
+    {
+      "index": 570,
+      "Title": "Little Dorrit (New Edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199596485",
+      "reason": "no_result"
+    },
+    {
+      "index": 571,
+      "Title": "Little Women ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538119",
+      "reason": "no_result"
+    },
+    {
+      "index": 572,
+      "Title": "The Lives of the Artists ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537198",
+      "reason": "no_result"
+    },
+    {
+      "index": 573,
+      "Title": "Lives of the Caesars ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537563",
+      "reason": "no_result"
+    },
+    {
+      "index": 574,
+      "Title": "The Lives of the Poets: A Selection",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199226740",
+      "reason": "no_result"
+    },
+    {
+      "index": 575,
+      "Title": "London Labour and the London Poor ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199697571",
+      "reason": "no_result"
+    },
+    {
+      "index": 576,
+      "Title": "Looking Backward 2000-1887 ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199552573",
+      "reason": "no_result"
+    },
+    {
+      "index": 577,
+      "Title": "Lord Byron - The Major Works ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537334",
+      "reason": "no_result"
+    },
+    {
+      "index": 578,
+      "Title": "Lord Chesterfield's Letters ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554843",
+      "reason": "no_result"
+    },
+    {
+      "index": 580,
+      "Title": "Lorna Doone: A Romance of Exmoor",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537594",
+      "reason": "no_result"
+    },
+    {
+      "index": 582,
+      "Title": "The Lost World ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538799",
+      "reason": "no_result"
+    },
+    {
+      "index": 583,
+      "Title": "Louise de la Valliere ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538454",
+      "reason": "no_result"
+    },
+    {
+      "index": 584,
+      "Title": "The Love Poems ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540334",
+      "reason": "no_result"
+    },
+    {
+      "index": 585,
+      "Title": "A Love Story",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198728641",
+      "reason": "no_result"
+    },
+    {
+      "index": 586,
+      "Title": "Love's Labour's Lost",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536818",
+      "reason": "no_result"
+    },
+    {
+      "index": 587,
+      "Title": "The Lusiads ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539963",
+      "reason": "no_result"
+    },
+    {
+      "index": 588,
+      "Title": "Lykophron: Alexandra",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198863342",
+      "reason": "no_result"
+    },
+    {
+      "index": 589,
+      "Title": "Lyrical Ballads: 1798 and 1802",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199601967",
+      "reason": "no_result"
+    },
+    {
+      "index": 590,
+      "Title": "The Mabinogion",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199218783",
+      "reason": "no_result"
+    },
+    {
+      "index": 591,
+      "Title": "The Mabinogion",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198815242",
+      "reason": "no_result"
+    },
+    {
+      "index": 592,
+      "Title": "Macbeth: The New Oxford Shakespeare",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192862426",
+      "reason": "no_result"
+    },
+    {
+      "index": 593,
+      "Title": "A Mad World, My Masters and Other Plays ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555413",
+      "reason": "no_result"
+    },
+    {
+      "index": 594,
+      "Title": "Madame Bovary: Provincial Manners",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535651",
+      "reason": "no_result"
+    },
+    {
+      "index": 596,
+      "Title": "The Magic Mountain",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198889175",
+      "reason": "no_result"
+    },
+    {
+      "index": 597,
+      "Title": "Major Cultural Essays",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198817727",
+      "reason": "no_result"
+    },
+    {
+      "index": 598,
+      "Title": "The Major Works ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554690",
+      "reason": "no_result"
+    },
+    {
+      "index": 599,
+      "Title": "Major Works ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199549795",
+      "reason": "no_result"
+    },
+    {
+      "index": 600,
+      "Title": "The Major Works ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538331",
+      "reason": "no_result"
+    },
+    {
+      "index": 601,
+      "Title": "The Major Works ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539185",
+      "reason": "no_result"
+    },
+    {
+      "index": 602,
+      "Title": "The Major Works ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537617",
+      "reason": "no_result"
+    },
+    {
+      "index": 603,
+      "Title": "The Major Works ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538973",
+      "reason": "no_result"
+    },
+    {
+      "index": 604,
+      "Title": "Major Works ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540785",
+      "reason": "no_result"
+    },
+    {
+      "index": 605,
+      "Title": "The Major Works ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199572762",
+      "reason": "no_result"
+    },
+    {
+      "index": 606,
+      "Title": "The Major Works ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536863",
+      "reason": "no_result"
+    },
+    {
+      "index": 607,
+      "Title": "The Major Works: Including Poems, Plays, and Critical Prose",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537495",
+      "reason": "no_result"
+    },
+    {
+      "index": 608,
+      "Title": "Man and Superman, John Bull's Other Island, and Major Barbara",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198828853",
+      "reason": "no_result"
+    },
+    {
+      "index": 609,
+      "Title": "Man and Wife ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538171",
+      "reason": "no_result"
+    },
+    {
+      "index": 610,
+      "Title": "The Man in the Iron Mask ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537259",
+      "reason": "no_result"
+    },
+    {
+      "index": 611,
+      "Title": "The Man of Feeling ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538621",
+      "reason": "no_result"
+    },
+    {
+      "index": 613,
+      "Title": "The Man Who Would be King: and Other Stories",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536474",
+      "reason": "no_result"
+    },
+    {
+      "index": 614,
+      "Title": "Manon Lescaut ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554928",
+      "reason": "no_result"
+    },
+    {
+      "index": 615,
+      "Title": "Mansfield Park",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535538",
+      "reason": "no_result"
+    },
+    {
+      "index": 616,
+      "Title": "The Marble Faun ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554072",
+      "reason": "no_result"
+    },
+    {
+      "index": 618,
+      "Title": "The Marquise de Gange",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198848288",
+      "reason": "no_result"
+    },
+    {
+      "index": 619,
+      "Title": "Martin Chuzzlewit ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554003",
+      "reason": "no_result"
+    },
+    {
+      "index": 620,
+      "Title": "Mary and the Wrongs of Woman (Revised Edition）",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538904",
+      "reason": "no_result"
+    },
+    {
+      "index": 621,
+      "Title": "Mary Barton ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538355",
+      "reason": "no_result"
+    },
+    {
+      "index": 622,
+      "Title": "The Masnavi, Bk. 5",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192857071",
+      "reason": "no_result"
+    },
+    {
+      "index": 624,
+      "Title": "The Masnavi: Bk. 1",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199552313",
+      "reason": "no_result"
+    },
+    {
+      "index": 625,
+      "Title": "The Masnavi: Bk. 2",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199549917",
+      "reason": "no_result"
+    },
+    {
+      "index": 627,
+      "Title": "The Masnavi: Bk. 4",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198783435",
+      "reason": "no_result"
+    },
+    {
+      "index": 628,
+      "Title": "The Masterpiece ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536917",
+      "reason": "no_result"
+    },
+    {
+      "index": 629,
+      "Title": "Mathilda",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192883049",
+      "reason": "no_result"
+    },
+    {
+      "index": 630,
+      "Title": "The Mayor of Casterbridge ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537037",
+      "reason": "no_result"
+    },
+    {
+      "index": 631,
+      "Title": "McTeague: A Story of San Francisco",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554898",
+      "reason": "no_result"
+    },
+    {
+      "index": 632,
+      "Title": "Measure for Measure: The New Oxford Shakespeare",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192865861",
+      "reason": "no_result"
+    },
+    {
+      "index": 633,
+      "Title": "Medea and Other Plays ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537969",
+      "reason": "no_result"
+    },
+    {
+      "index": 634,
+      "Title": "Meditations on First Philosophy ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192806963",
+      "reason": "no_result"
+    },
+    {
+      "index": 635,
+      "Title": "Meditations: With Selected Correspondence",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199573202",
+      "reason": "no_result"
+    },
+    {
+      "index": 636,
+      "Title": "Melmoth the Wanderer ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540297",
+      "reason": "no_result"
+    },
+    {
+      "index": 637,
+      "Title": "A Memoir of Jane Austen: and Other Family Recollections",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540778",
+      "reason": "no_result"
+    },
+    {
+      "index": 638,
+      "Title": "Memoirs from the House of the Dead ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540518",
+      "reason": "no_result"
+    },
+    {
+      "index": 639,
+      "Title": "Memoirs of a Woman of Pleasure ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540235",
+      "reason": "no_result"
+    },
+    {
+      "index": 640,
+      "Title": "Memoirs of Emma Courtney ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555406",
+      "reason": "no_result"
+    },
+    {
+      "index": 642,
+      "Title": "Memories of Socrates: Memorabilia and Apology",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198856092",
+      "reason": "no_result"
+    },
+    {
+      "index": 643,
+      "Title": "Meno and Other Dialogues: Charmides, Laches, Lysis, Meno",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555666",
+      "reason": "no_result"
+    },
+    {
+      "index": 644,
+      "Title": "The Merchant of Venice",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535859",
+      "reason": "no_result"
+    },
+    {
+      "index": 645,
+      "Title": "The Merry Wives of Windsor: The New Oxford Shakespeare",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192873576",
+      "reason": "no_result"
+    },
+    {
+      "index": 646,
+      "Title": "Metamorphoses ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537372",
+      "reason": "no_result"
+    },
+    {
+      "index": 648,
+      "Title": "Middlemarch (3rd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198815518",
+      "reason": "no_result"
+    },
+    {
+      "index": 649,
+      "Title": "A Midsummer Night's Dream",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535866",
+      "reason": "no_result"
+    },
+    {
+      "index": 650,
+      "Title": "The Mill on the Floss (3rd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198707530",
+      "reason": "no_result"
+    },
+    {
+      "index": 651,
+      "Title": "The Misanthrope, Tartuffe, and Other Plays ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540181",
+      "reason": "no_result"
+    },
+    {
+      "index": 652,
+      "Title": "The Misfortunes of Virtue and Other Early Tales ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540426",
+      "reason": "no_result"
+    },
+    {
+      "index": 653,
+      "Title": "Miss Julie and Other Plays ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538041",
+      "reason": "no_result"
+    },
+    {
+      "index": 654,
+      "Title": "Moby-Dick (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198853695",
+      "reason": "no_result"
+    },
+    {
+      "index": 655,
+      "Title": "Moll Flanders ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192805355",
+      "reason": "no_result"
+    },
+    {
+      "index": 656,
+      "Title": "Money ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199608379",
+      "reason": "no_result"
+    },
+    {
+      "index": 657,
+      "Title": "The Monk (New Edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198704454",
+      "reason": "no_result"
+    },
+    {
+      "index": 658,
+      "Title": "The Moonstone (3rd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198819394",
+      "reason": "no_result"
+    },
+    {
+      "index": 659,
+      "Title": "Mrs Beeton's Book of Household Management (Abridged Edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536337",
+      "reason": "no_result"
+    },
+    {
+      "index": 662,
+      "Title": "Mrs Warren's Profession, Candida, and You Never Can Tell",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198803836",
+      "reason": "no_result"
+    },
+    {
+      "index": 663,
+      "Title": "Much Ado About Nothing",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536115",
+      "reason": "no_result"
+    },
+    {
+      "index": 666,
+      "Title": "My Life ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555314",
+      "reason": "no_result"
+    },
+    {
+      "index": 668,
+      "Title": "The Mystery of Edwin Drood ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554614",
+      "reason": "no_result"
+    },
+    {
+      "index": 669,
+      "Title": "Myths from Mesopotamia: Creation, the Flood, Gilgamesh, and Others",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538362",
+      "reason": "no_result"
+    },
+    {
+      "index": 670,
+      "Title": "Nana (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198814269",
+      "reason": "no_result"
+    },
+    {
+      "index": 671,
+      "Title": "The Narrative of Arthur Gordon Pym of Nantucket and Related Tales ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540471",
+      "reason": "no_result"
+    },
+    {
+      "index": 672,
+      "Title": "Narrative of the Life of Frederick Douglass, an American Slave ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539079",
+      "reason": "no_result"
+    },
+    {
+      "index": 673,
+      "Title": "The Natural History of Selborne",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198737759",
+      "reason": "no_result"
+    },
+    {
+      "index": 674,
+      "Title": "The Natural History of Selborne",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192847447",
+      "reason": "no_result"
+    },
+    {
+      "index": 675,
+      "Title": "Natural Theology",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535750",
+      "reason": "no_result"
+    },
+    {
+      "index": 676,
+      "Title": "The Nature of the Gods ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540068",
+      "reason": "no_result"
+    },
+    {
+      "index": 677,
+      "Title": "The Nether World ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538287",
+      "reason": "no_result"
+    },
+    {
+      "index": 678,
+      "Title": "New Grub Street (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198729181",
+      "reason": "no_result"
+    },
+    {
+      "index": 679,
+      "Title": "The New Negro",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198911456",
+      "reason": "no_result"
+    },
+    {
+      "index": 680,
+      "Title": "News from Nowhere ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539192",
+      "reason": "no_result"
+    },
+    {
+      "index": 681,
+      "Title": "The Nibelungenlied: The Lay of the Nibelungs",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199238545",
+      "reason": "no_result"
+    },
+    {
+      "index": 682,
+      "Title": "Nicholas Nickleby ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538225",
+      "reason": "no_result"
+    },
+    {
+      "index": 683,
+      "Title": "The Nicomachean Ethics",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199213610",
+      "reason": "no_result"
+    },
+    {
+      "index": 684,
+      "Title": "Night and Day ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555604",
+      "reason": "no_result"
+    },
+    {
+      "index": 685,
+      "Title": "Nineteen Eighty-Four",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198829195",
+      "reason": "no_result"
+    },
+    {
+      "index": 686,
+      "Title": "No Name ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536733",
+      "reason": "no_result"
+    },
+    {
+      "index": 687,
+      "Title": "North and South ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537006",
+      "reason": "no_result"
+    },
+    {
+      "index": 688,
+      "Title": "Northanger Abbey (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198841067",
+      "reason": "no_result"
+    },
+    {
+      "index": 689,
+      "Title": "Northanger Abbey: Lady Susan ; The Watsons ; Sanditon: WITH Lady Susan: AND The Watsons: AND Sanditon",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535545",
+      "reason": "no_result"
+    },
+    {
+      "index": 690,
+      "Title": "Nostromo: A Tale of the Seaboard",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555918",
+      "reason": "no_result"
+    },
+    {
+      "index": 691,
+      "Title": "Notebooks",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199299027",
+      "reason": "no_result"
+    },
+    {
+      "index": 692,
+      "Title": "The Notebooks of Malte Laurids Brigge ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199646036",
+      "reason": "no_result"
+    },
+    {
+      "index": 693,
+      "Title": "Notes from the Underground: WITH The Gambler",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536382",
+      "reason": "no_result"
+    },
+    {
+      "index": 694,
+      "Title": "Notre-Dame de Paris ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555802",
+      "reason": "no_result"
+    },
+    {
+      "index": 695,
+      "Title": "The Nun",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555246",
+      "reason": "no_result"
+    },
+    {
+      "index": 696,
+      "Title": "O Pioneers! ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199552320",
+      "reason": "no_result"
+    },
+    {
+      "index": 697,
+      "Title": "Occasional, Critical, and Political Writing ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199553969",
+      "reason": "no_result"
+    },
+    {
+      "index": 698,
+      "Title": "The Odd Women ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538300",
+      "reason": "no_result"
+    },
+    {
+      "index": 699,
+      "Title": "The Odyssey",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199669103",
+      "reason": "no_result"
+    },
+    {
+      "index": 700,
+      "Title": "The Odyssey ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536788",
+      "reason": "no_result"
+    },
+    {
+      "index": 701,
+      "Title": "The Odyssey ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198736479",
+      "reason": "no_result"
+    },
+    {
+      "index": 702,
+      "Title": "Oedipus the King and Other Tragedies ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192806857",
+      "reason": "no_result"
+    },
+    {
+      "index": 703,
+      "Title": "The Old Curiosity Shop ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538232",
+      "reason": "no_result"
+    },
+    {
+      "index": 704,
+      "Title": "The Old English Baron ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199549740",
+      "reason": "no_result"
+    },
+    {
+      "index": 705,
+      "Title": "Old Mortality ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555307",
+      "reason": "no_result"
+    },
+    {
+      "index": 706,
+      "Title": "Oliver Twist ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536269",
+      "reason": "no_result"
+    },
+    {
+      "index": 707,
+      "Title": "On Christian Teaching ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540631",
+      "reason": "no_result"
+    },
+    {
+      "index": 708,
+      "Title": "On Liberty, Utilitarianism and Other Essays (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199670802",
+      "reason": "no_result"
+    },
+    {
+      "index": 709,
+      "Title": "On Life and Death",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199644148",
+      "reason": "no_result"
+    },
+    {
+      "index": 710,
+      "Title": "On Murder ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539048",
+      "reason": "no_result"
+    },
+    {
+      "index": 711,
+      "Title": "On Obligations: De Officiis",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540716",
+      "reason": "no_result"
+    },
+    {
+      "index": 712,
+      "Title": "On the Genealogy of Morals: A Polemic",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537082",
+      "reason": "no_result"
+    },
+    {
+      "index": 713,
+      "Title": "On the Nature of the Universe ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555147",
+      "reason": "no_result"
+    },
+    {
+      "index": 714,
+      "Title": "On the Origin of Species",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199219223",
+      "reason": "no_result"
+    },
+    {
+      "index": 715,
+      "Title": "On the Soul: and Other Psychological works",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199588213",
+      "reason": "no_result"
+    },
+    {
+      "index": 716,
+      "Title": "On War ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540020",
+      "reason": "no_result"
+    },
+    {
+      "index": 717,
+      "Title": "The Oregon Trail ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199553921",
+      "reason": "no_result"
+    },
+    {
+      "index": 718,
+      "Title": "Oresteia ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537815",
+      "reason": "no_result"
+    },
+    {
+      "index": 719,
+      "Title": "Orestes and Other Plays ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199552436",
+      "reason": "no_result"
+    },
+    {
+      "index": 720,
+      "Title": "The Origins of Science Fiction",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198891949",
+      "reason": "no_result"
+    },
+    {
+      "index": 721,
+      "Title": "The Origins of Science Fiction",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198853619",
+      "reason": "no_result"
+    },
+    {
+      "index": 722,
+      "Title": "Orlando (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199650736",
+      "reason": "no_result"
+    },
+    {
+      "index": 723,
+      "Title": "Orlando Furioso ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540389",
+      "reason": "no_result"
+    },
+    {
+      "index": 724,
+      "Title": "Orley Farm (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198803744",
+      "reason": "no_result"
+    },
+    {
+      "index": 725,
+      "Title": "Oroonoko and Other Writings ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538768",
+      "reason": "no_result"
+    },
+    {
+      "index": 726,
+      "Title": "Oscar Wilde - The Major Works ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540761",
+      "reason": "no_result"
+    },
+    {
+      "index": 727,
+      "Title": "Oscar Wilde (Authors in Context)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555215",
+      "reason": "no_result"
+    },
+    {
+      "index": 728,
+      "Title": "Othello - The Moor of Venice",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535873",
+      "reason": "no_result"
+    },
+    {
+      "index": 729,
+      "Title": "Our Mutual Friend ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536252",
+      "reason": "no_result"
+    },
+    {
+      "index": 730,
+      "Title": "Ourika, Édouard, and Olivier",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192889720",
+      "reason": "no_result"
+    },
+    {
+      "index": 731,
+      "Title": "Outlines of the Philosophy of Right ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192806109",
+      "reason": "no_result"
+    },
+    {
+      "index": 732,
+      "Title": "A Pair of Blue Eyes ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538492",
+      "reason": "no_result"
+    },
+    {
+      "index": 733,
+      "Title": "Pamela: Or Virtue Rewarded",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536498",
+      "reason": "no_result"
+    },
+    {
+      "index": 734,
+      "Title": "Pan",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192893451",
+      "reason": "no_result"
+    },
+    {
+      "index": 735,
+      "Title": "Pancatantra: The Book of India's Folk Wisdom",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555758",
+      "reason": "no_result"
+    },
+    {
+      "index": 736,
+      "Title": "Paradise Lost",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535743",
+      "reason": "no_result"
+    },
+    {
+      "index": 737,
+      "Title": "Parzival and Titurel ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539208",
+      "reason": "no_result"
+    },
+    {
+      "index": 738,
+      "Title": "The Passions of the Soul and Other Late Philosophical Writings ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199684137",
+      "reason": "no_result"
+    },
+    {
+      "index": 739,
+      "Title": "Past and Present",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198841081",
+      "reason": "no_result"
+    },
+    {
+      "index": 740,
+      "Title": "The Paston Letters: A Selection in Modern Spelling",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538379",
+      "reason": "no_result"
+    },
+    {
+      "index": 741,
+      "Title": "Peer Gynt: A Dramatic Poem",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555536",
+      "reason": "no_result"
+    },
+    {
+      "index": 742,
+      "Title": "The Peloponnesian War ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192821911",
+      "reason": "no_result"
+    },
+    {
+      "index": 743,
+      "Title": "Pensees and Other Writings ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540365",
+      "reason": "no_result"
+    },
+    {
+      "index": 744,
+      "Title": "Pere Goriot ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538751",
+      "reason": "no_result"
+    },
+    {
+      "index": 745,
+      "Title": "Pericles",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536832",
+      "reason": "no_result"
+    },
+    {
+      "index": 746,
+      "Title": "Persian Letters ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192806352",
+      "reason": "no_result"
+    },
+    {
+      "index": 747,
+      "Title": "Persians and Other Plays ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192832825",
+      "reason": "no_result"
+    },
+    {
+      "index": 748,
+      "Title": "Persuasion",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535552",
+      "reason": "no_result"
+    },
+    {
+      "index": 749,
+      "Title": "Peter Pan and Other Plays: \"Admirable Crichton\", \"Peter Pan\", \"When Wendy Grew Up\", \"What Every Woman Knows\", \"Mary Rose\"",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537839",
+      "reason": "no_result"
+    },
+    {
+      "index": 750,
+      "Title": "Peter Pan in Kensington Gardens / Peter and Wendy ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537846",
+      "reason": "no_result"
+    },
+    {
+      "index": 751,
+      "Title": "Phaedo ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538935",
+      "reason": "no_result"
+    },
+    {
+      "index": 752,
+      "Title": "Phaedrus ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554027",
+      "reason": "no_result"
+    },
+    {
+      "index": 753,
+      "Title": "The Phantom of the Opera ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199694570",
+      "reason": "no_result"
+    },
+    {
+      "index": 754,
+      "Title": "A Philosophical Enquiry into the Origin of our Ideas of the Sublime and the Beautiful (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199668717",
+      "reason": "no_result"
+    },
+    {
+      "index": 755,
+      "Title": "Phineas Finn (Palliser novels)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199581436",
+      "reason": "no_result"
+    },
+    {
+      "index": 756,
+      "Title": "Phineas Redux (Palliser novels) ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199583485",
+      "reason": "no_result"
+    },
+    {
+      "index": 757,
+      "Title": "Physics ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540280",
+      "reason": "no_result"
+    },
+    {
+      "index": 758,
+      "Title": "The Pickwick Papers ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536245",
+      "reason": "no_result"
+    },
+    {
+      "index": 759,
+      "Title": "The Picture of Dorian Gray",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535989",
+      "reason": "no_result"
+    },
+    {
+      "index": 760,
+      "Title": "Piers Plowman: A New Translation of the B-text",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555260",
+      "reason": "no_result"
+    },
+    {
+      "index": 761,
+      "Title": "The Pilgrim's Progress ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538133",
+      "reason": "no_result"
+    },
+    {
+      "index": 762,
+      "Title": "The Pit and the Pendulum and Other Tales (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198827290",
+      "reason": "no_result"
+    },
+    {
+      "index": 763,
+      "Title": "Plain Tales from the Hills",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538614",
+      "reason": "no_result"
+    },
+    {
+      "index": 764,
+      "Title": "Playlets",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198804987",
+      "reason": "no_result"
+    },
+    {
+      "index": 765,
+      "Title": "The Plays and Fragments ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540730",
+      "reason": "no_result"
+    },
+    {
+      "index": 766,
+      "Title": "Plays and Petersburg Tales: Petersburg Tales, Marriage, the Government Inspector",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555062",
+      "reason": "no_result"
+    },
+    {
+      "index": 767,
+      "Title": "A Pocket Philosophical Dictionary ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199553631",
+      "reason": "no_result"
+    },
+    {
+      "index": 768,
+      "Title": "The Poems ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555925",
+      "reason": "no_result"
+    },
+    {
+      "index": 769,
+      "Title": "Poems and Prose ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192807151",
+      "reason": "no_result"
+    },
+    {
+      "index": 770,
+      "Title": "The Poems of Catullus ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537570",
+      "reason": "no_result"
+    },
+    {
+      "index": 771,
+      "Title": "The Poetic Edda",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198834571",
+      "reason": "no_result"
+    },
+    {
+      "index": 772,
+      "Title": "The Poetic Edda (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199675340",
+      "reason": "no_result"
+    },
+    {
+      "index": 773,
+      "Title": "Poetics ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199608362",
+      "reason": "no_result"
+    },
+    {
+      "index": 774,
+      "Title": "Poetry of the First World War: An Anthology",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198703204",
+      "reason": "no_result"
+    },
+    {
+      "index": 775,
+      "Title": "Poetry of the Second World War",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198729082",
+      "reason": "no_result"
+    },
+    {
+      "index": 776,
+      "Title": "Political Speeches ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540136",
+      "reason": "no_result"
+    },
+    {
+      "index": 777,
+      "Title": "Political Writings",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198816591",
+      "reason": "no_result"
+    },
+    {
+      "index": 778,
+      "Title": "The Politics ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538737",
+      "reason": "no_result"
+    },
+    {
+      "index": 779,
+      "Title": "Poor Miss Finch ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554065",
+      "reason": "no_result"
+    },
+    {
+      "index": 780,
+      "Title": "The Portrait of a Lady",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199217946",
+      "reason": "no_result"
+    },
+    {
+      "index": 781,
+      "Title": "A Portrait of the Artist as a Young Man ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536443",
+      "reason": "no_result"
+    },
+    {
+      "index": 782,
+      "Title": "Pot Luck (Pot-Bouille) ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538706",
+      "reason": "no_result"
+    },
+    {
+      "index": 783,
+      "Title": "Praeterita ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192802415",
+      "reason": "no_result"
+    },
+    {
+      "index": 784,
+      "Title": "Pride and Prejudice (3rd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198826736",
+      "reason": "no_result"
+    },
+    {
+      "index": 785,
+      "Title": "The Prime Minister (Palliser novels)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199587193",
+      "reason": "no_result"
+    },
+    {
+      "index": 786,
+      "Title": "The Prince",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535699",
+      "reason": "no_result"
+    },
+    {
+      "index": 787,
+      "Title": "The Princesse De Clèves: With The Princesse De Montpensier and The Comtesse De Tende (Reissue)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539178",
+      "reason": "no_result"
+    },
+    {
+      "index": 788,
+      "Title": "Principles of Human Knowledge and Three Dialogues ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555178",
+      "reason": "no_result"
+    },
+    {
+      "index": 789,
+      "Title": "Principles of Political Economy and Chapters on Socialism ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199553914",
+      "reason": "no_result"
+    },
+    {
+      "index": 790,
+      "Title": "The Prisoner of Zenda (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198841098",
+      "reason": "no_result"
+    },
+    {
+      "index": 791,
+      "Title": "The Private Memoirs and Confessions of a Justified Sinner",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199217953",
+      "reason": "no_result"
+    },
+    {
+      "index": 792,
+      "Title": "The Professor ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536672",
+      "reason": "no_result"
+    },
+    {
+      "index": 793,
+      "Title": "The Professor's House",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198861355",
+      "reason": "no_result"
+    },
+    {
+      "index": 794,
+      "Title": "Protagoras ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555659",
+      "reason": "no_result"
+    },
+    {
+      "index": 795,
+      "Title": "Pudd'nhead Wilson and Other Tales ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554713",
+      "reason": "no_result"
+    },
+    {
+      "index": 796,
+      "Title": "Pygmalion, Heartbreak House, and Saint Joan",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198793281",
+      "reason": "no_result"
+    },
+    {
+      "index": 797,
+      "Title": "The Queen of Spades and Other Stories ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538652",
+      "reason": "no_result"
+    },
+    {
+      "index": 798,
+      "Title": "The Qur'an",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535958",
+      "reason": "no_result"
+    },
+    {
+      "index": 799,
+      "Title": "Rachel Ray ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537761",
+      "reason": "no_result"
+    },
+    {
+      "index": 800,
+      "Title": "Raffles: The Amateur Cracksman",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192866349",
+      "reason": "no_result"
+    },
+    {
+      "index": 801,
+      "Title": "The Ragged Trousered Philanthropists ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537471",
+      "reason": "no_result"
+    },
+    {
+      "index": 802,
+      "Title": "The Rainbow ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199553853",
+      "reason": "no_result"
+    },
+    {
+      "index": 803,
+      "Title": "The Recognition of Sakuntala: A Play in Seven Acts",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540600",
+      "reason": "no_result"
+    },
+    {
+      "index": 804,
+      "Title": "The Red and the Black: A Chronicles of the Nineteenth Century",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539253",
+      "reason": "no_result"
+    },
+    {
+      "index": 805,
+      "Title": "The Red Badge of Courage and Other Stories ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199552542",
+      "reason": "no_result"
+    },
+    {
+      "index": 806,
+      "Title": "Redgauntlet ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199599578",
+      "reason": "no_result"
+    },
+    {
+      "index": 807,
+      "Title": "Reflections on the Revolution in France ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539024",
+      "reason": "no_result"
+    },
+    {
+      "index": 808,
+      "Title": "Repetition and Philosophical Crumbs",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199214198",
+      "reason": "no_result"
+    },
+    {
+      "index": 809,
+      "Title": "Republic",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535767",
+      "reason": "no_result"
+    },
+    {
+      "index": 810,
+      "Title": "The Republic; AND The Laws ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540112",
+      "reason": "no_result"
+    },
+    {
+      "index": 811,
+      "Title": "Restoration Literature: An Anthology",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555192",
+      "reason": "no_result"
+    },
+    {
+      "index": 812,
+      "Title": "Resurrection ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555765",
+      "reason": "no_result"
+    },
+    {
+      "index": 813,
+      "Title": "The Return of Sherlock Holmes",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198856702",
+      "reason": "no_result"
+    },
+    {
+      "index": 814,
+      "Title": "The Return of the Native ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537044",
+      "reason": "no_result"
+    },
+    {
+      "index": 815,
+      "Title": "Revelations of Divine Love ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199641185",
+      "reason": "no_result"
+    },
+    {
+      "index": 816,
+      "Title": "Reveries of the Solitary Walker ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199563272",
+      "reason": "no_result"
+    },
+    {
+      "index": 817,
+      "Title": "Richard II",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199602285",
+      "reason": "no_result"
+    },
+    {
+      "index": 818,
+      "Title": "Richard II: The New Oxford Shakespeare",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198881964",
+      "reason": "no_result"
+    },
+    {
+      "index": 819,
+      "Title": "The Riddle of the Sands: A Record of Secret Service",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199549719",
+      "reason": "no_result"
+    },
+    {
+      "index": 820,
+      "Title": "Riders to the Sea; The Shadow of the Glen; The Tinker's Wedding; The Well of the Saints; The Playboy of the Western World; Deirdre of the Sorrows",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538058",
+      "reason": "no_result"
+    },
+    {
+      "index": 821,
+      "Title": "Rights of Man, Common Sense, and Other Political Writings ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538003",
+      "reason": "no_result"
+    },
+    {
+      "index": 822,
+      "Title": "The Rise of Rome: Bks. 1-5",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540044",
+      "reason": "no_result"
+    },
+    {
+      "index": 823,
+      "Title": "The Road to Wigan Pier",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198850908",
+      "reason": "no_result"
+    },
+    {
+      "index": 824,
+      "Title": "The Roaring Girl and Other City Comedies ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540105",
+      "reason": "no_result"
+    },
+    {
+      "index": 825,
+      "Title": "Rob Roy ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199549887",
+      "reason": "no_result"
+    },
+    {
+      "index": 826,
+      "Title": "Robinson Crusoe ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199553976",
+      "reason": "no_result"
+    },
+    {
+      "index": 827,
+      "Title": "Roman de Brut",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192871268",
+      "reason": "no_result"
+    },
+    {
+      "index": 828,
+      "Title": "Roman Lives: A Selection of Eight Lives",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537389",
+      "reason": "no_result"
+    },
+    {
+      "index": 829,
+      "Title": "The Romance of the Forest ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539222",
+      "reason": "no_result"
+    },
+    {
+      "index": 830,
+      "Title": "The Romance of the Rose ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540679",
+      "reason": "no_result"
+    },
+    {
+      "index": 831,
+      "Title": "Rome's Italian Wars: Bks 6-10",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199564859",
+      "reason": "no_result"
+    },
+    {
+      "index": 832,
+      "Title": "Rome's Mediterranean Empire: Bks. 41-45 and the Periochae",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199556021",
+      "reason": "no_result"
+    },
+    {
+      "index": 833,
+      "Title": "Romeo and Juliet: The New Oxford Shakespeare",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192866363",
+      "reason": "no_result"
+    },
+    {
+      "index": 834,
+      "Title": "A Room of One's Own/Three Guineas (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199642212",
+      "reason": "no_result"
+    },
+    {
+      "index": 835,
+      "Title": "The Rover and Other Plays ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540204",
+      "reason": "no_result"
+    },
+    {
+      "index": 836,
+      "Title": "Roxana: The Fortunate Mistress",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536740",
+      "reason": "no_result"
+    },
+    {
+      "index": 837,
+      "Title": "Rubaiyat of Omar Khayyam ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199580507",
+      "reason": "no_result"
+    },
+    {
+      "index": 838,
+      "Title": "The Russian Master and other Stories ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554874",
+      "reason": "no_result"
+    },
+    {
+      "index": 839,
+      "Title": "Ruth ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199581955",
+      "reason": "no_result"
+    },
+    {
+      "index": 840,
+      "Title": "Sa'iba",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198921684",
+      "reason": "no_result"
+    },
+    {
+      "index": 841,
+      "Title": "Samuel Taylor Coleridge - The Major Works ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537914",
+      "reason": "no_result"
+    },
+    {
+      "index": 842,
+      "Title": "Sanditon",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198840831",
+      "reason": "no_result"
+    },
+    {
+      "index": 843,
+      "Title": "Sartor Resartus ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540372",
+      "reason": "no_result"
+    },
+    {
+      "index": 844,
+      "Title": "The Satires ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540662",
+      "reason": "no_result"
+    },
+    {
+      "index": 845,
+      "Title": "Satires and Epistles ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199563289",
+      "reason": "no_result"
+    },
+    {
+      "index": 846,
+      "Title": "The Satyricon ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539215",
+      "reason": "no_result"
+    },
+    {
+      "index": 847,
+      "Title": "Sayings and Anecdotes: with Other Popular Moralists",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199589241",
+      "reason": "no_result"
+    },
+    {
+      "index": 848,
+      "Title": "Sayings of the Buddha: New Translations from the Pali Nikayas",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192839251",
+      "reason": "no_result"
+    },
+    {
+      "index": 849,
+      "Title": "The Scarlet Letter ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537808",
+      "reason": "no_result"
+    },
+    {
+      "index": 850,
+      "Title": "The Scarlet Pimpernel",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198791225",
+      "reason": "no_result"
+    },
+    {
+      "index": 851,
+      "Title": "Scenes of Clerical Life (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199689606",
+      "reason": "no_result"
+    },
+    {
+      "index": 852,
+      "Title": "The School for Scandal and Other Plays ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540099",
+      "reason": "no_result"
+    },
+    {
+      "index": 853,
+      "Title": "Scottish Poetry, 1730-1830",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198803553",
+      "reason": "no_result"
+    },
+    {
+      "index": 854,
+      "Title": "Scouting for Boys: A Handbook for Instruction in Good Citizenship",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198900344",
+      "reason": "no_result"
+    },
+    {
+      "index": 855,
+      "Title": "Scouting for Boys: A Handbook for Instruction in Good Citizenship",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198799993",
+      "reason": "no_result"
+    },
+    {
+      "index": 856,
+      "Title": "The Sea-Wolf ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554942",
+      "reason": "no_result"
+    },
+    {
+      "index": 857,
+      "Title": "Second Treatise of Government and a Letter Concerning Toleration",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198732440",
+      "reason": "no_result"
+    },
+    {
+      "index": 858,
+      "Title": "The Secret Agent: A Simple Tale",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536351",
+      "reason": "no_result"
+    },
+    {
+      "index": 859,
+      "Title": "The Secret Garden ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199588220",
+      "reason": "no_result"
+    },
+    {
+      "index": 860,
+      "Title": "Selected Dialogues ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555932",
+      "reason": "no_result"
+    },
+    {
+      "index": 861,
+      "Title": "Selected Essays",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198804178",
+      "reason": "no_result"
+    },
+    {
+      "index": 862,
+      "Title": "Selected Essays ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540303",
+      "reason": "no_result"
+    },
+    {
+      "index": 863,
+      "Title": "Selected Essays ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199556069",
+      "reason": "no_result"
+    },
+    {
+      "index": 864,
+      "Title": "Selected Letters",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199214204",
+      "reason": "no_result"
+    },
+    {
+      "index": 865,
+      "Title": "Selected Letters",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199533213",
+      "reason": "no_result"
+    },
+    {
+      "index": 866,
+      "Title": "Selected Letters ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538430",
+      "reason": "no_result"
+    },
+    {
+      "index": 868,
+      "Title": "Selected Letters ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555734",
+      "reason": "no_result"
+    },
+    {
+      "index": 869,
+      "Title": "Selected Myths ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199552559",
+      "reason": "no_result"
+    },
+    {
+      "index": 870,
+      "Title": "Selected Philosophical Writings ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540273",
+      "reason": "no_result"
+    },
+    {
+      "index": 871,
+      "Title": "Selected Poems",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192847997",
+      "reason": "no_result"
+    },
+    {
+      "index": 872,
+      "Title": "Selected Poems ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199584321",
+      "reason": "no_result"
+    },
+    {
+      "index": 873,
+      "Title": "Selected Poems ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554010",
+      "reason": "no_result"
+    },
+    {
+      "index": 874,
+      "Title": "Selected Poems and Songs ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199682324",
+      "reason": "no_result"
+    },
+    {
+      "index": 875,
+      "Title": "Selected Poems: With Parallel French Text",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199687596",
+      "reason": "no_result"
+    },
+    {
+      "index": 876,
+      "Title": "Selected Poems: With Parallel German Text",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199569410",
+      "reason": "no_result"
+    },
+    {
+      "index": 877,
+      "Title": "Selected Poems: With Parallel Spanish Text",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199556014",
+      "reason": "no_result"
+    },
+    {
+      "index": 878,
+      "Title": "Selected Poetry ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538782",
+      "reason": "no_result"
+    },
+    {
+      "index": 879,
+      "Title": "Selected Poetry ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555826",
+      "reason": "no_result"
+    },
+    {
+      "index": 880,
+      "Title": "Selected Poetry ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539062",
+      "reason": "no_result"
+    },
+    {
+      "index": 881,
+      "Title": "Selected Poetry ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538508",
+      "reason": "no_result"
+    },
+    {
+      "index": 882,
+      "Title": "Selected Poetry ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537297",
+      "reason": "no_result"
+    },
+    {
+      "index": 883,
+      "Title": "Selected Poetry ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199553952",
+      "reason": "no_result"
+    },
+    {
+      "index": 884,
+      "Title": "Selected Poetry ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537600",
+      "reason": "no_result"
+    },
+    {
+      "index": 885,
+      "Title": "Selected Poetry ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536887",
+      "reason": "no_result"
+    },
+    {
+      "index": 886,
+      "Title": "Selected Short Stories",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192865816",
+      "reason": "no_result"
+    },
+    {
+      "index": 887,
+      "Title": "Selected Speeches ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199593774",
+      "reason": "no_result"
+    },
+    {
+      "index": 888,
+      "Title": "Selected Stories ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537358",
+      "reason": "no_result"
+    },
+    {
+      "index": 889,
+      "Title": "Selected Tales ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555581",
+      "reason": "no_result"
+    },
+    {
+      "index": 890,
+      "Title": "Selected Tales (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535774",
+      "reason": "no_result"
+    },
+    {
+      "index": 891,
+      "Title": "Selected Writings ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199583690",
+      "reason": "no_result"
+    },
+    {
+      "index": 892,
+      "Title": "Selected Writings ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199552528",
+      "reason": "no_result"
+    },
+    {
+      "index": 893,
+      "Title": "Selected Writings ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539246",
+      "reason": "no_result"
+    },
+    {
+      "index": 894,
+      "Title": "Selections from the \"Canzoniere\" and Other Works ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540693",
+      "reason": "no_result"
+    },
+    {
+      "index": 895,
+      "Title": "Self-Help ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199552450",
+      "reason": "no_result"
+    },
+    {
+      "index": 896,
+      "Title": "Sense and Sensibility (3rd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198793359",
+      "reason": "no_result"
+    },
+    {
+      "index": 897,
+      "Title": "Sense and Sensibility (3rd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198807452",
+      "reason": "no_result"
+    },
+    {
+      "index": 898,
+      "Title": "Sentimental Education (New edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199686636",
+      "reason": "no_result"
+    },
+    {
+      "index": 899,
+      "Title": "A Sentimental Journey and Other Writings ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537181",
+      "reason": "no_result"
+    },
+    {
+      "index": 900,
+      "Title": "The Shadow-line: A Confession (Revised edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555567",
+      "reason": "no_result"
+    },
+    {
+      "index": 901,
+      "Title": "She ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536429",
+      "reason": "no_result"
+    },
+    {
+      "index": 902,
+      "Title": "She Stoops to Conquer and Other Comedies ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199553884",
+      "reason": "no_result"
+    },
+    {
+      "index": 903,
+      "Title": "Sherlock Holmes. Selected Stories (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199672066",
+      "reason": "no_result"
+    },
+    {
+      "index": 904,
+      "Title": "Shirley ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540808",
+      "reason": "no_result"
+    },
+    {
+      "index": 905,
+      "Title": "A Sicilian Romance ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537396",
+      "reason": "no_result"
+    },
+    {
+      "index": 906,
+      "Title": "The Sidney Psalter: The Psalms of Sir Philip and Mary Sidney",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199217939",
+      "reason": "no_result"
+    },
+    {
+      "index": 907,
+      "Title": "The Sign of Four",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198862123",
+      "reason": "no_result"
+    },
+    {
+      "index": 908,
+      "Title": "Silas Marner: The Weaver of Raveloe (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198724643",
+      "reason": "no_result"
+    },
+    {
+      "index": 909,
+      "Title": "A Simple Story ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554720",
+      "reason": "no_result"
+    },
+    {
+      "index": 910,
+      "Title": "The Sin of Abbé Mouret",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198736639",
+      "reason": "no_result"
+    },
+    {
+      "index": 911,
+      "Title": "Sir Gawain and The Green Knight ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540167",
+      "reason": "no_result"
+    },
+    {
+      "index": 912,
+      "Title": "Sir Philip Sidney: The Major Works",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538416",
+      "reason": "no_result"
+    },
+    {
+      "index": 913,
+      "Title": "Sister Carrie ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539086",
+      "reason": "no_result"
+    },
+    {
+      "index": 914,
+      "Title": "Six French Poets of the Nineteenth Century ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554782",
+      "reason": "no_result"
+    },
+    {
+      "index": 915,
+      "Title": "Six Tragedies ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192807069",
+      "reason": "no_result"
+    },
+    {
+      "index": 916,
+      "Title": "The Sketch-Book of Geoffrey Crayon, Gent",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555819",
+      "reason": "no_result"
+    },
+    {
+      "index": 917,
+      "Title": "The Small House at Allington (The Chronicles of Barsetshire)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199662777",
+      "reason": "no_result"
+    },
+    {
+      "index": 918,
+      "Title": "Snow White and Other Tales",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198833840",
+      "reason": "no_result"
+    },
+    {
+      "index": 919,
+      "Title": "So You Think You Know Jane Austen?: A Literary Quizbook",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538997",
+      "reason": "no_result"
+    },
+    {
+      "index": 920,
+      "Title": "Sodom and Gomorrah",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192846181",
+      "reason": "no_result"
+    },
+    {
+      "index": 921,
+      "Title": "A Son at the Front",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198859550",
+      "reason": "no_result"
+    },
+    {
+      "index": 922,
+      "Title": "The Song of Roland and Other Poems of Charlemagne ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199655540",
+      "reason": "no_result"
+    },
+    {
+      "index": 923,
+      "Title": "Sons and Lovers ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538881",
+      "reason": "no_result"
+    },
+    {
+      "index": 924,
+      "Title": "The Sorrows of Young Werther ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199583027",
+      "reason": "no_result"
+    },
+    {
+      "index": 925,
+      "Title": "The Souls of Black Folk ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555833",
+      "reason": "no_result"
+    },
+    {
+      "index": 926,
+      "Title": "South Sea Tales",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536085",
+      "reason": "no_result"
+    },
+    {
+      "index": 927,
+      "Title": "Specimen Days",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198861386",
+      "reason": "no_result"
+    },
+    {
+      "index": 928,
+      "Title": "The Spirit of Controversy: and Other Essays",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199591954",
+      "reason": "no_result"
+    },
+    {
+      "index": 929,
+      "Title": "The Spoils of Poynton ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199552481",
+      "reason": "no_result"
+    },
+    {
+      "index": 930,
+      "Title": "The Steppe and Other Stories ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555451",
+      "reason": "no_result"
+    },
+    {
+      "index": 931,
+      "Title": "Stories and Poems ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198723431",
+      "reason": "no_result"
+    },
+    {
+      "index": 932,
+      "Title": "The Story of an African Farm ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538010",
+      "reason": "no_result"
+    },
+    {
+      "index": 933,
+      "Title": "Strange Case of Dr Jekyll and Mr Hyde and Other Tales ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536221",
+      "reason": "no_result"
+    },
+    {
+      "index": 934,
+      "Title": "Studies in the History of the Renaissance",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535071",
+      "reason": "no_result"
+    },
+    {
+      "index": 935,
+      "Title": "A Study in Scarlet (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198856047",
+      "reason": "no_result"
+    },
+    {
+      "index": 936,
+      "Title": "Summer ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198709985",
+      "reason": "no_result"
+    },
+    {
+      "index": 937,
+      "Title": "Swann in Love",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198744894",
+      "reason": "no_result"
+    },
+    {
+      "index": 938,
+      "Title": "The Swann Way",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198871521",
+      "reason": "no_result"
+    },
+    {
+      "index": 939,
+      "Title": "Sybil: or the Two Nations (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198759898",
+      "reason": "no_result"
+    },
+    {
+      "index": 940,
+      "Title": "Sylvia's Lovers (2nd Edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199656738",
+      "reason": "no_result"
+    },
+    {
+      "index": 941,
+      "Title": "Symposium ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540198",
+      "reason": "no_result"
+    },
+    {
+      "index": 942,
+      "Title": "A Tale of a Tub and Other Works ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199549788",
+      "reason": "no_result"
+    },
+    {
+      "index": 943,
+      "Title": "The Tale of Sinuhe ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555628",
+      "reason": "no_result"
+    },
+    {
+      "index": 944,
+      "Title": "A Tale of Two Cities ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536238",
+      "reason": "no_result"
+    },
+    {
+      "index": 945,
+      "Title": "Tales of Glass Town, Angria, and Gondal ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192827630",
+      "reason": "no_result"
+    },
+    {
+      "index": 946,
+      "Title": "Tales of the Elders of Ireland ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199549856",
+      "reason": "no_result"
+    },
+    {
+      "index": 947,
+      "Title": "Tales of the Jazz Age (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198856085",
+      "reason": "no_result"
+    },
+    {
+      "index": 948,
+      "Title": "The Taming of the Shrew",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536528",
+      "reason": "no_result"
+    },
+    {
+      "index": 949,
+      "Title": "Tarr ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199567201",
+      "reason": "no_result"
+    },
+    {
+      "index": 950,
+      "Title": "Tarzan of the Apes",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199542888",
+      "reason": "no_result"
+    },
+    {
+      "index": 952,
+      "Title": "The Tempest: The New Oxford Shakespeare",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192865878",
+      "reason": "no_result"
+    },
+    {
+      "index": 953,
+      "Title": "The Tenant of Wildfell Hall",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199207558",
+      "reason": "no_result"
+    },
+    {
+      "index": 954,
+      "Title": "Tess of the d'Urbervilles ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537051",
+      "reason": "no_result"
+    },
+    {
+      "index": 955,
+      "Title": "Theaetetus ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199646166",
+      "reason": "no_result"
+    },
+    {
+      "index": 956,
+      "Title": "Theogony and Works and Days ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538317",
+      "reason": "no_result"
+    },
+    {
+      "index": 957,
+      "Title": "The Theory of the Leisure Class ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199552580",
+      "reason": "no_result"
+    },
+    {
+      "index": 958,
+      "Title": "Therese Raquin ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536856",
+      "reason": "no_result"
+    },
+    {
+      "index": 959,
+      "Title": "The Thirty-Nine Steps ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537877",
+      "reason": "no_result"
+    },
+    {
+      "index": 960,
+      "Title": "This Side of Paradise (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198848110",
+      "reason": "no_result"
+    },
+    {
+      "index": 961,
+      "Title": "Three Early Modern Utopias: Thomas More: \"Utopia\"/Francis Bacon: \"New Atlantis\"/Henry Neville: The \"Isle of Pines\"",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537990",
+      "reason": "no_result"
+    },
+    {
+      "index": 962,
+      "Title": "Three Major Plays ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540174",
+      "reason": "no_result"
+    },
+    {
+      "index": 963,
+      "Title": "Three Men in a Boat and Three Men on the Bummel ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537976",
+      "reason": "no_result"
+    },
+    {
+      "index": 964,
+      "Title": "The Three Musketeers ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538461",
+      "reason": "no_result"
+    },
+    {
+      "index": 965,
+      "Title": "Three Plays: Six Characters in Search of an Author, Henry IV, the Mountain Giants",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199641192",
+      "reason": "no_result"
+    },
+    {
+      "index": 966,
+      "Title": "Three Tales ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555864",
+      "reason": "no_result"
+    },
+    {
+      "index": 967,
+      "Title": "Thus Spoke Zarathustra: A Book for Everyone and Nobody",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537099",
+      "reason": "no_result"
+    },
+    {
+      "index": 968,
+      "Title": "Timaeus and Critias ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192807359",
+      "reason": "no_result"
+    },
+    {
+      "index": 969,
+      "Title": "The Time Machine",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198707516",
+      "reason": "no_result"
+    },
+    {
+      "index": 970,
+      "Title": "Timon of Athens",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537440",
+      "reason": "no_result"
+    },
+    {
+      "index": 971,
+      "Title": "Titus Andronicus",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536108",
+      "reason": "no_result"
+    },
+    {
+      "index": 972,
+      "Title": "Titus Andronicus: The New Oxford Shakespeare",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198875055",
+      "reason": "no_result"
+    },
+    {
+      "index": 973,
+      "Title": "To the Lighthouse ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536610",
+      "reason": "no_result"
+    },
+    {
+      "index": 974,
+      "Title": "Tom Brown's Schooldays ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537303",
+      "reason": "no_result"
+    },
+    {
+      "index": 975,
+      "Title": "Tom Jones ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536993",
+      "reason": "no_result"
+    },
+    {
+      "index": 976,
+      "Title": "Tractatus Logico-Philosophicus",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198861379",
+      "reason": "no_result"
+    },
+    {
+      "index": 977,
+      "Title": "The Tragedy of Coriolanus",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535804",
+      "reason": "no_result"
+    },
+    {
+      "index": 978,
+      "Title": "The Tragedy of King Richard III",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535880",
+      "reason": "no_result"
+    },
+    {
+      "index": 979,
+      "Title": "Travel Writing 1700-1830: An Anthology",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537525",
+      "reason": "no_result"
+    },
+    {
+      "index": 980,
+      "Title": "Treasure Island ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199560356",
+      "reason": "no_result"
+    },
+    {
+      "index": 981,
+      "Title": "The Trial",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199238293",
+      "reason": "no_result"
+    },
+    {
+      "index": 982,
+      "Title": "Trilby ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538805",
+      "reason": "no_result"
+    },
+    {
+      "index": 983,
+      "Title": "Troilus and Cressida",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536535",
+      "reason": "no_result"
+    },
+    {
+      "index": 984,
+      "Title": "Troilus and Criseyde: A New Translation",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555079",
+      "reason": "no_result"
+    },
+    {
+      "index": 985,
+      "Title": "The Trojan Women and Other Plays ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538812",
+      "reason": "no_result"
+    },
+    {
+      "index": 986,
+      "Title": "The Turn of the Screw and Other Stories ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536177",
+      "reason": "no_result"
+    },
+    {
+      "index": 987,
+      "Title": "Twelfth Night (or What You Will)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536092",
+      "reason": "no_result"
+    },
+    {
+      "index": 988,
+      "Title": "Twenty Thousand Leagues under the Seas (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198818649",
+      "reason": "no_result"
+    },
+    {
+      "index": 989,
+      "Title": "Twenty Years After ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537266",
+      "reason": "no_result"
+    },
+    {
+      "index": 990,
+      "Title": "Twilight of the Idols ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554966",
+      "reason": "no_result"
+    },
+    {
+      "index": 991,
+      "Title": "The Two Fundamental Problems of Ethics",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199297221",
+      "reason": "no_result"
+    },
+    {
+      "index": 992,
+      "Title": "The Two Gentlemen of Verona",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192831422",
+      "reason": "no_result"
+    },
+    {
+      "index": 993,
+      "Title": "The Two Noble Kinsmen",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537457",
+      "reason": "no_result"
+    },
+    {
+      "index": 994,
+      "Title": "Typhoon and Other Tales ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539031",
+      "reason": "no_result"
+    },
+    {
+      "index": 995,
+      "Title": "Ulysses (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192855107",
+      "reason": "no_result"
+    },
+    {
+      "index": 996,
+      "Title": "Uncle Silas",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198864356",
+      "reason": "no_result"
+    },
+    {
+      "index": 997,
+      "Title": "Uncle Tom's Cabin ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538034",
+      "reason": "no_result"
+    },
+    {
+      "index": 998,
+      "Title": "The Uncommercial Traveller",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199686667",
+      "reason": "no_result"
+    },
+    {
+      "index": 999,
+      "Title": "Under the Greenwood Tree (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199697205",
+      "reason": "no_result"
+    },
+    {
+      "index": 1000,
+      "Title": "Under Western Eyes ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199552375",
+      "reason": "no_result"
+    },
+    {
+      "index": 1001,
+      "Title": "Up from Slavery ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199552399",
+      "reason": "no_result"
+    },
+    {
+      "index": 1002,
+      "Title": "Upanisads ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540259",
+      "reason": "no_result"
+    },
+    {
+      "index": 1003,
+      "Title": "Utopia",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198860204",
+      "reason": "no_result"
+    },
+    {
+      "index": 1004,
+      "Title": "The Vagabond",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198881582",
+      "reason": "no_result"
+    },
+    {
+      "index": 1005,
+      "Title": "The Vampyre and Other Tales of the Macabre ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199552412",
+      "reason": "no_result"
+    },
+    {
+      "index": 1006,
+      "Title": "Vanity Fair",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198727712",
+      "reason": "no_result"
+    },
+    {
+      "index": 1007,
+      "Title": "The Varieties of Religious Experience ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199691647",
+      "reason": "no_result"
+    },
+    {
+      "index": 1008,
+      "Title": "Vathek (2nd Edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199576951",
+      "reason": "no_result"
+    },
+    {
+      "index": 1009,
+      "Title": "The Vicar of Wakefield ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537549",
+      "reason": "no_result"
+    },
+    {
+      "index": 1010,
+      "Title": "The Vicomte de Bragelonne ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538478",
+      "reason": "no_result"
+    },
+    {
+      "index": 1011,
+      "Title": "Victorian Fairy Tales",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198737599",
+      "reason": "no_result"
+    },
+    {
+      "index": 1012,
+      "Title": "Victorian Fairy Tales",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198825791",
+      "reason": "no_result"
+    },
+    {
+      "index": 1013,
+      "Title": "Victory ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554058",
+      "reason": "no_result"
+    },
+    {
+      "index": 1014,
+      "Title": "Villette ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536658",
+      "reason": "no_result"
+    },
+    {
+      "index": 1015,
+      "Title": "A Vindication of the Rights of Woman and a Vindication of the Rights of Men: WITH \"A Vindication of the Rights of Woman\": AND \"An Historical and Moral View of the French Revolution\"",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555468",
+      "reason": "no_result"
+    },
+    {
+      "index": 1016,
+      "Title": "The Virgin of the Seven Daggers: and Other Stories",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198837541",
+      "reason": "no_result"
+    },
+    {
+      "index": 1017,
+      "Title": "The Virginian: A Horseman of the Plains",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554102",
+      "reason": "no_result"
+    },
+    {
+      "index": 1018,
+      "Title": "Vita Nuova ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540655",
+      "reason": "no_result"
+    },
+    {
+      "index": 1019,
+      "Title": "The Voyage Out ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539307",
+      "reason": "no_result"
+    },
+    {
+      "index": 1020,
+      "Title": "Walden ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538065",
+      "reason": "no_result"
+    },
+    {
+      "index": 1021,
+      "Title": "War and Peace",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199232765",
+      "reason": "no_result"
+    },
+    {
+      "index": 1022,
+      "Title": "War and Peace",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198800545",
+      "reason": "no_result"
+    },
+    {
+      "index": 1023,
+      "Title": "The War of the Worlds",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198702641",
+      "reason": "no_result"
+    },
+    {
+      "index": 1024,
+      "Title": "War Stories and Poems ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555505",
+      "reason": "no_result"
+    },
+    {
+      "index": 1025,
+      "Title": "Ward Number Six and Other Stories ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199553891",
+      "reason": "no_result"
+    },
+    {
+      "index": 1026,
+      "Title": "The Warden (2nd edition)（The Chronicles of Barchester)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199665440",
+      "reason": "no_result"
+    },
+    {
+      "index": 1027,
+      "Title": "Washington Square ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199559190",
+      "reason": "no_result"
+    },
+    {
+      "index": 1028,
+      "Title": "Wasps and Other Plays: A new verse translation, with introduction and notes",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198900221",
+      "reason": "no_result"
+    },
+    {
+      "index": 1029,
+      "Title": "The Water-Babies ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199685455",
+      "reason": "no_result"
+    },
+    {
+      "index": 1030,
+      "Title": "Waverley (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198716594",
+      "reason": "no_result"
+    },
+    {
+      "index": 1031,
+      "Title": "The Waves　(2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199642922",
+      "reason": "no_result"
+    },
+    {
+      "index": 1032,
+      "Title": "The Way We Live Now (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198705031",
+      "reason": "no_result"
+    },
+    {
+      "index": 1033,
+      "Title": "The Well of Loneliness",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192894458",
+      "reason": "no_result"
+    },
+    {
+      "index": 1034,
+      "Title": "The Wendigo and Other Stories",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198848882",
+      "reason": "no_result"
+    },
+    {
+      "index": 1035,
+      "Title": "Wessex Tales ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538522",
+      "reason": "no_result"
+    },
+    {
+      "index": 1036,
+      "Title": "What Maisie Knew (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538591",
+      "reason": "no_result"
+    },
+    {
+      "index": 1037,
+      "Title": "Wieland (or The Transformation, and Memoirs of Carwin, the Biloquist)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538775",
+      "reason": "no_result"
+    },
+    {
+      "index": 1038,
+      "Title": "The Wild Ass's Skin ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199579501",
+      "reason": "no_result"
+    },
+    {
+      "index": 1039,
+      "Title": "The Wild Irish Girl ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199552498",
+      "reason": "no_result"
+    },
+    {
+      "index": 1040,
+      "Title": "William Blake: Selected Poems",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198804468",
+      "reason": "no_result"
+    },
+    {
+      "index": 1041,
+      "Title": "The Wind in the Willows ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199567560",
+      "reason": "no_result"
+    },
+    {
+      "index": 1043,
+      "Title": "The Wings of the Dove ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555437",
+      "reason": "no_result"
+    },
+    {
+      "index": 1044,
+      "Title": "The Winter's Tale",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535910",
+      "reason": "no_result"
+    },
+    {
+      "index": 1045,
+      "Title": "The Winter's Tale: The New Oxford Shakespeare",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198871873",
+      "reason": "no_result"
+    },
+    {
+      "index": 1046,
+      "Title": "Wives and Daughters ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538263",
+      "reason": "no_result"
+    },
+    {
+      "index": 1047,
+      "Title": "The Woman in White",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535637",
+      "reason": "no_result"
+    },
+    {
+      "index": 1048,
+      "Title": "A Woman Killed with Kindness and Other Domestic Plays ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192829504",
+      "reason": "no_result"
+    },
+    {
+      "index": 1049,
+      "Title": "Women Beware Women, and Other Plays ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538928",
+      "reason": "no_result"
+    },
+    {
+      "index": 1050,
+      "Title": "Women in Love ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555239",
+      "reason": "no_result"
+    },
+    {
+      "index": 1051,
+      "Title": "The Wonderful Wizard of Oz ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540648",
+      "reason": "no_result"
+    },
+    {
+      "index": 1052,
+      "Title": "The Woodlanders ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538539",
+      "reason": "no_result"
+    },
+    {
+      "index": 1053,
+      "Title": "Wuthering Heights (2nd edition)",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198834786",
+      "reason": "no_result"
+    },
+    {
+      "index": 1054,
+      "Title": "The Years ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555390",
+      "reason": "no_result"
+    },
+    {
+      "index": 1055,
+      "Title": "The Yellow Wall-Paper and Other Stories ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538843",
+      "reason": "no_result"
+    },
+    {
+      "index": 1056,
+      "Title": "York Mystery Plays: A Selection in Modern Spelling",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199552535",
+      "reason": "no_result"
+    },
+    {
+      "index": 1057,
+      "Title": "Young Goodman Brown and Other Tales ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555154",
+      "reason": "no_result"
+    },
+    {
+      "index": 1058,
+      "Title": "Zofloya: Or the Moor",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199549733",
+      "reason": "no_result"
+    }
+  ]
+}

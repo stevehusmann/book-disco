@@ -1,0 +1,55 @@
+{
+  "added": 87,
+  "examples": [
+    {
+      "Title": "A Room with a View",
+      "Author": "E.M. Forster",
+      "AlphaAuthor": "Forster"
+    },
+    {
+      "Title": "Adventures of Tom Sawyer",
+      "Author": "Mark Twain",
+      "AlphaAuthor": "Twain"
+    },
+    {
+      "Title": "Age of Innocence",
+      "Author": "Edith Wharton",
+      "AlphaAuthor": "Wharton"
+    },
+    {
+      "Title": "Ambassadors",
+      "Author": "Henry James",
+      "AlphaAuthor": "James"
+    },
+    {
+      "Title": "Barchester Towers",
+      "Author": "Anthony Trollope",
+      "AlphaAuthor": "Trollope"
+    },
+    {
+      "Title": "Beowulf",
+      "Author": "John McNamara",
+      "AlphaAuthor": "McNamara"
+    },
+    {
+      "Title": "Billy Budd and The Piazza Tales",
+      "Author": "Herman Melville",
+      "AlphaAuthor": "Melville"
+    },
+    {
+      "Title": "Bulfinch's Mythology",
+      "Author": "Thomas Bulfinch",
+      "AlphaAuthor": "Bulfinch"
+    },
+    {
+      "Title": "Candide",
+      "Author": "Voltaire",
+      "AlphaAuthor": "Voltaire"
+    },
+    {
+      "Title": "Common Sense and Other Writings",
+      "Author": "Thomas Paine",
+      "AlphaAuthor": "Paine"
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Goodreads ISBN Sample Covers</title>
+  <style>
+    body {
+      font-family: system-ui, Segoe UI, Roboto, Helvetica, Arial;
+      margin: 24px
+    }
+
+    .card {
+      display: inline-block;
+      width: 180px;
+      margin: 12px;
+      vertical-align: top
+    }
+
+    .card img {
+      width: 100%;
+      height: auto;
+      border: 1px solid #ccc
+    }
+
+    .meta {
+      font-size: 13px;
+      margin-top: 6px
+    }
+
+    a {
+      color: #0366d6;
+      text-decoration: none
+    }
+  </style>
+</head>
+
+<body>
+  <h2>Goodreads ISBN Sample Covers (5)</h2>
+  <div id="list">Loading…</div>
+
+  <script>
+    // Data loaded from the generated report
+    const data = {
+      "examples_found": [
+        {
+          "index": 91,
+          "Title": "'Tis Pity She's a Whore and Other Plays",
+          "ISBN": "9780199553860",
+          "Image": "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1348066995i/4766964.jpg",
+          "GOODREADS": "https://www.goodreads.com/book/show/4766964-tis-pity-she-s-a-whore-and-other-plays"
+        },
+        {
+          "index": 92,
+          "Title": "The \"Eclogues\" and \"Georgics\"",
+          "ISBN": "9780199554096",
+          "Image": "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1384875378i/6631343.jpg",
+          "GOODREADS": "https://www.goodreads.com/book/show/6631343-the-eclogues-and-the-georgics"
+        },
+        {
+          "index": 93,
+          "Title": "About Love and Other Stories ",
+          "ISBN": "9780199536689",
+          "Image": "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1348571933i/3789329.jpg",
+          "GOODREADS": "https://www.goodreads.com/book/show/3789329-about-love-and-other-stories"
+        },
+        {
+          "index": 94,
+          "Title": "Adam Bede",
+          "ISBN": "9780199203475",
+          "Image": "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1348005269i/2249617.jpg",
+          "GOODREADS": "https://www.goodreads.com/book/show/2249617.Adam_Bede"
+        },
+        {
+          "index": 95,
+          "Title": "Adventures of Huckleberry Finn ",
+          "ISBN": "9780199536559",
+          "Image": "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1388809479i/3327418.jpg",
+          "GOODREADS": "https://www.goodreads.com/book/show/3327418-adventures-of-huckleberry-finn"
+        }
+      ]
+    };
+
+    const container = document.getElementById('list');
+    container.innerHTML = '';
+    data.examples_found.forEach(it => {
+      const div = document.createElement('div'); div.className = 'card';
+      const img = document.createElement('img'); img.src = it.Image; img.alt = it.Title;
+      const m = document.createElement('div'); m.className = 'meta';
+      const t = document.createElement('div'); t.textContent = it.Title;
+      const s = document.createElement('div'); s.innerHTML = `ISBN: <strong>${it.ISBN}</strong>`;
+      const a = document.createElement('div'); a.innerHTML = `<a href="${it.GOODREADS}" target="_blank">Open Goodreads</a>`;
+      div.appendChild(img); div.appendChild(t); div.appendChild(s); div.appendChild(a);
+      container.appendChild(div);
+    });
+  </script>
+</body>
+
+</html>

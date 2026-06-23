@@ -1,0 +1,101 @@
+{
+  "startedAt": "2026-06-22T18:46:14.239Z",
+  "csvRows": 1304,
+  "added": 1303,
+  "updated": 1,
+  "scrapedOk": 1304,
+  "scrapedFailed": 0,
+  "missingOriginalPublicationDate": 1304,
+  "examplesAdded": [
+    {
+      "ISBN": "9780241467978",
+      "Title": "The Need for Roots"
+    },
+    {
+      "ISBN": "9780241568781",
+      "Title": "Thoughts From the Ice-Drinker's Studio"
+    },
+    {
+      "ISBN": "9780143137351",
+      "Title": "The Apprentice Tourist"
+    },
+    {
+      "ISBN": "9780241360637",
+      "Title": "The Dawn of Modern Cosmology"
+    },
+    {
+      "ISBN": "9780140449051",
+      "Title": "The Rise And Fall of Athens"
+    },
+    {
+      "ISBN": "9780143137269",
+      "Title": "Minor Notes, Volume 1"
+    },
+    {
+      "ISBN": "9780143137078",
+      "Title": "Black Empire"
+    },
+    {
+      "ISBN": "9780143137467",
+      "Title": "The Mis-Education of the Negro"
+    },
+    {
+      "ISBN": "9780143137580",
+      "Title": "To the Lighthouse"
+    },
+    {
+      "ISBN": "9780241197912",
+      "Title": "The Secret History of the Mongols"
+    },
+    {
+      "ISBN": "9780141192284",
+      "Title": "The Anatomy of Melancholy"
+    },
+    {
+      "ISBN": "9780143137214",
+      "Title": "The Custom of the Country"
+    },
+    {
+      "ISBN": "9780241543238",
+      "Title": "All Desire is a Desire for Being"
+    },
+    {
+      "ISBN": "9780241608302",
+      "Title": "Kallocain"
+    },
+    {
+      "ISBN": "9780241391594",
+      "Title": "The Penguin Book of Spiritual Verse"
+    },
+    {
+      "ISBN": "9780525505990",
+      "Title": "Metamorphoses"
+    },
+    {
+      "ISBN": "9780241543931",
+      "Title": "The Cosmography and Geography of Africa"
+    },
+    {
+      "ISBN": "9780241633977",
+      "Title": "The Penguin Book of Feminist Writing"
+    },
+    {
+      "ISBN": "9780241390504",
+      "Title": "The Penguin Book of Spanish Short Stories"
+    },
+    {
+      "ISBN": "9780143135067",
+      "Title": "The Portable Anna Julia Cooper"
+    }
+  ],
+  "examplesUpdated": [
+    {
+      "ISBN": "9780143107323",
+      "Title": "The Adventures of Huckleberry Finn"
+    }
+  ],
+  "examplesFailed": [],
+  "lastProgressAt": "2026-06-22T18:47:37.510Z",
+  "processed": 1304,
+  "finishedAt": "2026-06-22T18:47:37.887Z"
+}

@@ -1,0 +1,129 @@
+{
+  "attempted": 20,
+  "found": 0,
+  "not_found": 20,
+  "errors": 0,
+  "examples_found": [],
+  "examples_failed": [
+    {
+      "index": 91,
+      "Title": "'Tis Pity She's a Whore and Other Plays",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199553860",
+      "reason": "no_result"
+    },
+    {
+      "index": 92,
+      "Title": "The \"Eclogues\" and \"Georgics\"",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199554096",
+      "reason": "no_result"
+    },
+    {
+      "index": 93,
+      "Title": "About Love and Other Stories ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536689",
+      "reason": "no_result"
+    },
+    {
+      "index": 94,
+      "Title": "Adam Bede",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199203475",
+      "reason": "no_result"
+    },
+    {
+      "index": 95,
+      "Title": "Adventures of Huckleberry Finn ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536559",
+      "reason": "no_result"
+    },
+    {
+      "index": 96,
+      "Title": "The Adventures of Pinocchio ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199553983",
+      "reason": "no_result"
+    },
+    {
+      "index": 97,
+      "Title": "The Adventures of Roderick Random ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199552344",
+      "reason": "no_result"
+    },
+    {
+      "index": 98,
+      "Title": "The Adventures of Sherlock Holmes ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536955",
+      "reason": "no_result"
+    },
+    {
+      "index": 100,
+      "Title": "The Adventures of Tom Sawyer ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536566",
+      "reason": "no_result"
+    },
+    {
+      "index": 101,
+      "Title": "Aeneid",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199231959",
+      "reason": "no_result"
+    },
+    {
+      "index": 102,
+      "Title": "The Aeneid ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537488",
+      "reason": "no_result"
+    },
+    {
+      "index": 103,
+      "Title": "Aesop's Fables ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540754",
+      "reason": "no_result"
+    },
+    {
+      "index": 104,
+      "Title": "Against Nature: A Rebours",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555116",
+      "reason": "no_result"
+    },
+    {
+      "index": 106,
+      "Title": "Agnes Grey",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199296989",
+      "reason": "no_result"
+    },
+    {
+      "index": 107,
+      "Title": "Agricola and Germany ",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539260",
+      "reason": "no_result"
+    },
+    {
+      "index": 108,
+      "Title": "The Alchemist and Other Plays: \"Volpone, or the Fox\", \"Epicene, or the Silent Woman\", The \"Alchemist\", \"Bartholemew Fair\"",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537310",
+      "reason": "no_result"
+    },
+    {
+      "index": 109,
+      "Title": "Alexander the Great: The Anabasis and the Indica",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199587247",
+      "reason": "no_result"
+    },
+    {
+      "index": 110,
+      "Title": "Alice through the Looking Glass",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198861508",
+      "reason": "no_result"
+    },
+    {
+      "index": 111,
+      "Title": "Alice's Adventures in Wonderland: WITH Through the Looking-glass",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199558292",
+      "reason": "no_result"
+    },
+    {
+      "index": 112,
+      "Title": "All's Well That Ends Well",
+      "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537129",
+      "reason": "no_result"
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "total": 1059,
+  "added_series": 968,
+  "added_bnc_id": 91,
+  "examples": [
+    {
+      "index": 0,
+      "Title": "A Room with a View",
+      "Series": "Barnes & Noble Classics Series",
+      "SeriesId": "BNC"
+    },
+    {
+      "index": 1,
+      "Title": "Adventures of Tom Sawyer",
+      "Series": "Barnes & Noble Classics Series",
+      "SeriesId": "BNC"
+    },
+    {
+      "index": 2,
+      "Title": "Age of Innocence",
+      "Series": "Barnes & Noble Classics Series",
+      "SeriesId": "BNC"
+    },
+    {
+      "index": 3,
+      "Title": "Ambassadors",
+      "Series": "Barnes & Noble Classics Series",
+      "SeriesId": "BNC"
+    },
+    {
+      "index": 4,
+      "Title": "Barchester Towers",
+      "Series": "Barnes & Noble Classics Series",
+      "SeriesId": "BNC"
+    },
+    {
+      "index": 5,
+      "Title": "Beowulf",
+      "Series": "Barnes & Noble Classics Series",
+      "SeriesId": "BNC"
+    },
+    {
+      "index": 6,
+      "Title": "Billy Budd and The Piazza Tales",
+      "Series": "Barnes & Noble Classics Series",
+      "SeriesId": "BNC"
+    },
+    {
+      "index": 7,
+      "Title": "Bulfinch's Mythology",
+      "Series": "Barnes & Noble Classics Series",
+      "SeriesId": "BNC"
+    },
+    {
+      "index": 8,
+      "Title": "Candide",
+      "Series": "Barnes & Noble Classics Series",
+      "SeriesId": "BNC"
+    },
+    {
+      "index": 9,
+      "Title": "Common Sense and Other Writings",
+      "Series": "Barnes & Noble Classics Series",
+      "SeriesId": "BNC"
+    }
+  ]
+}

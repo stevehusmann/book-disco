@@ -1,0 +1,2597 @@
+{
+  "count_a": 144,
+  "count_b": 973,
+  "common_title_count": 58,
+  "pairs": [
+    {
+      "norm_title": "a christmas carol the chimes the cricket on the hearth",
+      "display_title": "A Christmas Carol, The Chimes & The Cricket on the Hearth",
+      "entries_a": [
+        {
+          "Title": "A Christmas Carol, The Chimes & The Cricket on the Hearth",
+          "AlphaTitle": "Christmas Carol, The Chimes & The Cricket on the Hearth",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593080334_p0.jpg?v=1766000837&width=422&height=658&crop=center",
+          "Website": "https://barnesandnoble.com/w/a-christmas-carol-the-chimes-the-cricket-on-the-hearth-charles-dickens/1100623364?ean=9781593080334",
+          "Author": "Charles Dickens",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$8.95",
+          "ISBN": "1100623364",
+          "EAN": "9781593080334"
+        }
+      ],
+      "entries_b": [
+        {
+          "Title": "A Christmas Carol, The Chimes & The Cricket on the Hearth",
+          "AlphaTitle": "A Christmas Carol, The Chimes & The Cricket on the Hearth",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593080334_p0.jpg?v=1766000837&width=422&height=658&crop=center",
+          "BINDING": "pbk",
+          "GOODREADS": "https://barnesandnoble.com/w/a-christmas-carol-the-chimes-the-cricket-on-the-hearth-charles-dickens/1100623364?ean=9781593080334",
+          "Author": "Charles Dickens",
+          "AlphaAuthor": "Dickens",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$8.95",
+          "ISBN": "1100623364",
+          "EAN": "9781593080334"
+        }
+      ]
+    },
+    {
+      "norm_title": "a connecticut yankee in king arthur s court",
+      "display_title": "A Connecticut Yankee in King Arthur's Court",
+      "entries_a": [
+        {
+          "Title": "A Connecticut Yankee in King Arthur's Court",
+          "AlphaTitle": "Connecticut Yankee in King Arthur's Court",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082109_p0.jpg?v=1765999848&width=422&height=660&crop=center",
+          "Website": "https://barnesandnoble.com/w/a-connecticut-yankee-in-king-arthurs-court-mark-twain/1116670489?ean=9781593082109",
+          "Author": "Mark Twain",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$7.95",
+          "ISBN": "1116670489",
+          "EAN": "9781593082109"
+        }
+      ],
+      "entries_b": [
+        {
+          "Title": "A Connecticut Yankee in King Arthur's Court",
+          "AlphaTitle": "Connecticut Yankee in King Arthur's Court",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082109_p0.jpg?v=1765999848&width=422&height=660&crop=center",
+          "GOODREADS": "https://barnesandnoble.com/w/a-connecticut-yankee-in-king-arthurs-court-mark-twain/1116670489?ean=9781593082109",
+          "BINDING": "pbk",
+          "Author": "Mark Twain",
+          "AlphaAuthor": "Twain",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$7.95",
+          "ISBN": "1116670489",
+          "EAN": "9781593082109"
+        },
+        {
+          "ISBN": "9780199540587 ",
+          "FULL TITLE": "A Connecticut Yankee in King Arthur's Court ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "400 ",
+          "ILLUSTRATIONS": "line drawings",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "American Literature ",
+          "DESCRIPTION": "When A Connecticut Yankee at King Arthur's Court was published in 1889, Mark Twain was undergoing a series of personal and professional crises. Thus what began as a literary burlesque of British chivalry and culture grew into a disturbing satire of modern technology and social thought. The story of Hank Morgan, a nineteenth-century American who is accidentally returned to sixth-century England, is a powerful analysis of such issues as monarchy versus democracy and free will versus determinism, but it is also one of Twain's finest comic novels, still fresh and funny after more than 100 years.   In his introduction, M. Thomas Inge shows how A Connecticut Yankee develops from comedy to tragedy and so into a novel that remains a major literary and cultural text for new generations of readers. This edition reproduces a number of the original drawings by Dan Beard, of whom Twain said `he not only illustrates the text but he illustrates my thoughts'.",
+          "PUB DATE": "Apr-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Twain, Mark"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540587 ",
+          "Image": "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1663617716i/2369940.jpg",
+          "Title": "A Connecticut Yankee in King Arthur's Court ",
+          "AlphaTitle": "Connecticut Yankee in King Arthur's Court ",
+          "Author": "Mark Twain",
+          "AlphaAuthor": "Twain, Mark"
+        }
+      ]
+    },
+    {
+      "norm_title": "a room with a view",
+      "display_title": "A Room with a View",
+      "entries_a": [
+        {
+          "Title": "A Room with a View",
+          "Image": "https://m.media-amazon.com/images/I/61-+BrJksZL._SY522_.jpg",
+          "Website": "",
+          "Author": "E.M. Forster",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "",
+          "ISBN": "1593082886",
+          "EAN": "9781593082888"
+        }
+      ],
+      "entries_b": [
+        {
+          "Title": "A Room with a View",
+          "AlphaTitle": "Room with a View",
+          "BINDING": "pbk",
+          "Image": "https://m.media-amazon.com/images/I/61-+BrJksZL._SY522_.jpg",
+          "GOODREADS": "",
+          "Author": "E.M. Forster",
+          "AlphaAuthor": "Forster",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "",
+          "ISBN": "1593082886",
+          "EAN": "9781593082888"
+        }
+      ]
+    },
+    {
+      "norm_title": "a tale of two cities",
+      "display_title": "A Tale of Two Cities",
+      "entries_a": [
+        {
+          "Title": "A Tale of Two Cities",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593081386_p0.jpg?v=1768977100&width=422&height=661&crop=center",
+          "Website": "https://barnesandnoble.com/w/a-tale-of-two-cities-charles-dickens/1106017525?ean=9781593081386",
+          "Author": "Charles Dickens",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$6.95",
+          "ISBN": "1106017525",
+          "EAN": "9781593081386"
+        }
+      ],
+      "entries_b": [
+        {
+          "Title": "A Tale of Two Cities",
+          "AlphaTitle": "Tale of Two Cities",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593081386_p0.jpg?v=1768977100&width=422&height=661&crop=center",
+          "GOODREADS": "https://barnesandnoble.com/w/a-tale-of-two-cities-charles-dickens/1106017525?ean=9781593081386",
+          "Author": "Charles Dickens",
+          "AlphaAuthor": "Dickens",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$6.95",
+          "PAGINATION": "400",
+          "BINDING": "pbk",
+          "ISBN": "1106017525",
+          "EAN": "9781593081386"
+        },
+        {
+          "ISBN": "9780199536238 ",
+          "FULL TITLE": "A Tale of Two Cities ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "448 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "C19 Literature ",
+          "DESCRIPTION": "As the the bicentennary of the French Revolution draws near, Dickens' historical novel serves as a timely reminder of nineteenth-century reactions to that great upheaval. Set between 1757 and 1793, A Tale of Two Cities views the causes and effects of the Revolution from an essentially private point of view, showing how private experience relates to public history. Dickens' characters are fictional, and their political activity is minimal, yet all are drawn towards the Paris of the Terror, and all become caught up in its web of human suffering and human sacrifice.  This edition includes extensive explanatory notes giving crucial background information about the Revolution and Dickens' sources.  `the best story I have written' Charles Dickens.",
+          "PUB DATE": "May-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Dickens, Charles"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536238 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199536238-L.jpg",
+          "Title": "A Tale of Two Cities ",
+          "AlphaTitle": "Tale of Two Cities ",
+          "Author": "Charles Dickens",
+          "AlphaAuthor": "Dickens, Charles"
+        }
+      ]
+    },
+    {
+      "norm_title": "adventures of huckleberry finn",
+      "display_title": "Adventures of Huckleberry Finn",
+      "entries_a": [
+        {
+          "Title": "Adventures of Huckleberry Finn",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593081126_p0.jpg?v=1766001099&width=422&height=657&crop=center",
+          "Website": "https://barnesandnoble.com/w/adventures-of-huckleberry-finn-mark-twain/1106017531?ean=9781593081126",
+          "Author": "Mark Twain",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$6.95",
+          "ISBN": "1106017531",
+          "EAN": "9781593081126"
+        }
+      ],
+      "entries_b": [
+        {
+          "Title": "Adventures of Huckleberry Finn",
+          "AlphaTitle": "Adventures of Huckleberry Finn",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593081126_p0.jpg?v=1766001099&width=422&height=657&crop=center",
+          "GOODREADS": "https://barnesandnoble.com/w/adventures-of-huckleberry-finn-mark-twain/1106017531?ean=9781593081126",
+          "Author": "Mark Twain",
+          "AlphaAuthor": "Twain",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$6.95",
+          "BINDING": "pbk",
+          "ISBN": "1106017531",
+          "EAN": "9781593081126"
+        },
+        {
+          "ISBN": "9780199536559 ",
+          "FULL TITLE": "Adventures of Huckleberry Finn ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "352 ",
+          "ILLUSTRATIONS": "1 map",
+          "BIC SUBJECTS": "Classic fiction (Children's / Teenage)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "American Literature ",
+          "DESCRIPTION": "You don't know about me, without you have read a book by the name of \"The Adventures of Tom Sawyer\", but that ain't no matter.  So begins, in characteristic fashion, one of the greatest American novels. Narrated by a poor, illiterate white boy living in America's deep South before the Civil War, Adventures of Huckleberry Finn is the story of Huck's escape from his brutal father and the relationship that grows between him and Jim, the slave who is fleeing from an even more brutal oppression. As they journey down the Mississippi their adventures address some of the most profound human conundrums: the prejudices of class, age, and colour are pitted against the qualities of hope, courage, and moral character.  Enormously influential in the development of American literature, Huckleberry Finn remains a controversial novel at the centre of impassioned critical debate. This edition discusses all the current issues and the evolution of Mark Twain's penetrating genius. ",
+          "PUB DATE": "Jun-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Twain, Mark"
+          ],
+          "EDITORS": [
+            "Elliott, Emory"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536559 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199536559-L.jpg",
+          "Title": "Adventures of Huckleberry Finn ",
+          "AlphaTitle": "Adventures of Huckleberry Finn ",
+          "Author": "Mark Twain",
+          "AlphaAuthor": "Twain, Mark"
+        }
+      ]
+    },
+    {
+      "norm_title": "agnes grey",
+      "display_title": "Agnes Grey",
+      "entries_a": [
+        {
+          "Title": "Agnes Grey",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593083236_p0.jpg?v=1768977108&width=422&height=652&crop=center",
+          "Website": "https://barnesandnoble.com/w/agnes-grey-anne-bront/1100972056?ean=9781593083236",
+          "Author": "Anne Bront\u00eb",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$9.95",
+          "ISBN": "1100972056",
+          "EAN": "9781593083236"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199296989 ",
+          "FULL TITLE": "Agnes Grey",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "240 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "C19 Literature ",
+          "DESCRIPTION": "How delightful it would be to be a governess!' When the young Agnes Grey takes up her first post as governess she is full of hope; she believes she only has to remember 'myself at their age' to win her pupils' love and trust. Instead she finds the young children she has to deal with completely unmanageable. They are, as she observes to her mother, 'unimpressible, incomprehensible creatures'. In writing her first novel, Anne Bronte drew on her own experiences, and one can trace in the work many of the trials of the Victorian governess, often stranded far from home, and treated with little respect by her employers, yet expected to control and educate her young charges. Agnes Grey looks at childhood from nursery to adolescence, and it also charts the frustrations of romantic love, as Agnes starts to nurse warmer feelings towards the local curate, Mr Weston. The novel combines astute dissection of middle-class social behaviour and class attitudes with a wonderful study of Victorian responses to young children which has parallels with debates about education that continue to this day.",
+          "PUB DATE": "Jun-10",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Bront\u00eb, Anne"
+          ],
+          "EDITORS": [
+            "Inglesfield, Robert",
+            "Marsden, Hilda"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199296989 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199296989-L.jpg",
+          "Title": "Agnes Grey",
+          "AlphaTitle": "Agnes Grey",
+          "Author": "Anne Bront\u00eb",
+          "AlphaAuthor": "Bront\u00eb, Anne"
+        }
+      ]
+    },
+    {
+      "norm_title": "babbitt",
+      "display_title": "Babbitt",
+      "entries_a": [
+        {
+          "Title": "Babbitt",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082673_p0.jpg?v=1768977160&width=422&height=651&crop=center",
+          "Website": "https://barnesandnoble.com/w/babbitt-sinclair-lewis/1100160085?ean=9781593082673",
+          "Author": "Sinclair Lewis",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$9.95",
+          "ISBN": "1100160085",
+          "EAN": "9781593082673"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199567690 ",
+          "FULL TITLE": "Babbitt",
+          "SERIES": "",
+          "BINDING": "Pbk",
+          "PAGINATION": "384 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "American Literature ",
+          "DESCRIPTION": "Amusing and tragic by turn, Sinclair Lewis's classic novel is a biting satire of middle-American values whose title has entered the language as a byword for smug complacency, conformity, and materialism, and whose suburban targets are still much in evidence. A successful real estate agent, George F. Babbitt is a member of all the right clubs, and unquestioningly shares the same aspirations and ideas as his friends and fellow Boosters. Yet even Babbitt dreams of romance and escape, and when his best friend does something to throw his world upside down, he rebels, and tries to find fulfillment in romantic adventures and liberal thinking.  Hilarious and poignant, Babbitt turns the spotlight on middle America and strips bare the hypocrisy of business practice, social mores, politics, and religious institutions.  In his introduction and notes Gordon Hutner explores the novel's historical and literary contexts, and highlights its rich cultural and social references. The book also features an up-to-date bibliography and explanatory notes that document and gloss the rich social history of the period.  About the Series: For over 100 years Oxford World's Classics has made available the broadest spectrum of literature from around the globe. Each affordable volume reflects Oxford's commitment to scholarship, providing the most accurate text plus a wealth of other valuable features, including expert introductions by leading authorities, voluminous notes to clarify the text, up-to-date bibliographies for further study, and much more.",
+          "PUB DATE": "Aug-10",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Lewis, Sinclair"
+          ],
+          "EDITORS": [
+            "Hutner, Gordon "
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199567690 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199567690-L.jpg",
+          "Title": "Babbitt",
+          "AlphaTitle": "Babbitt",
+          "Author": "Sinclair Lewis",
+          "AlphaAuthor": "Lewis, Sinclair"
+        }
+      ]
+    },
+    {
+      "norm_title": "bleak house",
+      "display_title": "Bleak House",
+      "entries_a": [
+        {
+          "Title": "Bleak House",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593083113_p0.jpg?v=1771133426&width=422&height=653&crop=center",
+          "Website": "https://barnesandnoble.com/w/bleak-house-charles-dickens/1007152291?ean=9781593083113",
+          "Author": "Charles Dickens",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$10.95",
+          "ISBN": "1007152291",
+          "EAN": "9781593083113"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199536313 ",
+          "FULL TITLE": "Bleak House ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "992 ",
+          "ILLUSTRATIONS": "frontispiece, original illustrations by 'Phiz', 2 maps",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "C19 Literature ",
+          "DESCRIPTION": "Bleak House, Dickens's most daring experiment in the narration of a complex plot, challenges the reader to make connections - -between the fashionable and the outcast, the beautiful and the ugly, the powerful and the victims. Nowhere in Dickens's later novels is his attack on an uncaring society more imaginatively embodied, but nowhere either is the mixture of comedy and angry satire more deftly managed.  Bleak House defies a single description. It is a mystery story, in which Esther Summerson discovers the truth about her birth and her unknown mother's tragic life. It is a murder story, which comes to a climax in a thrilling chase, led by one of the earliest detectives in English fiction, Inspector Bucket. And it is a fable about redemption, in which a bleak house is transformed by the resilience of human love.",
+          "PUB DATE": "May-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Dickens, Charles"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536313 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199536313-L.jpg",
+          "Title": "Bleak House ",
+          "AlphaTitle": "Bleak House ",
+          "Author": "Charles Dickens",
+          "AlphaAuthor": "Dickens, Charles"
+        }
+      ]
+    },
+    {
+      "norm_title": "cyrano de bergerac",
+      "display_title": "Cyrano de Bergerac",
+      "entries_a": [
+        {
+          "Title": "Cyrano de Bergerac",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593083878_p0.jpg?v=1766000845&width=422&height=657&crop=center",
+          "Website": "https://barnesandnoble.com/w/cyrano-de-bergerac-edmond-rostand/1116685670?ean=9781593083878",
+          "Author": "Edmond Rostand",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$9.95",
+          "ISBN": "1116685670",
+          "EAN": "9781593083878"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199539239 ",
+          "FULL TITLE": "Cyrano de Bergerac ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "192 ",
+          "ILLUSTRATIONS": "1 halftone",
+          "BIC SUBJECTS": "Plays, playscripts",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "French Literature ",
+          "DESCRIPTION": "`Tonight When I make my sweeping bow at heaven's gate, One thing I shall still possess, at any rate, Unscathed, something outlasting mortal flesh, And that is ... My panache.' The first English translation of Cyrano de Bergerac, in 1898, introduced the word panache into the English language. This single word summed up Rostand's rejection of the social realism which dominated late nineteenth-century theatre. He wrote his `heroic comedy', unfashionably, in verse, and set it in the reign of Louis XIII and the Three Musketeers. Based on the life of a little known writer, Rostand's hero has become a figure of theatrical legend: Cyrano, with the nose of a clown and the soul of a poet, is by turns comic and sad, as reckless in love as in war, and never at a loss for words. Audiences immediately took him to their hearts, and since the triumphant opening night in December 1897 - at the height of the Dreyfus Affair - the play has never lost its appeal.  The text is accompanied by notes and a full introduction which sets the play in its literary and historical context. Christopher Fry's acclaimed translation into `chiming couplets' represents the homage of one verse dramatist to another.",
+          "PUB DATE": "Aug-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Rostand, Edmond"
+          ],
+          "EDITORS": [
+            "Cronk, Nicholas"
+          ],
+          "TRANSLATORS": [
+            "Fry, Christopher"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539239 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199539239-L.jpg",
+          "Title": "Cyrano de Bergerac ",
+          "AlphaTitle": "Cyrano de Bergerac ",
+          "Author": "Edmond Rostand",
+          "AlphaAuthor": "Rostand, Edmond"
+        }
+      ]
+    },
+    {
+      "norm_title": "david copperfield",
+      "display_title": "David Copperfield",
+      "entries_a": [
+        {
+          "Title": "David Copperfield",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593080631_p0.jpg?v=1768977869&width=422&height=650&crop=center",
+          "Website": "https://barnesandnoble.com/w/david-copperfield-charles-dickens/1116612304?ean=9781593080631",
+          "Author": "Charles Dickens",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$13.95",
+          "ISBN": "1116612304",
+          "EAN": "9781593080631"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199536290 ",
+          "FULL TITLE": "David Copperfield ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "944 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "C19 Literature ",
+          "DESCRIPTION": "`I have in my heart of hearts a favourite child. And his name is DAVID COPPERFIELD,' wrote Dickens of what is the most personal, certainly one of the most popular, of all his novels.  Dickens wrote the book after the completion of a fragment of autobiography recalling his employment as a child in a London warehouse, and in the first-person narrative, a new departure for him, realized marvellously the workings of memory. The embodiment of his boyhood experience in the novel involved a `complicated interweaving of truth and fiction', at its most subtle in the portrait of his father as Mr Micawber, one of Dickens's greatest comic creations. Enjoying a humour that never becomes caricature, the reader shares David's affection for the eccentric Betsey Trotwood and her protege Mr Dick, and smiles with the narrator at the trials he endures in his love for the delightfully silly Dora. Settings, (East Anglia, the London of the 1820s), people, and events are unified by their relationship to the story of Steerforth's treachery, which reaches its powerful climax in the storm scene.  This edition, which has the accurate Clarendon text, includes Dickens's trial titles and working notes, and eight of the original illustrations by `Phiz'.",
+          "PUB DATE": "May-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Dickens, Charles"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536290 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199536290-L.jpg",
+          "Title": "David Copperfield ",
+          "AlphaTitle": "David Copperfield ",
+          "Author": "Charles Dickens",
+          "AlphaAuthor": "Dickens, Charles"
+        }
+      ]
+    },
+    {
+      "norm_title": "far from the madding crowd",
+      "display_title": "Far From the Madding Crowd",
+      "entries_a": [
+        {
+          "Title": "Far From the Madding Crowd",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082239_p0.jpg?v=1768977091&width=422&height=653&crop=center",
+          "Website": "https://barnesandnoble.com/w/far-from-the-madding-crowd-thomas-hardy/1007152294?ean=9781593082239",
+          "Author": "Thomas Hardy",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$7.95",
+          "ISBN": "1007152294",
+          "EAN": "9781593082239"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199537013 ",
+          "FULL TITLE": "Far from the Madding Crowd ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "496 ",
+          "ILLUSTRATIONS": "2 maps",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "C19 Literature ",
+          "DESCRIPTION": "I shall do one thing in this life - one thing for certain - that is, love you, and long for you, and keep wanting you till I die.' Gabriel Oak is only one of three suitors for the hand of the beautiful and spirited Bathsheba Everdene. He must compete with the dashing young soldier Sergeant Troy and respectable, middle-aged Farmer Boldwood. And while their fates depend upon the choice Bathsheba makes, she discovers the terrible consequences of an inconstant heart. Far from the Madding Crowd was the first of Hardy's novels to give the name of Wessex to the landscape of south-west England, and the first to gain him widespread popularity as a novelist. Set against the backdrop of the unchanging natural cycle of the year, the story both upholds and questions rural values with a startlingly modern sensibility. This new edition retains the critical text that restores previously deleted and revised passages.",
+          "PUB DATE": "Aug-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Hardy, Thomas"
+          ],
+          "EDITORS": [
+            "Falck-Yi, Suzanne B."
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537013 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199537013-L.jpg",
+          "Title": "Far from the Madding Crowd ",
+          "AlphaTitle": "Far from the Madding Crowd ",
+          "Author": "Thomas Hardy",
+          "AlphaAuthor": "Hardy, Thomas"
+        }
+      ]
+    },
+    {
+      "norm_title": "fathers and sons",
+      "display_title": "Fathers and Sons",
+      "entries_a": [
+        {
+          "Title": "Fathers and Sons",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082611_p0.jpg?v=1771134052&width=422&height=656&crop=center",
+          "Website": "https://barnesandnoble.com/w/fathers-and-sons-ivan-turgenev/1008181360?ean=9781593082611",
+          "Author": "Ivan Turgenev",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$9.95",
+          "ISBN": "1008181360",
+          "EAN": "9781593082611"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199536047 ",
+          "FULL TITLE": "Fathers and Sons",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "256 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945); Fiction in translation",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "Russian Literature ",
+          "DESCRIPTION": "Turgenev's masterpiece about the conflict between generations is as fresh, outspoken, and exciting today as it was in when it was first published in 1862. The controversial portrait of Bazarov, the energetic, cynical, and self-assured `nihilist' who repudiates the romanticism of his elders, shook Russian society. Indeed the image of humanity liberated by science from age-old conformities and prejudices is one that can threaten establishments of any political or religious persuasion, and is especially potent in the modern era.  This new translation, specially commissioned for the World's Classics, is the first to draw on Turgenev's working manuscript, which only came to light in 1988.",
+          "PUB DATE": "May-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Turgenev, Ivan"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536047 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199536047-L.jpg",
+          "Title": "Fathers and Sons",
+          "AlphaTitle": "Fathers and Sons",
+          "Author": "Ivan Turgenev",
+          "AlphaAuthor": "Turgenev, Ivan"
+        }
+      ]
+    },
+    {
+      "norm_title": "germinal",
+      "display_title": "Germinal",
+      "entries_a": [
+        {
+          "Title": "Germinal",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082918_p0.jpg?v=1768977532&width=422&height=651&crop=center",
+          "Website": "https://barnesandnoble.com/w/germinal-emile-zola/1116783983?ean=9781593082918",
+          "Author": "Emile Zola",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$9.95",
+          "ISBN": "1116783983",
+          "EAN": "9781593082918"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199536894 ",
+          "FULL TITLE": "Germinal ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "576 ",
+          "ILLUSTRATIONS": "1 map",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945); Fiction in translation",
+          "BIC QUALIFIERS": "French; c 1800 to c 1903",
+          "SUBJECT": "French Literature ",
+          "DESCRIPTION": "Zola's masterpiece of working life, Germinal (1885), exposes the inhuman conditions of miners in northern France in the 1860s. By Zola's death in 1902 it had come to symbolise the call for freedom from oppression so forcefully that the crowd which gathered at his State funeral chanted 'Germinal! Germinal!'. The central figure, Etienne Lantier, is an outsider who enters the community and eventually leads his fellow-miners in a strike protesting against pay-cuts - a strike which becomes a losing battle against starvation, repression, and sabotage. Yet despite all the violence and disillusion which rock the mining community to its foundations, Lantier retains his belief in the ultimate germination of a new society, leading to a better world. Germinal is a dramatic novel of working life and everyday relationships, but it is also a complex novel of ideas, given fresh vigour and power in this new translation.",
+          "PUB DATE": "Jul-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Zola, Emile"
+          ],
+          "TRANSLATORS": [
+            "Collier, Peter"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536894 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199536894-L.jpg",
+          "Title": "Germinal ",
+          "AlphaTitle": "Germinal ",
+          "Author": "Emile Zola",
+          "AlphaAuthor": "Zola, Emile"
+        }
+      ]
+    },
+    {
+      "norm_title": "great expectations",
+      "display_title": "Great Expectations",
+      "entries_a": [
+        {
+          "Title": "Great Expectations",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593081164_p0.jpg?v=1768976438&width=422&height=658&crop=center",
+          "Website": "https://barnesandnoble.com/w/great-expectations-charles-dickens/1116627604?ean=9781593081164",
+          "Author": "Charles Dickens",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$8.95",
+          "ISBN": "1116627604",
+          "EAN": "9781593081164"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199219766 ",
+          "FULL TITLE": "Great Expectations",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "544 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "C19 Literature ",
+          "DESCRIPTION": "you are to understand, Mr. Pip, that the name of the person who is your liberal benefactor remains a profound secret...' Young Pip lives with his sister and her husband the blacksmith, with few prospects for advancement until a mysterious benefaction takes him from the Kent marshes to London. Pip is haunted by figures from his past - the escaped convict Magwitch, the time-withered Miss Havisham and her proud and beautiful ward, Estella - and in time uncovers not just the origins of his great expectations but the mystery of his own heart. A powerful and moving novel, Great Expectations is suffused with Dickens's memories of the past and its grip on the present, and it raises disturbing questions about the extent to which individuals affect each other's lives. This edition includes a lively introduction, Dickens's working notes, the novel's original ending, and an extract from an early theatrical adaptation. It reprints the definitive Clarendon text.",
+          "PUB DATE": "Jun-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Dickens, Charles"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199219766 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199219766-L.jpg",
+          "Title": "Great Expectations",
+          "AlphaTitle": "Great Expectations",
+          "Author": "Charles Dickens",
+          "AlphaAuthor": "Dickens, Charles"
+        }
+      ]
+    },
+    {
+      "norm_title": "gulliver s travels",
+      "display_title": "Gulliver's Travels",
+      "entries_a": [
+        {
+          "Title": "Gulliver's Travels",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593081324_p0.jpg?v=1766000885&width=422&height=654&crop=center",
+          "Website": "https://barnesandnoble.com/w/gullivers-travels-jonathan-swift/1116644091?ean=9781593081324",
+          "Author": "Jonathan Swift",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$7.95",
+          "ISBN": "1116644091",
+          "EAN": "9781593081324"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199536849 ",
+          "FULL TITLE": "Gulliver's Travels ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "432 ",
+          "ILLUSTRATIONS": "original frontispiece; 5 halftones & 3 maps",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "C18 Literature ",
+          "DESCRIPTION": "Thus, gentle Reader, I have given thee a faithful History of my Travels for Sixteen Years, and above Seven Months; wherein I have not been so studious of Ornament as of Truth.' In these words Gulliver represents himself as a reliable reporter of the fantastic adventures he has just set down; but how far can we rely on a narrator whose identity is elusive and whoses inventiveness is self-evident? Gulliver's Travels purports to be a travel book, and describes Gulliver's encounters with the inhabitants of four extraordinary places: Lilliput, Brobdingnag, Laputa, and the country of the Houyhnhnms. A consummately skilful blend of fantasy and realism makes Gulliver's Travels by turns hilarious, frightening, and profound. Swift plays tricks on us, and delivers one of the world's most disturbing satires of the human condition. This new edition includes the changing frontispiece portraits of Gulliver that appeared in successive early editions.",
+          "PUB DATE": "Jun-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Swift, Jonathan"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536849 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199536849-L.jpg",
+          "Title": "Gulliver's Travels ",
+          "AlphaTitle": "Gulliver's Travels ",
+          "Author": "Jonathan Swift",
+          "AlphaAuthor": "Swift, Jonathan"
+        }
+      ]
+    },
+    {
+      "norm_title": "hard times",
+      "display_title": "Hard Times",
+      "entries_a": [
+        {
+          "Title": "Hard Times",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593081560_p0.jpg?v=1765999887&width=422&height=651&crop=center",
+          "Website": "https://barnesandnoble.com/w/hard-times-charles-dickens/1116614863?ean=9781593081560",
+          "Author": "Charles Dickens",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$8.95",
+          "ISBN": "1116614863",
+          "EAN": "9781593081560"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199536276 ",
+          "FULL TITLE": "Hard Times ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "352 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "C19 Literature ",
+          "DESCRIPTION": "Hard Times is Dickens's shortest novel, and arguably his greatest triumph. A useful appendix of the author's working notes, together with an enlightening introduction and full explanatory notes, will ensure that this edition becomes the obvious choice for anyone studying the novel. Paul Schlike is Lecturer in English at the University of Aberdeen.",
+          "PUB DATE": "May-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Dickens, Charles"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536276 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199536276-L.jpg",
+          "Title": "Hard Times ",
+          "AlphaTitle": "Hard Times ",
+          "Author": "Charles Dickens",
+          "AlphaAuthor": "Dickens, Charles"
+        }
+      ]
+    },
+    {
+      "norm_title": "incidents in the life of a slave girl",
+      "display_title": "Incidents in the Life of a Slave Girl",
+      "entries_a": [
+        {
+          "Title": "Incidents in the Life of a Slave Girl",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082833_p0.jpg?v=1766001264&width=422&height=653&crop=center",
+          "Website": "https://barnesandnoble.com/w/incidents-in-the-life-of-a-slave-girl-harriet-jacobs/1116743952?ean=9781593082833",
+          "Author": "Harriet Jacobs",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$8.95",
+          "ISBN": "1116743952",
+          "EAN": "9781593082833"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780198709879 ",
+          "FULL TITLE": "Incidents in the Life of a Slave Girl ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "304 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Autobiography: historical, political & military; Slavery & abolition of slavery; Black & Asian studies; Gender studies: women",
+          "BIC QUALIFIERS": "North Carolina; c 1800 to c 1900",
+          "SUBJECT": "American Literature ",
+          "DESCRIPTION": "The degradations, the wrongs, the vices, that grow out of slavery, are more than I can describe.' Harriet Jacobs was born a slave in the American South and went on to write one of the most extraordinary slave narratives. First published pseudonymously in 1861, Incidents in the Life of a Slave Girl describes Jacobs's treatment at the hands of her owners, her eventual escape to the North, and her perilous existence evading recapture as a fugitive slave. To save herself from sexual assault and protect her children she is forced to hide for seven years in a tiny attic space, suffering terrible psychological and physical pain. Written to expose the appalling treatment of slaves in the South and the racism of the free North, and to advance the abolitionist cause, Incidents is notable for its careful construction and literary effects. Jacobs's story of self-emancipation and a growing feminist consciousness is the tale of an individual and a searing indictment of slavery's inhumanity. This edition includes the short memoir by Jacobs's brother, John S. Jacobs, 'A True Tale of Slavery'.",
+          "PUB DATE": "Nov-15",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Jacobs, Harriet"
+          ],
+          "EDITORS": [
+            "Ellis, R. J."
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198709879 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780198709879-L.jpg",
+          "Title": "Incidents in the Life of a Slave Girl ",
+          "AlphaTitle": "Incidents in the Life of a Slave Girl ",
+          "Author": "Harriet Jacobs",
+          "AlphaAuthor": "Jacobs, Harriet"
+        }
+      ]
+    },
+    {
+      "norm_title": "ivanhoe",
+      "display_title": "Ivanhoe",
+      "entries_a": [
+        {
+          "Title": "Ivanhoe",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082468_p0.jpg?v=1766000778&width=422&height=651&crop=center",
+          "Website": "https://barnesandnoble.com/w/ivanhoe-sir-walter-scott/1100240038?ean=9781593082468",
+          "Author": "Sir Walter Scott",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$9.95",
+          "ISBN": "1100240038",
+          "EAN": "9781593082468"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199538409 ",
+          "FULL TITLE": "Ivanhoe ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "624 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945); Literary studies: fiction, novelists & prose writers; Literary studies: c 1800 to c 1900",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "C19 Literature ",
+          "DESCRIPTION": "More than a century after the Norman Conquest, England remains a colony of foreign warlords. The dissolute Prince John plots to seize his brother's crown, his barons terrorize the country, and the mysterious outlaw Robin Hood haunts the ancient greenwood. The secret return of King Richard and the disinherited Saxon knight, Ivanhoe, heralds the start of a splendid and tumultuous romance, featuring the tournament at Ashby-de-la-Zouche, the siege of Torquilstone, and the clash of wills between the wicked Templar Bois-Guilbert and the sublime Jewess Rebecca.   In Ivanhoe Scott fashioned an imperial myth of national cultural identity that has shaped the popular imagination ever since its first appearance at the end of 1819. The most famous of Scottish novelists drew on the conventions of Gothic fiction, including its risky sexual and racial themes, to explore the violent origins and limits of English nationality.   This edition uses the 1830 Magnum Opus text, corrected against the Interleaved Set, and incorporates readings from Scott's manuscript. The introduction examines the originality and cultural importance of Ivanhoe, and draws on current work by historians and cultural critics.",
+          "PUB DATE": "Dec-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Scott, Walter"
+          ],
+          "EDITORS": [
+            "Duncan, Ian"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538409 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199538409-L.jpg",
+          "Title": "Ivanhoe ",
+          "AlphaTitle": "Ivanhoe ",
+          "Author": "Walter Scott",
+          "AlphaAuthor": "Scott, Walter"
+        }
+      ]
+    },
+    {
+      "norm_title": "kim",
+      "display_title": "Kim",
+      "entries_a": [
+        {
+          "Title": "Kim",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593081928_p0.jpg?v=1768977519&width=422&height=651&crop=center",
+          "Website": "https://barnesandnoble.com/w/kim-rudyard-kipling/1116610533?ean=9781593081928",
+          "Author": "Rudyard Kipling",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$7.95",
+          "ISBN": "1116610533",
+          "EAN": "9781593081928"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199536467 ",
+          "FULL TITLE": "Kim ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "352 ",
+          "ILLUSTRATIONS": "1 map",
+          "BIC SUBJECTS": "Modern & contemporary fiction (post c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "C19 Literature ",
+          "DESCRIPTION": "Kim (1901) is one of Kipling's masterpieces. Through the story of the young orphan Kimball O'Hara, and his vocation in the Secret Service, Kipling presents a vivid picture of India, its teeming populations, religions, and superstitions, and the life of the bazaars and the road.",
+          "PUB DATE": "Jun-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Kipling, Rudyard"
+          ],
+          "EDITORS": [
+            "Sandison, Alan"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536467 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199536467-L.jpg",
+          "Title": "Kim ",
+          "AlphaTitle": "Kim ",
+          "Author": "Rudyard Kipling",
+          "AlphaAuthor": "Kipling, Rudyard"
+        }
+      ]
+    },
+    {
+      "norm_title": "les liaisons dangereuses",
+      "display_title": "Les Liaisons Dangereuses",
+      "entries_a": [
+        {
+          "Title": "Les Liaisons Dangereuses",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082406_p0.jpg?v=1766001136&width=422&height=653&crop=center",
+          "Website": "https://barnesandnoble.com/w/les-liaisons-dangereuses-choderlos-de-laclos/1016090373?ean=9781593082406",
+          "Author": "Choderlos de Laclos",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$9.95",
+          "ISBN": "1016090373",
+          "EAN": "9781593082406"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199536481 ",
+          "FULL TITLE": "Les Liaisons dangereuses ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "448 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945); Fiction in translation",
+          "BIC QUALIFIERS": "French",
+          "SUBJECT": "French Literature ",
+          "DESCRIPTION": "The complex moral ambiguities of seduction and revenge make Les Liaisons dangereuses (1782) one of the most scandalous and controversial novels in European literature. The subject of major film and stage adaptations, the novel's prime movers, the Vicomte de Valmont and the Marquise de Merteuil, form an unholy alliance and turn seduction into a game - a game which they must win.  This new translation gives Laclos a modern voice, and readers will be able a judge whether the novel is as `diabolical' and `infamous' as its critics have claimed, or whether it has much to tell us about the kind of world we ourselves live in. David Coward's introduction explodes myths about Laclos's own life and puts the book in its literary and cultural context.",
+          "PUB DATE": "Apr-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Laclos, Pierre Ambroise Francois Choderlos de"
+          ],
+          "TRANSLATORS": [
+            "Parmee, Douglas"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536481 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199536481-L.jpg",
+          "Title": "Les Liaisons dangereuses ",
+          "AlphaTitle": "Les Liaisons dangereuses ",
+          "Author": "Pierre Ambroise Francois Choderlos de Laclos",
+          "AlphaAuthor": "Laclos, Pierre Ambroise Francois Choderlos de"
+        }
+      ]
+    },
+    {
+      "norm_title": "little women",
+      "display_title": "Little Women",
+      "entries_a": [
+        {
+          "Title": "Little Women",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593081089_p0.jpg?v=1768977072&width=422&height=649&crop=center",
+          "Website": "https://barnesandnoble.com/w/little-women-louisa-may-alcott/1116668150?ean=9781593081089",
+          "Author": "Louisa May Alcott",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$8.95",
+          "ISBN": "1116668150",
+          "EAN": "9781593081089"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199538119 ",
+          "FULL TITLE": "Little Women ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "528 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945); Literary studies: fiction, novelists & prose writers; Literary studies: c 1800 to c 1900",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "Childrens Literature ",
+          "DESCRIPTION": "Little Women has remained enduringly popular since its publication in 1868, becoming the inspiration for a whole genre of family stories. Set in a small New England community, it tells of the March family: Marmee looks after daughters in the absence of her husband, who is serving as an army chaplain in the Civil War, and Meg, Jo,Beth, and Amy experience domestic trials and triumphs as they attempt to supplement the family's small income. In the second part of the novel (sometimes known as Good Wives) the girls grow up and fall in love. The novel is highly autobiographical, and in Jo's character Alcott portrays a strong-minded and independent woman, determined to control her own destiny. The introduction to this edition provides a fascinating history of the Alcotts,and of Louisa Alcott's own struggles as a writer.",
+          "PUB DATE": "Dec-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Alcott, Louisa May"
+          ],
+          "EDITORS": [
+            "Alderson, Valerie"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538119 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199538119-L.jpg",
+          "Title": "Little Women ",
+          "AlphaTitle": "Little Women ",
+          "Author": "Louisa May Alcott",
+          "AlphaAuthor": "Alcott, Louisa May"
+        }
+      ]
+    },
+    {
+      "norm_title": "lord jim",
+      "display_title": "Lord Jim",
+      "entries_a": [
+        {
+          "Title": "Lord Jim",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593081454_p0.jpg?v=1766000890&width=422&height=658&crop=center",
+          "Website": "https://barnesandnoble.com/w/lord-jim-joseph-conrad/1116610542?ean=9781593081454",
+          "Author": "Joseph Conrad",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$7.95",
+          "ISBN": "1116610542",
+          "EAN": "9781593081454"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199536023 ",
+          "FULL TITLE": "Lord Jim",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "400 ",
+          "ILLUSTRATIONS": "1 map",
+          "BIC SUBJECTS": "Modern & contemporary fiction (post c 1945); Classic fiction (pre c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "C20 Literature ",
+          "DESCRIPTION": "To the white men in the waterside business and to the captain of ships he was just Jim - nothing more. He had, of course, another name, but he was anxious that it should not be pronounced.' Lord Jim tells the story of a young, idealistic Englishman - 'as unflinching as a hero in a book' - who is disgraced by a single act of cowardice while serving as an officer on the Patna, a merchant-ship sailing from an Eastern port. His life is blighted: an isolated scandal assumes horrifying proportions. An older man, Marlow, befriends Jim, and helps to establish him in Patusan, a remote Malay settlement. There he achieves a kind of peace, but his courage is put to the test once more. Lord Jim is one of the most profound and rewarding psychological novels in English. Set in the context of social change and colonial expansion in late Victorian England, it embodies in Jim the values and the turmoil of a fading empire. In his introduction and notes to this new edition Jacques Berthoud explores the social and cultural dynamics that inform the novel. ",
+          "PUB DATE": "May-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Conrad, Joseph"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536023 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199536023-L.jpg",
+          "Title": "Lord Jim",
+          "AlphaTitle": "Lord Jim",
+          "Author": "Joseph Conrad",
+          "AlphaAuthor": "Conrad, Joseph"
+        }
+      ]
+    },
+    {
+      "norm_title": "moll flanders",
+      "display_title": "Moll Flanders",
+      "entries_a": [
+        {
+          "Title": "Moll Flanders",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082161_p0.jpg?v=1768977999&width=422&height=659&crop=center",
+          "Website": "https://barnesandnoble.com/w/moll-flanders-daniel-defoe/1007012745?ean=9781593082161",
+          "Author": "Daniel Defoe",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$10.95",
+          "ISBN": "1007012745",
+          "EAN": "9781593082161"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780192805355 ",
+          "FULL TITLE": "Moll Flanders ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "384 ",
+          "ILLUSTRATIONS": "3 maps",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "C18 Literature ",
+          "DESCRIPTION": "Twelve Year a Whore, fives times a Wife (whereof once to her own Brother), Twelve Year a Thief, Eight Year a Transported Felon in Virginia, at last grew Rich, liv'd Honest, and died a Penitent' So the title page of this extraordinary novel describes the career of the woman known as Moll Flanders, whose real name we never discover. And so, in a tour-de-force of writing by the businessman, political satirist, and spy Daniel Defoe, Moll tells her own story, a vivid and racy tale of a woman's experience in the seamy side of life in late seventeenth- and early eighteenth-century England and America. Born in Newgate prison, and seduced in the home of her adoptive family, she learns to live off her wits, defying the traditional depiction of women as helpless victims. First published in 1722, and one of the earliest novels in the English language, its account of opportunism, endurance, and survival speaks as strongly to us today as it did to its original readers.",
+          "PUB DATE": "Feb-11",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Defoe, Daniel"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780192805355 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780192805355-L.jpg",
+          "Title": "Moll Flanders ",
+          "AlphaTitle": "Moll Flanders ",
+          "Author": "Daniel Defoe",
+          "AlphaAuthor": "Defoe, Daniel"
+        }
+      ]
+    },
+    {
+      "norm_title": "my antonia",
+      "display_title": "My Antonia",
+      "entries_a": [
+        {
+          "Title": "My Antonia",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082024_p0.jpg?v=1768976445&width=422&height=655&crop=center",
+          "Website": "https://barnesandnoble.com/w/my-antonia-willa-cather/1116629808?ean=9781593082024",
+          "Author": "Willa Cather",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$7.95",
+          "ISBN": "1116629808",
+          "EAN": "9781593082024"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199538140 ",
+          "FULL TITLE": "My Antonia ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "272 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Modern & contemporary fiction (post c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "American Literature ",
+          "DESCRIPTION": "As I looked about me I felt that the grass was the country, as the water is the sea. The red of the grass made all the great prairie the colour of wine-stains...And there was so much motion in it; the whole country seemed, somehow, to be running.' My Antonia (1918) depicts the pioneering period of European settlement on the tall-grass prairie of the American midwest, with its beautiful yet terrifying landscape, rich ethnic mix of immigrants and native-born Americans, and communities who share life's joys and sorrows. Jim Burden recounts his memories of Antonia Shimerda, whose family settle in Nebraska from Bohemia. Together they share childhoods spent in a new world. Jim leaves the prairie for college and a career in the east, while Antonia devotes herself to her large family and productive farm. Her story is that of the land itself, a moving portrait of endurance and strength. Described on publication as 'one of the best [novels] that any American has ever done', My Antonia paradoxically took Cather out of the rank of provincial novelists as the same time that it celebrated the provinces, and mythologized a period of American history that had to be lost before its value could be understood.",
+          "PUB DATE": "Dec-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Cather, Willa"
+          ],
+          "EDITORS": [
+            "Sharistanian, Janet"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538140 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199538140-L.jpg",
+          "Title": "My Antonia ",
+          "AlphaTitle": "My Antonia ",
+          "Author": "Willa Cather",
+          "AlphaAuthor": "Cather, Willa"
+        }
+      ]
+    },
+    {
+      "norm_title": "my bondage and my freedom",
+      "display_title": "My Bondage and My Freedom",
+      "entries_a": [
+        {
+          "Title": "My Bondage and My Freedom",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593083014_p0.jpg?v=1766000939&width=422&height=652&crop=center",
+          "Website": "https://barnesandnoble.com/w/my-bondage-and-my-freedom-frederick-douglass/1116700919?ean=9781593083014",
+          "Author": "Frederick Douglass",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$11.95",
+          "ISBN": "1116700919",
+          "EAN": "9781593083014"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780198820710 ",
+          "FULL TITLE": "My Bondage and My Freedom",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "432 ",
+          "ILLUSTRATIONS": "two black & white illustrations",
+          "BIC SUBJECTS": "Autobiography: general; Autobiography: historical, political & military; Autobiography: literary; True stories of heroism, endurance & survival; History of the Americas",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "American Literature ",
+          "DESCRIPTION": "'It was said to me, \"Better have a little of the plantation manner of speech than not; 'tis not best that you seem too learned.\"'  Appearing in 1855, My Bondage and My Freedom is the second autobiography written by Frederick Douglass (1818-95), a man who was born into slavery in Maryland and who went on to become the most famous antislavery author, orator, philosopher, essaysist, historian, intellectual, statesman and freedom-fighter in US history. An instant bestseller, Douglass's autobiography tells the story of his early life as lived in 'bondage' and of his later life as lived in a 'freedom' that was in name only. Recognizing that his body and soul were bought and sold by white slaveholders in the US South, he soon realized his story was being traded by white northern antislavery campaigners. Douglass's My Bondage and My Freedom is a literary, intellectual and philosophical tour-de-force in which he betrays his determination not only to speak but to write 'just the word that seemed to me the word to be written by me.'   This new edition examines Douglass's biography, literary strategies and political activism alongside his depiction of Black women's lives and his narrative histories of Black heroism. This volume also reproduces Frederick Douglass's only work of fiction, The Heroic Slave, published in 1853.",
+          "PUB DATE": "Nov-19",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Douglass, Frederick"
+          ],
+          "EDITORS": [
+            "Bernier, Celeste-Marie "
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198820710 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780198820710-L.jpg",
+          "Title": "My Bondage and My Freedom",
+          "AlphaTitle": "My Bondage and My Freedom",
+          "Author": "Frederick Douglass",
+          "AlphaAuthor": "Douglass, Frederick"
+        }
+      ]
+    },
+    {
+      "norm_title": "narrative of the life of frederick douglass an american slave",
+      "display_title": "Narrative of the Life of Frederick Douglass, An American Slave",
+      "entries_a": [
+        {
+          "Title": "Narrative of the Life of Frederick Douglass, An American Slave",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593080419_p0.jpg?v=1768977043&width=422&height=650&crop=center",
+          "Website": "https://barnesandnoble.com/w/narrative-of-the-life-of-frederick-douglass-an-american-slave-frederick-douglass/1116670483?ean=9781593080419",
+          "Author": "Frederick Douglass",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$7.95",
+          "ISBN": "1116670483",
+          "EAN": "9781593080419"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199539079 ",
+          "FULL TITLE": "Narrative of the Life of Frederick Douglass, an American Slave ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "176 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Autobiography: general; Slavery & abolition of slavery",
+          "BIC QUALIFIERS": "USA",
+          "SUBJECT": "American Literature ",
+          "DESCRIPTION": "I was born in Tuckahoe I have no accurate knowledge of my age, never having seen any authentic record containing it. By far the larger part of the slaves know as little of their ages as horses know of theirs, and it is the wish of most masters within my knowledge to keep their slaves thus ignorant.'  Thus begins the autobiography of Frederick Douglass (1818-1895) who was born into slavery in Maryland and after his escape to Massachusetts in 1838 became an ardent abolitionist and campaigner for women's rights. His Narrative, which became an instant bestseller on publication in 1845, describes his life as a slave, the cruelty he suffered at the hands of his masters, his struggle to educate himself and his fight for freedom. Passionately written, often using striking biblical imagery, the Narrative came to assume epic proportions as a founding anti-slavery text in which Douglass carefully crafted both his life story and his persona.  This new edition examines Douglass, the man and the myth, his complex relationship with women and the enduring power of his book. It includes extracts from Douglass's primary sources and examples of his writing on women's rights.",
+          "PUB DATE": "Mar-09",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Douglass, Frederick"
+          ],
+          "EDITORS": [
+            "McDowell, Deborah E."
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539079 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199539079-L.jpg",
+          "Title": "Narrative of the Life of Frederick Douglass, an American Slave ",
+          "AlphaTitle": "Narrative of the Life of Frederick Douglass, an American Slave ",
+          "Author": "Frederick Douglass",
+          "AlphaAuthor": "Douglass, Frederick"
+        }
+      ]
+    },
+    {
+      "norm_title": "nicholas nickleby",
+      "display_title": "Nicholas Nickleby",
+      "entries_a": [
+        {
+          "Title": "Nicholas Nickleby",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593083007_p0.jpg?v=1766000718&width=422&height=644&crop=center",
+          "Website": "https://barnesandnoble.com/w/nicholas-nickleby-charles-dickens/1116779895?ean=9781593083007",
+          "Author": "Charles Dickens",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$9.95",
+          "ISBN": "1116779895",
+          "EAN": "9781593083007"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199538225 ",
+          "FULL TITLE": "Nicholas Nickleby ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "928 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "C19 Literature ",
+          "DESCRIPTION": "Our hero confronts a large and varied cast, including Wackford Squeers, the fantastic ogre of a schoolmaster, and Vincent Crummles, the grandiloquent ham actor, on his comic and satirical adventures up and down the country. Punishing wickedness, befriending the helpless, strutting the stage, and falling in love, Nicholas shares some of his creator's energy and earnestness as he faces the pressing issues of early Victorian society.",
+          "PUB DATE": "Dec-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Dickens, Charles"
+          ],
+          "EDITORS": [
+            "Schlicke, Paul"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538225 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199538225-L.jpg",
+          "Title": "Nicholas Nickleby ",
+          "AlphaTitle": "Nicholas Nickleby ",
+          "Author": "Charles Dickens",
+          "AlphaAuthor": "Dickens, Charles"
+        }
+      ]
+    },
+    {
+      "norm_title": "night and day",
+      "display_title": "Night and Day",
+      "entries_a": [
+        {
+          "Title": "Night and Day",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082123_p0.jpg?v=1768977148&width=422&height=647&crop=center",
+          "Website": "https://barnesandnoble.com/w/night-and-day-virginia-woolf/1100184097?ean=9781593082123",
+          "Author": "Virginia Woolf",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$11.95",
+          "ISBN": "1100184097",
+          "EAN": "9781593082123"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199555604 ",
+          "FULL TITLE": "Night and Day ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "592 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "C20 Literature ",
+          "DESCRIPTION": "Katherine Hilbery, torn between past and present, is a figure reflecting Woolf's own struggle with history. Both have illustrious literary ancestors: in Katherine's case, her poet grandfather, and in Woolf's, her father Leslie Stephen, writer, philosopher, and editor. Both desire to break away from the demands of the previous generation without disowning it altogether. Katherine must decide whether or not she loves the iconoclastic Ralph Denham; Woolf seeks a way of experimenting with the novel for that still allows her to express her affection for the literature of the past.  This is the most traditional of Woolf's novels, yet even here we can see her beginning to break free; in this, her second novel, with its strange mixture of comedy and high seriousness, Woolf had already found her own characteristic voice.",
+          "PUB DATE": "Jan-09",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Woolf, Virginia"
+          ],
+          "EDITORS": [
+            "Raitt, Suzanne"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555604 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199555604-L.jpg",
+          "Title": "Night and Day ",
+          "AlphaTitle": "Night and Day ",
+          "Author": "Virginia Woolf",
+          "AlphaAuthor": "Woolf, Virginia"
+        }
+      ]
+    },
+    {
+      "norm_title": "o pioneers",
+      "display_title": "O Pioneers!",
+      "entries_a": [
+        {
+          "Title": "O Pioneers!",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082055_p0.jpg?v=1768977033&width=422&height=655&crop=center",
+          "Website": "https://barnesandnoble.com/w/o-pioneers-willa-cather/1005704522?ean=9781593082055",
+          "Author": "Willa Cather",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$8.95",
+          "ISBN": "1005704522",
+          "EAN": "9781593082055"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199552320 ",
+          "FULL TITLE": "O Pioneers! ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "224 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Modern & contemporary fiction (post c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "American Literature ",
+          "DESCRIPTION": "`For the first time, perhaps, since that land emerged from the waters of geologic ages, a human face was set toward it with love and yearning. It seemed beautiful to her, rich and strong and glorious.'  Willa Cather's second novel, O Pioneers! (1913) tells the story of Alexandra Bergson and her determination to save her immigrant family's Nebraska farm. Clear-headed and fiercely independent, Alexandra's passionate faith in the prairie makes her a wealthy landowner.  By placing a strong, self-reliant woman at the centre of her tale, Cather gives the quintessentially American novel of the soil a radical cast. Yet, although influenced by the democratic utopianism of Walt Whitman and the serene regionalism of Sarah Orne Jewett, O Pioneers! is more than merely an elegy for the lost glories of America's pioneer past. In its rage for order and efficiency, the novel testifies to the cultural politics of the Progressive Era, the period of massive social and economic transformations that helped to modernize the United States in the years between the Civil War and World War.",
+          "PUB DATE": "Aug-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Cather, Willa"
+          ],
+          "EDITORS": [
+            "Lindemann, Marilee"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199552320 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199552320-L.jpg",
+          "Title": "O Pioneers! ",
+          "AlphaTitle": "O Pioneers! ",
+          "Author": "Willa Cather",
+          "AlphaAuthor": "Cather, Willa"
+        }
+      ]
+    },
+    {
+      "norm_title": "oliver twist",
+      "display_title": "Oliver Twist",
+      "entries_a": [
+        {
+          "Title": "Oliver Twist",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082062_p0.jpg?v=1766000174&width=422&height=652&crop=center",
+          "Website": "https://barnesandnoble.com/w/oliver-twist-charles-dickens/1116610530?ean=9781593082062",
+          "Author": "Charles Dickens",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$6.95",
+          "ISBN": "1116610530",
+          "EAN": "9781593082062"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199536269 ",
+          "FULL TITLE": "Oliver Twist ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "544 ",
+          "ILLUSTRATIONS": "24 original illustrations by George Cruikshank",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "C19 Literature ",
+          "DESCRIPTION": "The new Oxford World's Classics edition of Oliver Twist is based on the authoritative Clarendon edition, which uses Dickens's revised text of 1846. It includes his preface of 1841 in which he defended himself against hostile criticism, and includes all 24 original illustrations by George Cruikshank. Stephen Gill's groundbreaking Introduction gives a fascinating new account of the novel. He also provides appendices on Dickens and Cruikshank, on Dickens's Preface and the Newgate Novel Controversy, on Oliver Twist and the New Poor Law and on thieves' slang.",
+          "PUB DATE": "May-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Dickens, Charles"
+          ],
+          "EDITORS": [
+            "Tillotson, Kathleen"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536269 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199536269-L.jpg",
+          "Title": "Oliver Twist ",
+          "AlphaTitle": "Oliver Twist ",
+          "Author": "Charles Dickens",
+          "AlphaAuthor": "Dickens, Charles"
+        }
+      ]
+    },
+    {
+      "norm_title": "pere goriot",
+      "display_title": "Pere Goriot",
+      "entries_a": [
+        {
+          "Title": "Pere Goriot",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082857_p0.jpg?v=1766000671&width=422&height=652&crop=center",
+          "Website": "https://barnesandnoble.com/w/pere-goriot-honore-de-balzac/1007296455?ean=9781593082857",
+          "Author": "Honore de Balzac",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$9.95",
+          "ISBN": "1007296455",
+          "EAN": "9781593082857"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199538751 ",
+          "FULL TITLE": "Pere Goriot ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "304 ",
+          "ILLUSTRATIONS": "maps",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "French Literature ",
+          "DESCRIPTION": "This is the tragic story of a father whose obsessive love for his two daughters leads to his financial and personal ruin. It is set against the background of a whole society driven by social ambition and lust for money. The detailed descriptions of both affluence and squalor in the Paris of 1819 are an integral part of the drama played out by a wide range of characters, including the sinister but fascinating Vautrin. Unquestionably one of Balzac's finest novels, Pere Goriot still has the power to move the modern reader.",
+          "PUB DATE": "Feb-09",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Balzac, Honore de"
+          ],
+          "TRANSLATORS": [
+            "Krailsheimer, A. J."
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538751 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199538751-L.jpg",
+          "Title": "Pere Goriot ",
+          "AlphaTitle": "Pere Goriot ",
+          "Author": "Honore de Balzac",
+          "AlphaAuthor": "Balzac, Honore de"
+        }
+      ]
+    },
+    {
+      "norm_title": "sister carrie",
+      "display_title": "Sister Carrie",
+      "entries_a": [
+        {
+          "Title": "Sister Carrie",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082260_p0.jpg?v=1768977027&width=422&height=651&crop=center",
+          "Website": "https://barnesandnoble.com/w/sister-carrie-theodore-dreiser/1007503368?ean=9781593082260",
+          "Author": "Theodore Dreiser",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$10.95",
+          "ISBN": "1007503368",
+          "EAN": "9781593082260"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199539086 ",
+          "FULL TITLE": "Sister Carrie ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "512 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "American Literature ",
+          "DESCRIPTION": "`When a girl leaves her home at eighteen, she does one of two things. Either she falls into saving hands and becomes better, or she rapidly assumes the cosmopolitan standard of virtue and becomes worse.'  The tale of Carrie Meeber's rise to stardom in the theatre and George Hurstwood's slow decline captures the twin poles of exuberance and exhaustion in modern city life as never before. The premier example of American naturalism, Dreiser's remarkable first novel has deeply influenced such key writers as William Faulkner, F. Scott Fitzgerald, Saul Bellow, and Joyce Carol Oates.  This edition uses the 1900 text, which is regarded as the author's final version.",
+          "PUB DATE": "Mar-09",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Dreiser, Theodore"
+          ],
+          "EDITORS": [
+            "Mitchell, Lee Clark"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539086 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199539086-L.jpg",
+          "Title": "Sister Carrie ",
+          "AlphaTitle": "Sister Carrie ",
+          "Author": "Theodore Dreiser",
+          "AlphaAuthor": "Dreiser, Theodore"
+        }
+      ]
+    },
+    {
+      "norm_title": "sons and lovers",
+      "display_title": "Sons and Lovers",
+      "entries_a": [
+        {
+          "Title": "Sons and Lovers",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593080136_p0.jpg?v=1768977071&width=422&height=652&crop=center",
+          "Website": "https://barnesandnoble.com/w/sons-and-lovers-d-h-lawrence/1100153244?ean=9781593080136",
+          "Author": "D. H. Lawrence",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$10.95",
+          "ISBN": "1100153244",
+          "EAN": "9781593080136"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199538881 ",
+          "FULL TITLE": "Sons and Lovers ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "528 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "C20 Literature ",
+          "DESCRIPTION": "Lawrence's first major novel was also the first in the English language to explore ordinary working-class life from the inside. No writer before or since has written so well about the intimacies enforced by a tightly-knit mining community and by a family where feelings are never hidden for long. When the marriage between Walter Morel and his sensitive, high-minded wife begins to break down, the bitterness of their frustration seeps into their children's lives. Their second son, Paul, craves the warmth of family and community, but knows that he must sacrifice everything in the struggle for independence if he is not to repeat his parents' failure. Lawrence's powerful description of Paul's single-minded efforts to define himself sexually and emotionally through relationships with two women - the innocent, old-fashioned Miriam Leivers and the experienced, provocatively modern Clara Dawes - makes this a novel as much for the beginning of the twenty-first century as it was for the beginning of the twentieth.",
+          "PUB DATE": "Feb-09",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Lawrence, D. H."
+          ],
+          "EDITORS": [
+            "Trotter, David"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538881 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199538881-L.jpg",
+          "Title": "Sons and Lovers ",
+          "AlphaTitle": "Sons and Lovers ",
+          "Author": "D. H. Lawrence",
+          "AlphaAuthor": "Lawrence, D. H."
+        }
+      ]
+    },
+    {
+      "norm_title": "tarzan of the apes",
+      "display_title": "Tarzan of the Apes",
+      "entries_a": [
+        {
+          "Title": "Tarzan of the Apes",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082277_p0.jpg?v=1766000627&width=422&height=651&crop=center",
+          "Website": "/w/tarzan-of-the-apes-edgar-rice-burroughs/1007611451?ean=9781593082277",
+          "Author": "Edgar Rice Burroughs",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$8.95",
+          "ISBN": "1007611451",
+          "EAN": "9781593082277"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199542888 ",
+          "FULL TITLE": "Tarzan of the Apes",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "320 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945); Adventure",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "C20 Literature ",
+          "DESCRIPTION": "Tarzan first came swinging through the jungle in the pages of a pulp-fiction magazine in 1912, and subsequently in the novel that went on to spawn numerous film and other adaptations.  In its pages we find Tarzan's origins: how he is orphaned after his parents are marooned and killed on the coast of West Africa, and is adopted by an ape-mother.  He grows up to become a model of physical strength and natural prowess, and eventually leader of his tribe.  When he encounters a group of white Europeans, and rescues Jane Porter from a marauding ape, he finds love, and must choose between the values of the jungle and civilization.  The Tarzan of popular imagination bears only limited resemblance to Edgar Rice Burroughs's creation, and the complex backdrop of colonial appropriation, literary heritage, and nostalgic yearning from which he emerged.  This new edition considers these contexts, as well as the enduring appeal of the King of the Apes.",
+          "PUB DATE": "Apr-10",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Burroughs, Edgar Rice"
+          ],
+          "EDITORS": [
+            "Haslam, Jason"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199542888 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199542888-L.jpg",
+          "Title": "Tarzan of the Apes",
+          "AlphaTitle": "Tarzan of the Apes",
+          "Author": "Edgar Rice Burroughs",
+          "AlphaAuthor": "Burroughs, Edgar Rice"
+        }
+      ]
+    },
+    {
+      "norm_title": "tess of the d urbervilles",
+      "display_title": "Tess of the d'Urbervilles",
+      "entries_a": [
+        {
+          "Title": "Tess of the d'Urbervilles",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082284_p0.jpg?v=1766000901&width=422&height=653&crop=center",
+          "Website": "/w/tess-of-the-durbervilles-thomas-hardy/1116741801?ean=9781593082284",
+          "Author": "Thomas Hardy",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$10.95",
+          "ISBN": "1116741801",
+          "EAN": "9781593082284"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199537051 ",
+          "FULL TITLE": "Tess of the d'Urbervilles ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "496 ",
+          "ILLUSTRATIONS": "two maps",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "C19 Literature ",
+          "DESCRIPTION": "She looked absolutely pure. Nature, in her fantastic trickery, had set such a seal of maidenhood upon Tess's countenance that he gazed at her with a stupefied air: \"Tess- say it is not true! No, it is not true!\"' Young Tess Durbeyfield attempts to restore her family's fortunes by claiming their connection with the aristocratic d'Urbervilles. But Alec d'Urberville is a rich wastrel who seduces her and makes her life miserable. When Tess meets Angel Clare, she is offered true love and happiness, but her past catches up with her and she faces an agonizing moral choice. Hardy's indictment of society's double standards, and his depiction of Tess as 'a pure woman', caused controversy in his day and has held the imagination of readers ever since. Hardy thought it his finest novel, and Tess the most deeply felt character he ever created. This unique critical text is taken from the authoritative Clarendon edition, which is based on the manuscript collated with all Hardy's subsequent revisions.",
+          "PUB DATE": "Aug-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Hardy, Thomas"
+          ],
+          "EDITORS": [
+            "Gatrell, Simon",
+            "Grindle, Juliet"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537051 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199537051-L.jpg",
+          "Title": "Tess of the d'Urbervilles ",
+          "AlphaTitle": "Tess of the d'Urbervilles ",
+          "Author": "Thomas Hardy",
+          "AlphaAuthor": "Hardy, Thomas"
+        }
+      ]
+    },
+    {
+      "norm_title": "the aeneid",
+      "display_title": "The Aeneid",
+      "entries_a": [
+        {
+          "Title": "The Aeneid",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082376_p0.jpg?v=1766001131&width=422&height=653&crop=center",
+          "Website": "/w/the-aeneid-vergil/1101708293?ean=9781593082376",
+          "Author": "Vergil",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$11.95",
+          "ISBN": "1101708293",
+          "EAN": "9781593082376"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199537488 ",
+          "FULL TITLE": "The Aeneid ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "480 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Poetry by individual poets",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "Classical Studies ",
+          "DESCRIPTION": "The supreme Roman epic and the greatest poem in Latin, the Aeneid has inspired many of the great European poets including Dante and Milton. The Trojan hero Aeneas, after surviving the sack of Troy, makes his way to the West, urged on by benevolent deities and following a destiny laid down by Jupiter, but harassed and impeded by the goddess Juno. He wins his way to Italy despite many trials, of which the greatest is the tragic outcome of his love affair with Dido, Queen of Carthage. In Italy Aeneas visits the world of the dead, and is forced to wage a fearful war with the indigenous Italian tribes before he can found his city and open the history of Rome. The Aeneid survives as a poem not only of Roman imperialism but also of the whole world of human passion, duty and suffering. ",
+          "PUB DATE": "Sep-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Virgil"
+          ],
+          "TRANSLATORS": [
+            "Day Lewis, C."
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537488 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199537488-L.jpg",
+          "Title": "The Aeneid ",
+          "AlphaTitle": "Aeneid ",
+          "Author": "Virgil",
+          "AlphaAuthor": "Virgil"
+        }
+      ]
+    },
+    {
+      "norm_title": "the bostonians",
+      "display_title": "The Bostonians",
+      "entries_a": [
+        {
+          "Title": "The Bostonians",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082970_p0.jpg?v=1765999940&width=422&height=653&crop=center",
+          "Website": "/w/the-bostonians-henry-james/1116743935?ean=9781593082970",
+          "Author": "Henry James",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$8.95",
+          "ISBN": "1116743935",
+          "EAN": "9781593082970"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199539147 ",
+          "FULL TITLE": "The Bostonians ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "512 ",
+          "ILLUSTRATIONS": "maps",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "C19 Literature ",
+          "DESCRIPTION": "The plot of this novel revolves around the feminist movement in Boston in the 1870s. F.R. Leavis called it one of \"the two most brilliant novels in the language. \"The novel's many allusions to the historical and social background of Boston society are explained in the editorial material.",
+          "PUB DATE": "Mar-09",
+          "NOTES:": "",
+          "AUTHORS": [
+            "James, Henry"
+          ],
+          "EDITORS": [
+            "Gooder, R. D."
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539147 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199539147-L.jpg",
+          "Title": "The Bostonians ",
+          "AlphaTitle": "Bostonians ",
+          "Author": "Henry James",
+          "AlphaAuthor": "James, Henry"
+        }
+      ]
+    },
+    {
+      "norm_title": "the canterbury tales",
+      "display_title": "The Canterbury Tales",
+      "entries_a": [
+        {
+          "Title": "The Canterbury Tales",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593080808_p0.jpg?v=1766000656&width=422&height=651&crop=center",
+          "Website": "/w/the-canterbury-tales-geoffrey-chaucer/1007611355?ean=9781593080808",
+          "Author": "Geoffrey Chaucer",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$10.95",
+          "ISBN": "1007611355",
+          "EAN": "9781593080808"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199599028 ",
+          "FULL TITLE": "The Canterbury Tales ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "560 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Poetry by individual poets; Literary studies: poetry & poets; Literary studies: classical, early & medieval",
+          "BIC QUALIFIERS": "English",
+          "SUBJECT": "Medieval Literature ",
+          "DESCRIPTION": "Whoever best acquits himself, and tells The most amusing and instructive tale, Shall have a dinner, paid for by us all...' In Chaucer's most ambitious poem, The Canterbury Tales (c. 1387), a group of pilgrims assembles in an inn just outside London and agree to entertain each other on the way to Canterbury by telling stories. The pilgrims come from all ranks of society, from the crusading Knight and burly Miller to the worldly Monk and lusty Wife of Bath. Their tales are as various as the tellers, including romance, bawdy comedy, beast fable, learned debate, parable, and Eastern adventure. The resulting collection gives us a set of characters so vivid that they have often been taken as portraits from real life, and a series of stories as hilarious in their comedy as they are affecting in their tragedy. Even after 600 years, their account of the human condition seems both fresh and true. This new edition of David Wright's acclaimed translation includes a new critical introduction and invaluable notes by a leading Chaucer scholar.",
+          "PUB DATE": "Aug-11",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Chaucer, Geoffrey"
+          ],
+          "TRANSLATORS": [
+            "Wright, David"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199599028 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199599028-L.jpg",
+          "Title": "The Canterbury Tales ",
+          "AlphaTitle": "Canterbury Tales ",
+          "Author": "Geoffrey Chaucer",
+          "AlphaAuthor": "Chaucer, Geoffrey"
+        }
+      ]
+    },
+    {
+      "norm_title": "the good soldier",
+      "display_title": "The Good Soldier",
+      "entries_a": [
+        {
+          "Title": "The Good Soldier",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082680_p0.jpg?v=1765999932&width=422&height=660&crop=center",
+          "Website": "/w/the-good-soldier-ford-madox-ford/1100161641?ean=9781593082680",
+          "Author": "Ford Madox Ford",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$8.95",
+          "ISBN": "1100161641",
+          "EAN": "9781593082680"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199585946 ",
+          "FULL TITLE": "The Good Soldier ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "320 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "C20 Literature ",
+          "DESCRIPTION": "This is the saddest story I have ever heard.' Wealthy American John Dowell describes in a disarmingly casual, compellingly intimate manner how he and his wife Florence meet an English couple in a German spa resort. They become friends over the years and gradually the history of their relationships and the passions that lie behind the orderly Edwardian facade are unveiled. Dowell is the archetypal 'unreliable narrator', and his casual revelations are both unexpected and explosive.  A masterpiece of early Modernism and a virtuoso performance of literary skill, Ford's 'Tale of Passion' reflects contemporary interests in psychology, sexuality, and the New Woman. Its portrayal of the destruction of a civilized elite anticipates the cataclysm of the First World War, which erupted while Ford was finishing the book. This new edition includes Ford's important essay 'On Impressionism', which sheds valuable light on his artistic technique. ",
+          "PUB DATE": "Sep-12",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Ford, Ford Madox"
+          ],
+          "EDITORS": [
+            "Saunders, Max"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199585946 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199585946-L.jpg",
+          "Title": "The Good Soldier ",
+          "AlphaTitle": "Good Soldier ",
+          "Author": "Ford Madox Ford",
+          "AlphaAuthor": "Ford, Ford Madox"
+        }
+      ]
+    },
+    {
+      "norm_title": "the house of mirth",
+      "display_title": "The House of Mirth",
+      "entries_a": [
+        {
+          "Title": "The House of Mirth",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593081539_p0.jpg?v=1765999828&width=422&height=647&crop=center",
+          "Website": "/w/the-house-of-mirth-edith-wharton/1116616936?ean=9781593081539",
+          "Author": "Edith Wharton",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$10.95",
+          "ISBN": "1116616936",
+          "EAN": "9781593081539"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199538102 ",
+          "FULL TITLE": "The House of Mirth ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "368 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "American Literature ",
+          "DESCRIPTION": "Since its publication in 1905 The House of Mirth has commanded attention for the sharpness of Wharton's observations and the power of her style. Its heroine, Lily Bart, is beautiful, poor, and unmarried at 29. In her search for a husband with money and position she betrays her own heart and sows the seeds of the tragedy that finally overwhelms her.  The House of Mirth is a lucid, disturbing analysis of the stifling limitations imposed upon women of Wharton's generation. Herself born into Old New York Society, Wharton watched as an entirely new set of people living by new codes of conduct entered the metropolitan scene. In telling the story of Lily Bart, who must marry to survive, Wharton recasts the age-old themes of family, marriage, and money in ways that transform the traditional novel of manners into an arresting modern document of cultural anthropology. ",
+          "PUB DATE": "Nov-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Wharton, Edith"
+          ],
+          "EDITORS": [
+            "Banta, Martha"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538102 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199538102-L.jpg",
+          "Title": "The House of Mirth ",
+          "AlphaTitle": "House of Mirth ",
+          "Author": "Edith Wharton",
+          "AlphaAuthor": "Wharton, Edith"
+        }
+      ]
+    },
+    {
+      "norm_title": "the jungle books",
+      "display_title": "The Jungle Books",
+      "entries_a": [
+        {
+          "Title": "The Jungle Books",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593081096_p0.jpg?v=1766001093&width=422&height=647&crop=center",
+          "Website": "/w/the-jungle-books-rudyard-kipling/1100316014?ean=9781593081096",
+          "Author": "Rudyard Kipling",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$7.95",
+          "ISBN": "1100316014",
+          "EAN": "9781593081096"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199536450 ",
+          "FULL TITLE": "The Jungle Books ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "432 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Modern & contemporary fiction (post c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "C19 Literature ",
+          "DESCRIPTION": "The Jungle Books can be regarded as classic stories told by an adult to children. But they also constitute a complex literary work of art in which the whole of Kipling's philosophy of life is expressed in miniature. They are best known for the `Mowgli' stories; the tale of a baby abandoned and brought up by wolves, educated in the ways and secrets of the jungle by Kaa the python, Baloo the bear, and Bagheera the black panther. The stories, a mixture of fantasy, myth, and magic, are underpinned by Kipling's abiding preoccupation with the theme of self-discovery, and the nature of the `Law'.",
+          "PUB DATE": "Jun-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Kipling, Rudyard"
+          ],
+          "EDITORS": [
+            "Robson, W. W."
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536450 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199536450-L.jpg",
+          "Title": "The Jungle Books ",
+          "AlphaTitle": "Jungle Books ",
+          "Author": "Rudyard Kipling",
+          "AlphaAuthor": "Kipling, Rudyard"
+        }
+      ]
+    },
+    {
+      "norm_title": "the last of the mohicans",
+      "display_title": "The Last of the Mohicans",
+      "entries_a": [
+        {
+          "Title": "The Last of the Mohicans",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593081379_p0.jpg?v=1768977075&width=422&height=658&crop=center",
+          "Website": "/w/the-last-of-the-mohicans-james-fenimore-cooper/1126378221?ean=9781593081379",
+          "Author": "James Fenimore Cooper",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$9.95",
+          "ISBN": "1126378221",
+          "EAN": "9781593081379"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199538195 ",
+          "FULL TITLE": "The Last of the Mohicans ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "464 ",
+          "ILLUSTRATIONS": "2 maps",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945); Literary studies: fiction, novelists & prose writers; Literary studies: c 1800 to c 1900",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "American Literature ",
+          "DESCRIPTION": "The second of Cooper's five Leatherstocking Tales, this is the one which has consistently captured the imagination of generations since it was first published in 1826. Its success lies partly in the historical role Cooper gives to his Indian characters, against the grain of accumulated racial hostility, and partly in his evocation of the wild beautiful landscapes of North America which the French and the British fought to control throughout the eighteenth century. At the centre of the novel is the celebrated `Massacre' of British troops and their families by Indian allies of the French at Fort William Henry in 1757. Around this historical event, Cooper built a romantic fiction of captivity, sexuality, and heroism, in which the destiny of the Mohicans Chingachgook and his son Uncas is inseparable from the lives of Alice and Cora Munro and of Hawkeye the frontier scout. The controlled, elaborate writing gives natural pace to the violence of the novel's action: like the nature whose plundering Copper laments, the books placid surfaces conceal inexplicable and deathly forces.",
+          "PUB DATE": "Dec-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Cooper, James Fenimore"
+          ],
+          "EDITORS": [
+            "McWilliams, John P., Jr."
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538195 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199538195-L.jpg",
+          "Title": "The Last of the Mohicans ",
+          "AlphaTitle": "Last of the Mohicans ",
+          "Author": "James Fenimore Cooper",
+          "AlphaAuthor": "Cooper, James Fenimore"
+        }
+      ]
+    },
+    {
+      "norm_title": "the odyssey",
+      "display_title": "The Odyssey",
+      "entries_a": [
+        {
+          "Title": "The Odyssey",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593080099_p0.jpg?v=1768977021&width=422&height=652&crop=center",
+          "Website": "/w/the-odyssey-homer/1116748927?ean=9781593080099",
+          "Author": "Homer",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$9.95",
+          "ISBN": "1116748927",
+          "EAN": "9781593080099"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199669103 ",
+          "FULL TITLE": "The Odyssey",
+          "SERIES": "OWC Hardback Collection",
+          "BINDING": "H/C",
+          "PAGINATION": "384 ",
+          "ILLUSTRATIONS": "1 black & white map",
+          "BIC SUBJECTS": "Literary studies: classical, early & medieval; Poetry by individual poets; Classical texts; Literary studies: poetry & poets",
+          "BIC QUALIFIERS": "Ancient (Classical) Greek; BCE to c 500 CE",
+          "SUBJECT": "Classical Studies ",
+          "DESCRIPTION": "'Tell me, Muse, of the man of many turns, who was driven         far and wide after he had sacked the sacred city of Troy'  Twenty years after setting out to fight in the Trojan War, Odysseus is yet to return home to Ithaca. His household is in disarray: a horde of over 100 disorderly and arrogant suitors are vying to claim Odysseus' wife Penelope, and his young son Telemachus is powerless to stop them. Meanwhile, Odysseus is driven beyond the limits of the known world, encountering countless divine and earthly challenges. But Odysseus is 'of many wiles' and his cunning and bravery eventually lead him home, to reclaim both his family and his kingdom.   The Odyssey rivals the Iliad as the greatest poem of Western culture and is perhaps the most influential text of classical literature. This elegant and compelling new translation is accompanied by a full introduction and notes that guide the reader in understanding the poem and the many different contexts in which it was performed and read.",
+          "PUB DATE": "Oct-16",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Homer"
+          ],
+          "TRANSLATORS": [
+            "Verity, Anthony"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199669103 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199669103-L.jpg",
+          "Title": "The Odyssey",
+          "AlphaTitle": "Odyssey",
+          "Author": "Homer",
+          "AlphaAuthor": "Homer"
+        },
+        {
+          "ISBN": "9780199536788 ",
+          "FULL TITLE": "The Odyssey ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "384 ",
+          "ILLUSTRATIONS": "maps",
+          "BIC SUBJECTS": "Poetry by individual poets; Literary studies: classical, early & medieval; Classical texts",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "Classical Studies ",
+          "DESCRIPTION": "This prose translation of the Odyssey is so successful that it has taken its place as one of the few really outstanding versions of Homer's famous epic poem. It is the story of the return of Odysseus from the siege of Troy to his home in Ithaca, and of the vengeance he takes on the suitors of his wife Penelope. Odysseus's account of his adventures since leaving Troy includes his encounter with the enchantress Circe, his visit to the Underworld, and the lure of the Sirens.",
+          "PUB DATE": "Jul-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Homer"
+          ],
+          "TRANSLATORS": [
+            "Shewring, Walter"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536788 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199536788-L.jpg",
+          "Title": "The Odyssey ",
+          "AlphaTitle": "Odyssey ",
+          "Author": "Homer",
+          "AlphaAuthor": "Homer"
+        },
+        {
+          "ISBN": "9780198736479 ",
+          "FULL TITLE": "The Odyssey ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "384 ",
+          "ILLUSTRATIONS": "1 black & white map",
+          "BIC SUBJECTS": "Literary studies: classical, early & medieval; Poetry by individual poets; Classical texts; Literary studies: poetry & poets",
+          "BIC QUALIFIERS": "Ancient (Classical) Greek; BCE to c 500 CE",
+          "SUBJECT": "Classical Studies ",
+          "DESCRIPTION": "'Tell me, Muse, of the man of many turns, who was driven         far and wide after he had sacked the sacred city of Troy'  Twenty years after setting out to fight in the Trojan War, Odysseus is yet to return home to Ithaca. His household is in disarray: a horde of over 100 disorderly and arrogant suitors are vying to claim Odysseus' wife Penelope, and his young son Telemachus is powerless to stop them. Meanwhile, Odysseus is driven beyond the limits of the known world, encountering countless divine and earthly challenges. But Odysseus is 'of many wiles' and his cunning and bravery eventually lead him home, to reclaim both his family and his kingdom.   The Odyssey rivals the Iliad as the greatest poem of Western culture and is perhaps the most influential text of classical literature. This elegant and compelling new translation is accompanied by a full introduction and notes that guide the reader in understanding the poem and the many different contexts in which it was performed and read.",
+          "PUB DATE": "Feb-18",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Homer"
+          ],
+          "TRANSLATORS": [
+            "Verity, Anthony"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198736479 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780198736479-L.jpg",
+          "Title": "The Odyssey ",
+          "AlphaTitle": "Odyssey ",
+          "Author": "Homer",
+          "AlphaAuthor": "Homer"
+        }
+      ]
+    },
+    {
+      "norm_title": "the return of the native",
+      "display_title": "The Return of the Native",
+      "entries_a": [
+        {
+          "Title": "The Return of the Native",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082208_p0.jpg?v=1768977526&width=422&height=652&crop=center",
+          "Website": "/w/the-return-of-the-native-thomas-hardy/1116679267?ean=9781593082208",
+          "Author": "Thomas Hardy",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$7.95",
+          "ISBN": "1116679267",
+          "EAN": "9781593082208"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199537044 ",
+          "FULL TITLE": "The Return of the Native ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "496 ",
+          "ILLUSTRATIONS": "one map",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "C19 Literature ",
+          "DESCRIPTION": "To be loved to madness - such was her great desire' Eustacia Vye criss-crosses the wild Egdon Heath, eager to experience life to the full in her quest for 'music, poetry, passion, war'. She marries Clym Yeobright, native of the heath, but his idealism frustrates her romantic ambitions and her discontent draws others into a tangled web of deceit and unhappiness. Early readers responded to Hardy's 'insatiably observant' descriptions of the heath, a setting that for D. H. Lawrence provided the 'real stuff of tragedy'. For modern readers, the tension between the mythic setting of the heath and the modernity of the characters challenges our freedom to shape the world as we wish; like Eustacia, we may not always be able to live our dreams. This edition has a critically established text based on the manuscript and first edition.",
+          "PUB DATE": "Aug-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Hardy, Thomas"
+          ],
+          "EDITORS": [
+            "Gatrell, Simon"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537044 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199537044-L.jpg",
+          "Title": "The Return of the Native ",
+          "AlphaTitle": "Return of the Native ",
+          "Author": "Thomas Hardy",
+          "AlphaAuthor": "Hardy, Thomas"
+        }
+      ]
+    },
+    {
+      "norm_title": "the scarlet letter",
+      "display_title": "The Scarlet Letter",
+      "entries_a": [
+        {
+          "Title": "The Scarlet Letter",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082079_p0.jpg?v=1768977079&width=422&height=655&crop=center",
+          "Website": "/w/the-scarlet-letter-nathaniel-hawthorne/1116620656?ean=9781593082079",
+          "Author": "Nathaniel Hawthorne",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$6.95",
+          "ISBN": "1116620656",
+          "EAN": "9781593082079"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199537808 ",
+          "FULL TITLE": "The Scarlet Letter ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "272 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945); Literary studies: fiction, novelists & prose writers; Literary studies: c 1800 to c 1900",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "American Literature ",
+          "DESCRIPTION": "Thou and thine, Hester Prynne, belong to me.' With these chilling words a husband claims his wife after a two-year absence. But the child she clutches is not his, and Hester must wear a scarlet 'A' upon her breast, the sin of adultery visible to all. Under an assumed name her husband begins his search for her lover, determined to expose what Hester is equally determined to protect. Defiant and proud, Hester witnesses the degradation of two very different men, as moral codes and legal imperatives painfully collide. Set in the Puritan community of seventeenth-century Boston, The Scarlet Letter also sheds light on the nineteenth-century in which it was written, as Hawthorne explores his ambivalent relations with his Puritan forebears. The text of this edition is taken from the Centenary Edition of Hawthorne's works, the most authoritative critical edition. ",
+          "PUB DATE": "Oct-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Hawthorne, Nathaniel"
+          ],
+          "EDITORS": [
+            "Harding, Brian"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199537808 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199537808-L.jpg",
+          "Title": "The Scarlet Letter ",
+          "AlphaTitle": "Scarlet Letter ",
+          "Author": "Nathaniel Hawthorne",
+          "AlphaAuthor": "Hawthorne, Nathaniel"
+        }
+      ]
+    },
+    {
+      "norm_title": "the scarlet pimpernel",
+      "display_title": "The Scarlet Pimpernel",
+      "entries_a": [
+        {
+          "Title": "The Scarlet Pimpernel",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082345_p0.jpg?v=1768977040&width=422&height=652&crop=center",
+          "Website": "/w/the-scarlet-pimpernel-baroness-orczy/1100303462?ean=9781593082345",
+          "Author": "Baroness Orczy",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$8.95",
+          "ISBN": "1100303462",
+          "EAN": "9781593082345"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780198791225 ",
+          "FULL TITLE": "The Scarlet Pimpernel",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "272 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945); Historical adventure; Historical fiction",
+          "BIC QUALIFIERS": "20th century",
+          "SUBJECT": "C20 Literature ",
+          "DESCRIPTION": "Is he in heaven?-Is he in hell? That demmed, elusive Pimpernel?   Sir Percy Blakeney lives a double life in the England of 1792: at home he is an idle fop and a leader of fashion, but in abroad he is the Scarlet Pimpernel, a master of disguise who saves aristocrats from the guillotine.  When the revolutionary French state seeks to unmask him, Percy's estranged, independent wife, Marguerite, unwittingly sets their agent on her husband's track.   Percy's escapades, and Marguerite's daring journey to France to save him from the guillotine, keep the reader turning the pages of Baroness Orczy's well-paced romantic adventure.   Written in just five weeks in 1903, Baroness Emma Orczy's bestseller has been the basis of multiple adaptations.  Rooted in the upheaval of Orczy's Hungarian childhood, and in the anxious nationalism of turn-of-the-century Britain, the story of the Scarlet Pimpernel provided a blueprint not only for subsequent historical swashbucklers, but for superheroes from Zorro to Superman.      The edition places the book The Scarlet Pimpernel within the context of the elite and popular literature of the turn of the century.  Orczy's novel is close in kin to such contemporary political thrillers as Joseph Conrad's The Secret Agent (1907); tales that channelled contemporary concerns about refugees and enemies within.",
+          "PUB DATE": "Jan-18",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Orczy, Emma"
+          ],
+          "EDITORS": [
+            "Daly, Nicholas"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198791225 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780198791225-L.jpg",
+          "Title": "The Scarlet Pimpernel",
+          "AlphaTitle": "Scarlet Pimpernel",
+          "Author": "Emma Orczy",
+          "AlphaAuthor": "Orczy, Emma"
+        }
+      ]
+    },
+    {
+      "norm_title": "the secret garden",
+      "display_title": "The Secret Garden",
+      "entries_a": [
+        {
+          "Title": "The Secret Garden",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082772_p0.jpg?v=1768977302&width=422&height=652&crop=center",
+          "Website": "/w/the-secret-garden-frances-hodgson-burnett/1100156315?ean=9781593082772",
+          "Author": "Frances Hodgson Burnett",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$6.95",
+          "ISBN": "1100156315",
+          "EAN": "9781593082772"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199588220 ",
+          "FULL TITLE": "The Secret Garden ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "288 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945); Classic fiction (Children's / Teenage); Fiction companions",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "Childrens Literature ",
+          "DESCRIPTION": "It was the garden that did it - and Mary and Dickon and the creatures - and the Magic.' An orphaned girl, a grim moorland manor with hundreds of empty rooms, strange cries in the night, a walled garden, with its door locked and the key buried - and a boy who talks to animals. These are the ingredients of one of the most famous and well-loved of children's classics. Through her discovery of the secret garden, Mary Lennox is gradually transformed from a spoilt and unhappy child into a healthy, unselfish girl who in turn redeems her neglected cousin and his gloomy, Byronic father. Frances Hodgson Burnett's inspiring story of regeneration and salvation gently subverted the conventions of a century of romantic and gothic fiction for girls. After a hundred years, The Secret Garden's critique of empire and of attitudes to childhood and gender, and its advocacy of a holistic approach to health remains remarkably contemporary and relevant.",
+          "PUB DATE": "Mar-11",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Burnett, Frances Hodgson"
+          ],
+          "EDITORS": [
+            "Hunt, Peter"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199588220 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199588220-L.jpg",
+          "Title": "The Secret Garden ",
+          "AlphaTitle": "Secret Garden ",
+          "Author": "Frances Hodgson Burnett",
+          "AlphaAuthor": "Burnett, Frances Hodgson"
+        }
+      ]
+    },
+    {
+      "norm_title": "the souls of black folk",
+      "display_title": "The Souls of Black Folk",
+      "entries_a": [
+        {
+          "Title": "The Souls of Black Folk",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593080143_p0.jpg?v=1768977110&width=422&height=653&crop=center",
+          "Website": "/w/the-souls-of-black-folk-w-e-b-du-bois/1116629258?ean=9781593080143",
+          "Author": "W. E. B. Du Bois",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$8.95",
+          "ISBN": "1116629258",
+          "EAN": "9781593080143"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199555833 ",
+          "FULL TITLE": "The Souls of Black Folk ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "272 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Literary essays; Black & Asian studies",
+          "BIC QUALIFIERS": "USA",
+          "SUBJECT": "American Literature ",
+          "DESCRIPTION": "The problem of the twentieth-century is the problem of the color-line.' Originally published in 1903, The Souls of Black Folk is a classic study of race, culture, and education at the turn of the twentieth century. With its singular combination of essays, memoir, and fiction, this book vaulted W. E. B. Du Bois to the forefront of American political commentary and civil rights activism. The Souls of Black Folk is an impassioned, at times searing account of the situation of African Americans in the United States. Du Bois makes a forceful case for the access of African Americans to higher education, memorably extols the achievements of black culture (above all the spirituals or 'sorrow songs'), and advances the provocative and influential argument that due to the inequalities and pressures of the 'race problem', African American identity is characterized by 'double consciousness'. This edition includes a valuable appendix of other writing by Du Bois, which sheds light on his attitudes and intentions.",
+          "PUB DATE": "Oct-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Du Bois, W. E. B."
+          ],
+          "EDITORS": [
+            "Edwards, Brent Hayes"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555833 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199555833-L.jpg",
+          "Title": "The Souls of Black Folk ",
+          "AlphaTitle": "Souls of Black Folk ",
+          "Author": "W. E. B. Du Bois",
+          "AlphaAuthor": "Du Bois, W. E. B."
+        }
+      ]
+    },
+    {
+      "norm_title": "the voyage out",
+      "display_title": "The Voyage Out",
+      "entries_a": [
+        {
+          "Title": "The Voyage Out",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082291_p0.jpg?v=1765999597&width=422&height=654&crop=center",
+          "Website": "/w/the-voyage-out-virginia-woolf/1116742461?ean=9781593082291",
+          "Author": "Virginia Woolf",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$11.95",
+          "ISBN": "1116742461",
+          "EAN": "9781593082291"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199539307 ",
+          "FULL TITLE": "The Voyage Out ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "496 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "C20 Literature ",
+          "DESCRIPTION": "The Voyage Out (1915) is the story of a rite of passage. When Rachel Vinrace embarks for South America on her father's ship she is launched on a course of self-discovery in a modern version of the mythic voyage. Virginia Woolf knew all too well the forms that she was supposed to follow when writing of a young lady's entrance into the world, and she struggled to subvert the conventions, wittily and assiduously, rewriting and revising the novel many times. The finished work is not, on the face of it, a `portrait of the artist'. However, through The Voyage Out readers will discover Woolf as an emerging and original artist: not identified with the heroine, but present everywhere in the social satire and the lyricism and patterning of consciousness.",
+          "PUB DATE": "Mar-09",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Woolf, Virginia"
+          ],
+          "EDITORS": [
+            "Sage, Lorna"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199539307 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199539307-L.jpg",
+          "Title": "The Voyage Out ",
+          "AlphaTitle": "Voyage Out ",
+          "Author": "Virginia Woolf",
+          "AlphaAuthor": "Woolf, Virginia"
+        }
+      ]
+    },
+    {
+      "norm_title": "the wind in the willows",
+      "display_title": "The Wind in the Willows",
+      "entries_a": [
+        {
+          "Title": "The Wind in the Willows",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082659_p0.jpg?v=1765999880&width=422&height=661&crop=center",
+          "Website": "/w/the-wind-in-the-willows-kenneth-grahame/1007012693?ean=9781593082659",
+          "Author": "Kenneth Grahame",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$9.95",
+          "ISBN": "1007012693",
+          "EAN": "9781593082659"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199567560 ",
+          "FULL TITLE": "The Wind in the Willows ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "224 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945); Classic fiction (Children's / Teenage)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "Childrens Literature ",
+          "DESCRIPTION": "Believe me, my young friend, there is nothing - absolutely nothing - half so much worth doing as simply messing about in boats.' So says Rat to Mole, as he introduces him to the delights of the river and his friends Toad, the spirit of rebellion, and Badger, the spirit of England. But it is a world where the motor-car is about to wreck the gipsy caravan, the revolutionaries in the Wild Wood are threatening the social fabric, the god Pan is abroad, and the warm seductive whispers of the south are drifting into the English lanes. An international children's classic, The Wind in the Willows grew from the author's letters to his young son, yet it is concerned almost exclusively with adult themes: fear of radical changes in political, social, and economic power. Mole's acceptance into the conservative world of the River Bank, and Toad's wild attempts to escape from it, are narrated in virtuoso language ranging from lively parody to elaborate fin-de-siecle mysticism. A profoundly English fiction with a world following, it is a book for adults adopted by children, a timeless masterpiece, and a vital portrait of an age.",
+          "PUB DATE": "Jul-10",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Grahame, Kenneth"
+          ],
+          "EDITORS": [
+            "Hunt, Peter"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199567560 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199567560-L.jpg",
+          "Title": "The Wind in the Willows ",
+          "AlphaTitle": "Wind in the Willows ",
+          "Author": "Kenneth Grahame",
+          "AlphaAuthor": "Grahame, Kenneth"
+        }
+      ]
+    },
+    {
+      "norm_title": "the woman in white",
+      "display_title": "The Woman in White",
+      "entries_a": [
+        {
+          "Title": "The Woman in White",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082802_p0.jpg?v=1768977317&width=422&height=651&crop=center",
+          "Website": "/w/the-woman-in-white-wilkie-collins/1116743916?ean=9781593082802",
+          "Author": "Wilkie Collins",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$15.95",
+          "ISBN": "1116743916",
+          "EAN": "9781593082802"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199535637 ",
+          "FULL TITLE": "The Woman in White",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "752 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Literature & literary studies; Fiction & related items; Classic fiction (pre c 1951); Thriller / suspense; Crime & mystery",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "C19 Literature ",
+          "DESCRIPTION": "The Woman in White (1859-60) is the first and greatest `Sensation Novel'. Walter Hartright's mysterious midnight encounter with the woman in white draws him into a vortex of crime, poison, kidnapping, and international intrigue. The novel is dominated by two of the finest creations in all Victorian fiction - Marion Halcombe, dark, mannish, yet irresistibly fascinating, and Count Fosco, the sinister and flamboyant `Napoleon of Crime'. A masterwork of intricate construction, The Woman in White sets new standards of suspense and excitement, and achieved sales which topped even those of Dickens, Collins's friend and mentor. ",
+          "PUB DATE": "Apr-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Collins, Wilkie"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199535637 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199535637-L.jpg",
+          "Title": "The Woman in White",
+          "AlphaTitle": "Woman in White",
+          "Author": "Wilkie Collins",
+          "AlphaAuthor": "Collins, Wilkie"
+        }
+      ]
+    },
+    {
+      "norm_title": "the wonderful wizard of oz",
+      "display_title": "The Wonderful Wizard of Oz",
+      "entries_a": [
+        {
+          "Title": "The Wonderful Wizard of Oz",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082215_p0.jpg?v=1766000133&width=422&height=652&crop=center",
+          "Website": "/w/the-wonderful-wizard-of-oz-l-frank-baum/1114761867?ean=9781593082215",
+          "Author": "L. Frank Baum",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$9.95",
+          "ISBN": "1114761867",
+          "EAN": "9781593082215"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199540648 ",
+          "FULL TITLE": "The Wonderful Wizard of Oz ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "336 ",
+          "ILLUSTRATIONS": "line illustrations, 1 map",
+          "BIC SUBJECTS": "Classic fiction (Children's / Teenage)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "Childrens Literature ",
+          "DESCRIPTION": "`The road to the City of Emeralds is paved with yellow brick,' said the Witch; `so you cannot miss it. When you get to Oz do not be afraid of him, but tell your story and ask him to help you.'  A cyclone hits Kansas and whirls away Dorothy and her little dog Toto to the magical Land of Oz, where wild beasts talk, silver shoes have magic powers, and good witches offer protection with a kiss. But Dorothy has made an enemy of the Wicked Witch of the West. With her new friends the Scarecrow, the Tin Woodman, and the Cowardly Lion, they brave many dangers in search of the Wonderful Wizard in his Emerald City at the heart of Oz to ask him to grant each of them what they most desire - only to find that they already possess it.  Published at the dawn of the twentieth century, The Wonderful Wizard of Oz (1900) immediately captivated child and adult readers alike. This new edition includes many of W. W. Denslow's original illustrations, and the introduction considers both the famous MGM film version and recent literary theory in a fascinating discussion of this children's classic.",
+          "PUB DATE": "May-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Baum, L. Frank"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199540648 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199540648-L.jpg",
+          "Title": "The Wonderful Wizard of Oz ",
+          "AlphaTitle": "Wonderful Wizard of Oz ",
+          "Author": "L. Frank Baum",
+          "AlphaAuthor": "Baum, L. Frank"
+        }
+      ]
+    },
+    {
+      "norm_title": "tom jones",
+      "display_title": "Tom Jones",
+      "entries_a": [
+        {
+          "Title": "Tom Jones",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593080709_p0.jpg?v=1765999789&width=422&height=652&crop=center",
+          "Website": "https://barnesandnoble.com/w/tom-jones-henry-fielding/1100110760?ean=9781593080709",
+          "Author": "Henry Fielding",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$11.95",
+          "ISBN": "1100110760",
+          "EAN": "9781593080709"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199536993 ",
+          "FULL TITLE": "Tom Jones ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "976 ",
+          "ILLUSTRATIONS": "2 maps",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "C18 Literature ",
+          "DESCRIPTION": "Fielding's comic masterpiece of 1749 was immediately attacked as `A motley history of bastardism, fornication, and adultery'. Indeed, his populous novel overflows with a marvellous assortment of prudes, whores, libertines, bumpkins, misanthropes, hypocrites, scoundrels, virgins, and all too fallible humanitarians. At the centre of one of the most ingenious plots in English fiction stands a hero whose actions were, in 1749, as shocking as they are funny today. Expelled from Mr Allworthy's country estate for his wild temper and sexual conquests, the good-hearted foundling Tom Jones loses his money, joins the army, and pursues his beloved across Britain to London, where he becomes a kept lover and confronts the possibility of incest. Tom Jones is rightly regarded as Fielding's greatest work, and one of the first and most influential of English novels.  This carefully modernized edition is based on Fielding's emended fourth edition text and offers the most thorough notes, maps, and bibliography. The introduction uses the latest scholarship to examine how Tom Jones exemplifies the role of the novel in the emerging eighteenth-century public sphere.",
+          "PUB DATE": "Aug-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Fielding, Henry"
+          ],
+          "EDITORS": [
+            "Bender, John",
+            "Stern, Simon"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199536993 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199536993-L.jpg",
+          "Title": "Tom Jones ",
+          "AlphaTitle": "Tom Jones ",
+          "Author": "Henry Fielding",
+          "AlphaAuthor": "Fielding, Henry"
+        }
+      ]
+    },
+    {
+      "norm_title": "treasure island",
+      "display_title": "Treasure Island",
+      "entries_a": [
+        {
+          "Title": "Treasure Island",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082475_p0.jpg?v=1768977048&width=422&height=659&crop=center",
+          "Website": "https://barnesandnoble.com/w/treasure-island-robert-louis-stevenson/1146880737?ean=9781593082475",
+          "Author": "Robert Louis Stevenson",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$7.95",
+          "ISBN": "1146880737",
+          "EAN": "9781593082475"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199560356 ",
+          "FULL TITLE": "Treasure Island ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "272 ",
+          "ILLUSTRATIONS": "one map",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945); Adventure; Classic fiction (Children's / Teenage); Adventure stories (Children's / Teenage)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "Childrens Literature ",
+          "DESCRIPTION": "there were only seven out of the twenty-six on whom we knew we could rely; and out of those seven one was a boy ...' When a mysterious seafarer puts up at the Admiral Benbow, young Jim Hawkins is haunted by his frightening tales; the sailor's sudden death is the beginning of one of the most exciting adventure stories in literature. The discovery of a treasure map sets Jim and his companions in search of buried gold, and they are soon on board the Hispaniola with a crew of buccaneers recruited by the one-legged sea cook known as Long John Silver. As they near their destination, and the lure of Captain Flint's treasure grows ever stronger, Jim's courage and wits are tested to the full. Stevenson reinvented the genre with Treasure Island, a boys' story that appeals as much to adults as to children, and whose moral ambiguities turned the Victorian universe on its head. This edition celebrates the ultimate book of pirates and high adventure, and also examines how its tale of greed, murder, treachery, and evil has acquired its classic status.",
+          "PUB DATE": "Jan-11",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Stevenson, Robert Louis"
+          ],
+          "EDITORS": [
+            "Hunt, Peter"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199560356 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199560356-L.jpg",
+          "Title": "Treasure Island ",
+          "AlphaTitle": "Treasure Island ",
+          "Author": "Robert Louis Stevenson",
+          "AlphaAuthor": "Stevenson, Robert Louis"
+        }
+      ]
+    },
+    {
+      "norm_title": "uncle tom s cabin",
+      "display_title": "Uncle Tom's Cabin",
+      "entries_a": [
+        {
+          "Title": "Uncle Tom's Cabin",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593081218_p0.jpg?v=1768977498&width=422&height=651&crop=center",
+          "Website": "https://barnesandnoble.com/w/uncle-toms-cabin-harriet-beecher-stowe/1116705392?ean=9781593081218",
+          "Author": "Harriet Beecher Stowe",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$8.95",
+          "ISBN": "1116705392",
+          "EAN": "9781593081218"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199538034 ",
+          "FULL TITLE": "Uncle Tom's Cabin ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "576 ",
+          "ILLUSTRATIONS": "1 map",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "American Literature ",
+          "DESCRIPTION": "`So you're the little woman who wrote the book that started this great war!'  These words, said to have been uttered by Abraham Lincoln, signal the celebrity of Uncle Tom's Cabin. The first American novel to become an international best-seller, Stowe's novel charts the progress from slavery to freedom of fugitives who escape the chains of American chattel slavery, and of a martyr who transcends all earthly ties. At the middle of the nineteenth-century, the names of its characters - Little Eva, Topsy, Uncle Tom - were renowned. A hundred years later, `Uncle Tom' still had meaning, but, to Blacks everywhere it had become a curse.  This edition firmly locates Uncle Tom's Cabin within the context of African-American writing, the issues of race and the role of women. Its appendices include the most important contemporary African-American literary responses to the glorification of Uncle Tom's Christian resignation as well as excerpts from popular slave narratives, quoted by Stowe in her justification of the dramatization of slavery, Key to Uncles Tom's Cabin.",
+          "PUB DATE": "Jun-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Stowe, Harriet Beecher"
+          ],
+          "EDITORS": [
+            "Yellin, Jean Fagan"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538034 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199538034-L.jpg",
+          "Title": "Uncle Tom's Cabin ",
+          "AlphaTitle": "Uncle Tom's Cabin ",
+          "Author": "Harriet Beecher Stowe",
+          "AlphaAuthor": "Stowe, Harriet Beecher"
+        }
+      ]
+    },
+    {
+      "norm_title": "vanity fair",
+      "display_title": "Vanity Fair",
+      "entries_a": [
+        {
+          "Title": "Vanity Fair",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593080716_p0.jpg?v=1768977095&width=422&height=651&crop=center",
+          "Website": "https://barnesandnoble.com/w/vanity-fair-william-makepeace-thackeray/1116670519?ean=9781593080716",
+          "Author": "William Makepeace Thackeray",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$8.95",
+          "ISBN": "1116670519",
+          "EAN": "9781593080716"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780198727712 ",
+          "FULL TITLE": "Vanity Fair",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "1024 ",
+          "ILLUSTRATIONS": "193 black and white illustrations by Thackeray",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "C19 Literature ",
+          "DESCRIPTION": "I think I could be a good woman if I had five thousand a year.' Becky Sharp is sharp, calculating, and determined to succeed. Craving wealth and a position in society, she charms, hoodwinks, manipulates everyone she meets, rising in the world as she attaches herself to a succession of rich men. Becky's fortunes are contrasted with those of her best friend Amelia, who has none of Becky's wit and vitality but whose gentle-heartedness attracts the devotion of the loyal Dobbin.  Set during the Napoleonic wars, Vanity Fair follows Becky as she cuts a swathe through Regency society. Thackeray paints a panoramic portrait of the age, with war, money and national identity his great subjects. The battle for social success is as fierce as the battle of Waterloo, and its casualties as stricken. The satire is at once biting and profound, sparing none in a clear-eyed exposure of a world on the make. Thackeray's scepticism of human motives borders on cynicism yet Vanity Fair is among the funniest novels of the Victorian age. This new edition includes all Thackeray's original illustrations.",
+          "PUB DATE": "Jun-15",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Thackeray, William Makepeace"
+          ],
+          "EDITORS": [
+            "Small, Helen"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780198727712 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780198727712-L.jpg",
+          "Title": "Vanity Fair",
+          "AlphaTitle": "Vanity Fair",
+          "Author": "William Makepeace Thackeray",
+          "AlphaAuthor": "Thackeray, William Makepeace"
+        }
+      ]
+    },
+    {
+      "norm_title": "wives and daughters",
+      "display_title": "Wives and Daughters",
+      "entries_a": [
+        {
+          "Title": "Wives and Daughters",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082574_p0.jpg?v=1766000929&width=422&height=655&crop=center",
+          "Website": "https://barnesandnoble.com/w/wives-and-daughters-elizabeth-gaskell/1100159989?ean=9781593082574",
+          "Author": "Elizabeth Gaskell",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$11.95",
+          "ISBN": "1100159989",
+          "EAN": "9781593082574"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199538263 ",
+          "FULL TITLE": "Wives and Daughters ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "784 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Classic fiction (pre c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "C19 Literature ",
+          "DESCRIPTION": "Wives and Daughters, Elizabeth Gaskell's last novel, is regarded by many as her masterpiece. Molly Gibson is the daughter of the doctor in the small provincial town of Hollingford. Her widowed father marries a second time to give Molly the woman's presence he feels she lacks, but until the arrival of Cynthia, her dazzling step-sister, Molly finds her situation hard to accept. Intertwined with the story of the Gibsons is that of Squire Hamley and his two sons; as Molly grows up and falls in love she learns to judge people for what they are, not what they seem. Through Molly's observations the hierarchies, social values, and social changes of early nineteenth-century English life are made vivid in a novel that is timeless in its representation of human relationships. This edition, the first to be based in the original Cornhill Magazine serialization of 1864-6, draws on a full collation of the manuscript to present the most accurate text so far available.",
+          "PUB DATE": "Dec-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Gaskell, Elizabeth Cleghorn"
+          ],
+          "EDITORS": [
+            "Easson, Angus"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199538263 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199538263-L.jpg",
+          "Title": "Wives and Daughters ",
+          "AlphaTitle": "Wives and Daughters ",
+          "Author": "Elizabeth Cleghorn Gaskell",
+          "AlphaAuthor": "Gaskell, Elizabeth Cleghorn"
+        }
+      ]
+    },
+    {
+      "norm_title": "women in love",
+      "display_title": "Women in Love",
+      "entries_a": [
+        {
+          "Title": "Women in Love",
+          "Image": "https://cdn.shopify.com/s/files/1/0674/5433/7265/files/9781593082581_p0.jpg?v=1765999620&width=422&height=651&crop=center",
+          "Website": "https://barnesandnoble.com/w/women-in-love-d-h-lawrence/1100028574?ean=9781593082581",
+          "Author": "D. H. Lawrence",
+          "Series": "Barnes & Noble Classics Series",
+          "Price": "$9.95",
+          "ISBN": "1100028574",
+          "EAN": "9781593082581"
+        }
+      ],
+      "entries_b": [
+        {
+          "ISBN": "9780199555239 ",
+          "FULL TITLE": "Women in Love ",
+          "SERIES": "",
+          "BINDING": "pbk",
+          "PAGINATION": "576 ",
+          "ILLUSTRATIONS": "",
+          "BIC SUBJECTS": "Modern & contemporary fiction (post c 1945)",
+          "BIC QUALIFIERS": "",
+          "SUBJECT": "C20 Literature ",
+          "DESCRIPTION": "`New eyes were opened in her soul. She saw a strange creature from another world, in him. It was as if she were enchanted, and everything were metamorphosed.'  In Women in Love (1920), Ursula and Gudrun Brangwen, who first appeared in Lawrence's earlier novel, The Rainbow, take centre stage as Lawrence explores their growth and development in their relationships with two powerful men, Rupert Birkin and his friend Gerald Crich. A novel of regeneration and dark, destructive human passion, Women in Love reflects the impact on Lawrence of the First World War in the potential both for annihilation and salvation of the self. Quintessentially modernist, Women is Love is one of Lawrence's most extraordinary, innovative and unsettling works.",
+          "PUB DATE": "Sep-08",
+          "NOTES:": "",
+          "AUTHORS": [
+            "Lawrence, D. H."
+          ],
+          "EDITORS": [
+            "Bradshaw, David"
+          ],
+          "GOODREADS": "https://www.goodreads.com/search?utf8=%E2%9C%93&query=9780199555239 ",
+          "Image": "https://covers.openlibrary.org/b/isbn/9780199555239-L.jpg",
+          "Title": "Women in Love ",
+          "AlphaTitle": "Women in Love ",
+          "Author": "D. H. Lawrence",
+          "AlphaAuthor": "Lawrence, D. H."
+        }
+      ]
+    }
+  ]
+}
