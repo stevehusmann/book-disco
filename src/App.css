@@ -381,7 +381,7 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
 }
 @media(max-width: 768px) {
   .title-row {
-    flex-wrap: nowrap;
-    flex-direction: row;
+    flex-wrap: nowrap !important;
+    flex-direction: row !important;
   }
 }
