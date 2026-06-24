@@ -136,7 +136,7 @@ const App = () => {
               </Row>
             ) : (
               <Row>
-                <Col xs={0} lg={2} className="d-none d-lg-flex flex-column align-items-stretch">
+                <Col xs={12} lg={2} className="d-flex flex-column align-items-stretch">
                   <div className="me-3">
                     <div className="mb-3">
                       <label htmlFor="searchInput" className="form-label">Search:</label>

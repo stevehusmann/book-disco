@@ -68,7 +68,6 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
     -8px 8px 16px rgba(0, 0, 0, 0.15),
     -20px 20px 35px rgba(0, 0, 0, 0.2);
 }
-/* 1. The Stage setup - provides the 3D perspective depth */
 
 /* 1. The Stage setup - provides the 3D perspective depth */
 .book-container {
@@ -379,4 +378,9 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
   padding: 8px;
   max-height: 180px;
   overflow: auto;
+}
+@media(max-width: 768px) {
+  .title-row {
+    flex-wrap: nowrap;
+  }
 }

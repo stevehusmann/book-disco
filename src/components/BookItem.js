@@ -112,7 +112,7 @@ const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colCla
   const isAuthorLayout = layout === 'author';
 
   return (
-    <Col xs={6} lg={3} className={`mb-3 ${colClass || ''} ${isAuthorLayout ? 'author-view-col' : ''}`} style={colStyle}>
+    <Col xs={12} lg={3} className={`mb-3 ${colClass || ''} ${isAuthorLayout ? 'author-view-col' : ''}`} style={colStyle}>
       <div className="py-2 h-100 book-tile">
         <div className="book-header-row" style={{ minHeight: 26, marginBottom: 8, fontWeight: 700 }}>
           {header ? header : <span style={{ visibility: 'hidden' }}>placeholder</span>}

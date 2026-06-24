@@ -19,7 +19,7 @@ const getBookKey = (book, fallbackIndex) => {
 
 const TitleView = ({ books, pageIndex }) => {
   return (
-    <Row className="d-flex">
+    <Row className="d-flex title-row">
       {books.map((book, i) => (
         <BookItem book={book} index={i} pageIndex={pageIndex} key={getBookKey(book, i)} />
       ))}
