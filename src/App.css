@@ -391,8 +391,8 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
   }
 
   .title-row > .mb-3 {
-    flex: 0 0 82vw;
-    max-width: 82vw;
+    flex: 0 0 74vw;
+    max-width: 74vw;
     scroll-snap-align: start;
     margin-bottom: 0 !important;
     padding-left: 0;
@@ -420,8 +420,8 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
   }
 
   .author-mobile-row > .mb-3 {
-    flex: 0 0 82vw;
-    max-width: 82vw;
+    flex: 0 0 74vw;
+    max-width: 74vw;
     scroll-snap-align: start;
     margin-bottom: 0 !important;
     padding-left: 0;

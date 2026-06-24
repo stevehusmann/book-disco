@@ -21,7 +21,7 @@ const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colCla
 
   const seriesSize = PHYSICAL_SERIES_SIZES[seriesId];
   const horizontalPaddingRatio = seriesSize
-    ? (PHYSICAL_SERIES_SIZES.container.width - seriesSize.width) / PHYSICAL_SERIES_SIZES.container.width
+    ? (PHYSICAL_SERIES_SIZES.container.width - seriesSize.width) / PHYSICAL_SERIES_SIZES.container.width / 2
     : 0;
   const topPaddingRatio = seriesSize
     ? (PHYSICAL_SERIES_SIZES.container.height - seriesSize.height) / PHYSICAL_SERIES_SIZES.container.height
@@ -110,6 +110,10 @@ const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colCla
 
 
   const isAuthorLayout = layout === 'author';
+  const isDesktopViewport = typeof window !== 'undefined' && window.innerWidth >= 768;
+  const containerPaddingStyle = isDesktopViewport
+    ? { paddingRight: `${horizontalPadding * 2}px`, paddingTop: `${topPadding}px` }
+    : { paddingLeft: `${horizontalPadding}px`, paddingRight: `${horizontalPadding}px`, paddingTop: `${topPadding}px` };
 
   return (
     <Col xs={12} lg={3} className={`mb-3 ${colClass || ''} ${isAuthorLayout ? 'author-view-col' : ''}`} style={colStyle}>
@@ -118,7 +122,7 @@ const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colCla
           {header ? header : <span style={{ visibility: 'hidden' }}>placeholder</span>}
         </div>
         <a href={book?.Website} target="_blank" rel="noopener noreferrer" className="book-stage-link">
-          <div className="book-container" style={{ paddingRight: `${horizontalPadding}px`, paddingTop: `${topPadding}px` }}>
+          <div className="book-container" style={containerPaddingStyle}>
             <div ref={bookRef} className={`book series-${seriesId}`} style={{ transform: `translateZ(-${thickness || 0}px)` }}>
               <div className="book-front" style={{ transform: `translateZ(${(thickness || 0) - 1}px)` }}>
                 <img src={book.Image} alt={book.Title} draggable="false"/>
