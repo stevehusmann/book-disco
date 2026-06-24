@@ -38,20 +38,54 @@ const AuthorView = ({ books, pageIndex = 0 }) => {
     else authorBounds[key].last = i;
   });
 
+  const mobileGroups = [];
+  const mobileGroupMap = new Map();
+  books.forEach((b) => {
+    const key = (b.Author || b.AlphaAuthor || 'Unknown').trim() || 'Unknown';
+    if (!mobileGroupMap.has(key)) {
+      const group = { key, items: [] };
+      mobileGroupMap.set(key, group);
+      mobileGroups.push(group);
+    }
+    mobileGroupMap.get(key).items.push(b);
+  });
+
   // No alternating backgrounds; we render uniform background and add
   // panel-edge classes for first/last items of each author.
 
   return (
-    <Row className="d-flex author-view-grid">
-      {books.map((book, i) => {
-        const key = (book.Author || book.AlphaAuthor || 'Unknown').trim() || 'Unknown';
-        const bounds = authorBounds[key] || { first: -1, last: -1 };
-        const header = i === bounds.first ? formatAuthor(key) : null;
-        return (
-          <BookItem key={getBookKey(book, i)} book={book} index={i} pageIndex={pageIndex} header={header} layout="author" />
-        );
-      })}
-    </Row>
+    <>
+      <Row className="d-none d-md-flex author-view-grid">
+        {books.map((book, i) => {
+          const key = (book.Author || book.AlphaAuthor || 'Unknown').trim() || 'Unknown';
+          const bounds = authorBounds[key] || { first: -1, last: -1 };
+          const header = i === bounds.first ? formatAuthor(key) : null;
+          return (
+            <BookItem key={getBookKey(book, i)} book={book} index={i} pageIndex={pageIndex} header={header} layout="author" />
+          );
+        })}
+      </Row>
+
+      <div className="d-md-none author-mobile-groups">
+        {mobileGroups.map((group, groupIndex) => (
+          <section key={`${group.key}-${groupIndex}`} className="author-mobile-group">
+            <h5 className="author-mobile-group-title mb-2">{formatAuthor(group.key)}</h5>
+            <Row className="d-flex flex-nowrap author-mobile-row">
+              {group.items.map((book, i) => (
+                <BookItem
+                  key={getBookKey(book, i)}
+                  book={book}
+                  index={i}
+                  pageIndex={pageIndex}
+                  header={null}
+                  layout="author-mobile"
+                />
+              ))}
+            </Row>
+          </section>
+        ))}
+      </div>
+    </>
   );
 };
 

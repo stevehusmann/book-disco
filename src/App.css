@@ -379,9 +379,56 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
   max-height: 180px;
   overflow: auto;
 }
-@media(max-width: 768px) {
+@media (max-width: 768px) {
   .title-row {
     flex-wrap: nowrap !important;
-    flex-direction: row !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    margin-left: 0;
+    margin-right: 0;
+    gap: 12px;
+  }
+
+  .title-row > .mb-3 {
+    flex: 0 0 82vw;
+    max-width: 82vw;
+    scroll-snap-align: start;
+    margin-bottom: 0 !important;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .author-mobile-group {
+    margin-bottom: 20px;
+  }
+
+  .author-mobile-group-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 0 8px;
+  }
+
+  .author-mobile-row {
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    margin-left: 0;
+    margin-right: 0;
+    gap: 12px;
+  }
+
+  .author-mobile-row > .mb-3 {
+    flex: 0 0 82vw;
+    max-width: 82vw;
+    scroll-snap-align: start;
+    margin-bottom: 0 !important;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .author-mobile-row .book-header-row {
+    display: none;
   }
 }
