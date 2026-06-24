@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 const SpinePC = ({ book, pagination, thickness, spineText, showAuthorOnSpine, author }) => {
   // PC thickness: prefer parent-provided `thickness` (measured),

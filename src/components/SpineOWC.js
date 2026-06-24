@@ -16,7 +16,7 @@ const SpineOWC = ({ book, pagination, thickness, spineText, showAuthorOnSpine, a
   const useThickness = typeof thickness === 'number' ? thickness : computed;
   const seriesId = (book?.SeriesId || book?.Series || 'GEN').toString().replace(/\s+/g, '-').replace(/[^A-Za-z0-9-_]/g, '').toLowerCase();
   return (
-    <div className={`book-spine owc-spine series-${seriesId}`} style={{ width: `${thickness}px` }}>
+    <div className={`book-spine owc-spine series-${seriesId}`} style={{ width: `${useThickness}px` }}>
       <div className="red-spine"></div>
       <div
         className="gray-spine"

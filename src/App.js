@@ -17,7 +17,7 @@ const App = () => {
   const pageSize = 80;
   const [sortOption, setSortOption] = useState('title-asc');
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchField, setSearchField] = useState('both');
+  const [searchField] = useState('both');
   const [selectedSeries, setSelectedSeries] = useState('');
   
   useEffect(() => {
