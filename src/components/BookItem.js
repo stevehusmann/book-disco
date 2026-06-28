@@ -31,6 +31,7 @@ const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colCla
   const [thicknessWidth, setThicknessWidth] = useState(null);
   const [horizontalPadding, setHorizontalPadding] = useState(0);
   const [topPadding, setTopPadding] = useState(0);
+  const [pcRibbon, setPcRibbon] = useState(null);
 
   // Try to compute thickness proportionally from rendered cover width for OWC series.
   // Physical reference: OWC 5-3/16" (83/16 in) wide, 464pp -> thickness 13/16".
@@ -47,6 +48,95 @@ const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colCla
   const PCD_PER_PAGE_REL = 0.000684;
   const isPCD = /Penguin Classics Deluxe/i.test(series) || seriesId === 'pcd';
   const isPC = seriesId === 'pc' || (/Penguin Classics/i.test(series) && !/Deluxe/i.test(series));
+
+  const detectPcRibbon = (imgEl) => {
+    if (!imgEl || !isPC) return;
+    try {
+      const naturalW = imgEl.naturalWidth || imgEl.width;
+      const naturalH = imgEl.naturalHeight || imgEl.height;
+      const renderW = Math.round(imgEl.clientWidth || imgEl.width || 0);
+      const renderH = Math.round(imgEl.clientHeight || imgEl.height || 0);
+      if (!naturalW || !naturalH || !renderW || !renderH) return;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = renderW;
+      canvas.height = renderH;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      if (!ctx) return;
+
+      // Simulate CSS object-fit: cover so pixels match what is actually displayed.
+      const scale = Math.max(renderW / naturalW, renderH / naturalH);
+      const drawW = naturalW * scale;
+      const drawH = naturalH * scale;
+      const dx = (renderW - drawW) / 2;
+      const dy = (renderH - drawH) / 2;
+      ctx.drawImage(imgEl, dx, dy, drawW, drawH);
+
+      const pixels = ctx.getImageData(0, 0, renderW, renderH).data;
+
+      // Search range: 45–85% of the cover where the PC ribbon lives.
+      const yStart = Math.max(0, Math.floor(renderH * 0.45));
+      const yEnd = Math.min(renderH - 1, Math.ceil(renderH * 0.85));
+      const xStart = Math.floor(renderW * 0.08);
+      const xEnd = Math.ceil(renderW * 0.92);
+      const xCount = xEnd - xStart + 1;
+
+      // Compute average luminance per row (robust to JPEG noise).
+      const rowLum = [];
+      for (let y = yStart; y <= yEnd; y++) {
+        let lumSum = 0;
+        for (let x = xStart; x <= xEnd; x++) {
+          const idx = (y * renderW + x) * 4;
+          lumSum += 0.2126 * pixels[idx] + 0.7152 * pixels[idx + 1] + 0.0722 * pixels[idx + 2];
+        }
+        rowLum.push({ y, lum: lumSum / xCount });
+      }
+
+      // Find the top edge of the ribbon: the row with the largest upward lum jump
+      // (dark artwork → bright ribbon). Same for bottom edge (bright → dark).
+      let topEdge = -1, topDelta = 0;
+      let botEdge = -1, botDelta = 0;
+      for (let i = 1; i < rowLum.length; i++) {
+        const rise = rowLum[i].lum - rowLum[i - 1].lum;
+        const fall = rowLum[i - 1].lum - rowLum[i].lum;
+        if (rise > topDelta) { topDelta = rise; topEdge = i; }
+        if (fall > botDelta) { botDelta = fall; botEdge = i - 1; }
+      }
+
+      // Need a meaningful transition (not a noisy flat region).
+      if (topEdge < 0 || botEdge < 0 || topEdge >= botEdge || topDelta < 15 || botDelta < 15) {
+        setPcRibbon(null);
+        return;
+      }
+
+      const topY    = rowLum[topEdge].y;
+      const bottomY = rowLum[botEdge].y;
+
+      // Average color of the ribbon band.
+      let rSum = 0, gSum = 0, bSum = 0, bandPx = 0;
+      for (let y = topY; y <= bottomY; y++) {
+        for (let x = xStart; x <= xEnd; x++) {
+          const idx = (y * renderW + x) * 4;
+          rSum += pixels[idx];
+          gSum += pixels[idx + 1];
+          bSum += pixels[idx + 2];
+          bandPx++;
+        }
+      }
+      const avgR = bandPx ? Math.round(rSum / bandPx) : 241;
+      const avgG = bandPx ? Math.round(gSum / bandPx) : 239;
+      const avgB = bandPx ? Math.round(bSum / bandPx) : 236;
+
+      setPcRibbon({
+        topPx: topY,
+        bottomPx: bottomY,
+        coverHeightPx: renderH,
+        color: `rgb(${avgR}, ${avgG}, ${avgB})`
+      });
+    } catch (err) {
+      setPcRibbon(null);
+    }
+  };
 
   let thickness = null;
   // If we can measure the displayed cover width, compute a pixel thickness for OWC
@@ -118,18 +208,19 @@ const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colCla
   return (
     <Col xs={12} lg={3} className={`mb-3 ${colClass || ''} ${isAuthorLayout ? 'author-view-col' : ''}`} style={colStyle}>
       <div className="py-2 h-100 book-tile">
+        {book.isAuthorLayout && (
         <div className="book-header-row" style={{ minHeight: 26, marginBottom: 8, fontWeight: 700 }}>
           {header ? header : <span style={{ visibility: 'hidden' }}>placeholder</span>}
-        </div>
-        <a href={book?.Website} target="_blank" rel="noopener noreferrer" className="book-stage-link">
+        </div>)}
+        <div className="book-stage-link">
           <div className="book-container" style={containerPaddingStyle}>
             <div ref={bookRef} className={`book series-${seriesId}`} style={{ transform: `translateZ(-${thickness || 0}px)` }}>
               <div className="book-front" style={{ transform: `translateZ(${(thickness || 0) - 1}px)` }}>
-                <img src={book.Image} alt={book.Title} draggable="false"/>
+                <img src={book.Image} alt={book.Title} draggable="false" onLoad={(e) => detectPcRibbon(e.currentTarget)} />
               </div>
 
               {(() => {
-                const spineProps = { book, pagination: book?.PAGINATION, thickness, spineText, showAuthorOnSpine, author: authorFull };
+                const spineProps = { book, pagination: book?.PAGINATION, thickness, spineText, showAuthorOnSpine, author: authorFull, ribbon: pcRibbon };
                 const spineMap = {
                   OWC: SpineOWC,
                   BNC: SpineBNC,
@@ -141,12 +232,15 @@ const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colCla
               })()}
             </div>
           </div>
-        </a>
-        <div className="book-meta book-meta-row">
+        </div>
+        <div className="book-meta book-meta-row mt-5">
           <strong>{book.Title || 'Untitled Book'}</strong>
           <div>{book?.Author || 'Unknown Author'}</div>
           {book.GOODREADS && (
             <a target="_blank" href={book?.GOODREADS} rel="noopener noreferrer">GoodReads</a>
+          )}
+          {book.Website && (
+            <a target="_blank" href={book?.Website} rel="noopener noreferrer">Website</a>
           )}
           {book.PAGINATION && (
             <div>{book.PAGINATION}p</div>

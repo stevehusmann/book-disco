@@ -184,6 +184,18 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
   background: #000;
 }
 
+.book-spine.pc-spine .pc-ribbon-band {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+.book-spine.pc-spine .book-spine-title {
+  position: relative;
+  z-index: 2;
+}
+
 .book-spine-title {
   color: #AA1A2D;
   font-family: 'Crimson Pro', serif; /* Classic book font vibe */
@@ -424,6 +436,7 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
   .mobile-chevron {
     position: absolute;
     top: 38%;
+    font-family: var(--bs-font-monospace);
     transform: translateY(-50%);
     z-index: 4;
     width: auto;
@@ -432,7 +445,7 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
     border-radius: 0;
     background: transparent;
     color: rgba(0, 0, 0, 0.72);
-    font-size: 48px;
+    font-size: 60px;
     font-weight: 700;
     line-height: 1;
     display: flex;

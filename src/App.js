@@ -120,7 +120,7 @@ const App = () => {
 
   return (
     <>
-      <Container fluid className="bg-gray">
+      <Container fluid className="bg-gray px-0">
         <Container className="pt-5 bg-gray">
             {view === 'spine-crop' ? (
               <Row>
@@ -137,7 +137,7 @@ const App = () => {
             ) : (
               <Row>
                 <Col xs={12} lg={2} className="d-flex flex-column align-items-stretch">
-                  <div className="me-3">
+                  <div className="">
                     <div className="mb-3">
                       <label htmlFor="searchInput" className="form-label">Search:</label>
                       <input id="searchInput" className="form-control form-control-sm" value={searchTerm} onChange={(e) => { setSearchTerm(e.target.value); setPage(0); }} placeholder="Title or author" />
