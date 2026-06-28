@@ -1,6 +1,7 @@
 import React from 'react';
 import Row from 'react-bootstrap/Row';
 import BookItem from './BookItem';
+import MobileChevronRow from './MobileChevronRow';
 
 const getBookKey = (book, fallbackIndex) => {
   return (
@@ -70,7 +71,7 @@ const AuthorView = ({ books, pageIndex = 0 }) => {
         {mobileGroups.map((group, groupIndex) => (
           <section key={`${group.key}-${groupIndex}`} className="author-mobile-group">
             <h5 className="author-mobile-group-title mb-2">{formatAuthor(group.key)}</h5>
-            <Row className="d-flex flex-nowrap author-mobile-row">
+            <MobileChevronRow rowClassName="author-mobile-row" ariaLabel={`Books by ${formatAuthor(group.key)}`}>
               {group.items.map((book, i) => (
                 <BookItem
                   key={getBookKey(book, i)}
@@ -81,7 +82,7 @@ const AuthorView = ({ books, pageIndex = 0 }) => {
                   layout="author-mobile"
                 />
               ))}
-            </Row>
+            </MobileChevronRow>
           </section>
         ))}
       </div>

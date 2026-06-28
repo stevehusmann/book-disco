@@ -41,7 +41,7 @@ const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colCla
   const BNC_PER_PAGE_REL = 0.00069;
   // PC physical reference: 16mm thickness, 128mm cover width, 368 pages
   // Per-page multiplier relative to cover width = (16 / 128) / 368 = 16/(128*368)
-  const PC_PER_PAGE_REL = 0.000614;
+  const PC_PER_PAGE_REL = 0.000594;
   // PCD physical reference: 1.69" thickness, 5.67" cover width, 672 pages
   // Per-page multiplier relative to cover width = (1.69 / 5.67) / 672 = 1.69/(5.67*672)
   const PCD_PER_PAGE_REL = 0.000684;
@@ -113,7 +113,7 @@ const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colCla
   const isDesktopViewport = typeof window !== 'undefined' && window.innerWidth >= 768;
   const containerPaddingStyle = isDesktopViewport
     ? { paddingRight: `${horizontalPadding * 2}px`, paddingTop: `${topPadding}px` }
-    : { paddingRight: `${horizontalPadding * 2}px`, paddingTop: `${topPadding}px` };
+    : { paddingLeft: `${horizontalPadding }px`, paddingRight: `${horizontalPadding }px`, paddingTop: `${topPadding}px` };
 
   return (
     <Col xs={12} lg={3} className={`mb-3 ${colClass || ''} ${isAuthorLayout ? 'author-view-col' : ''}`} style={colStyle}>

@@ -1,6 +1,7 @@
 import React from 'react';
 import Row from 'react-bootstrap/Row';
 import BookItem from './BookItem';
+import MobileChevronRow from './MobileChevronRow';
 
 const getBookKey = (book, fallbackIndex) => {
   return (
@@ -19,11 +20,21 @@ const getBookKey = (book, fallbackIndex) => {
 
 const TitleView = ({ books, pageIndex }) => {
   return (
-    <Row className="d-flex title-row">
-      {books.map((book, i) => (
-        <BookItem book={book} index={i} pageIndex={pageIndex} key={getBookKey(book, i)} />
-      ))}
-    </Row>
+    <>
+      <Row className="d-none d-md-flex title-row-desktop">
+        {books.map((book, i) => (
+          <BookItem book={book} index={i} pageIndex={pageIndex} key={getBookKey(book, i)} />
+        ))}
+      </Row>
+
+      <div className="d-md-none">
+        <MobileChevronRow rowClassName="title-row" ariaLabel="Title view books">
+          {books.map((book, i) => (
+            <BookItem book={book} index={i} pageIndex={pageIndex} key={getBookKey(book, i)} />
+          ))}
+        </MobileChevronRow>
+      </div>
+    </>
   );
 };
 
