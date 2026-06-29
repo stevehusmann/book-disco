@@ -184,18 +184,6 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
   background: #000;
 }
 
-.book-spine.pc-spine .pc-ribbon-band {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  z-index: 1;
-}
-
-.book-spine.pc-spine .book-spine-title {
-  position: relative;
-  z-index: 2;
-}
-
 .book-spine-title {
   color: #AA1A2D;
   font-family: 'Crimson Pro', serif; /* Classic book font vibe */
@@ -521,4 +509,29 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
   .author-mobile-row .book-header-row {
     display: none;
   }
+}
+.pc-spine .book-spine-title {
+  font-family: "Jost", sans-serif !important;
+  font-optical-sizing: auto;
+  letter-spacing: 5%;
+  text-transform: uppercase;
+  font-weight: 400 !important;
+  font-style: normal;
+  font-size: 8px;
+}
+.pc-spine .author-name {
+  font-weight: 600 !important;
+}
+.pc-version-v1 {
+  background-color: #01151e !important;
+  border-radius: 0px !important;
+}
+.pc-version-v1 .book-spine-title {
+  height: 65.5%;
+  overflow: hidden;
+  text-wrap: wrap;
+}
+.white-ribbon-v1 {
+  background-color: #fff;
+  height: 8.35%;
 }

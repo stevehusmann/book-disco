@@ -10,6 +10,7 @@
     "axios": "^1.18.0",
     "bootstrap": "^5.3.8",
     "cheerio": "^1.2.0",
+    "jimp": "^1.6.1",
     "puppeteer": "^25.1.0",
     "react": "^19.2.7",
     "react-bootstrap": "^2.10.10",
@@ -20,6 +21,9 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "precompute:pcversion": "node scripts/precompute_pc_version.js --limit=50",
+    "precompute:pcversion:apply": "node scripts/precompute_pc_version.js --limit=50 --apply",
+    "precompute:pcversion:all": "node scripts/precompute_pc_version.js --all --apply",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
