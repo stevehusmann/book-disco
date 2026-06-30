@@ -183,14 +183,25 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
 .book-spine.pc-spine {
   background: #000;
 }
-
+.pc-orange {
+    color: #AA1A2D;
+}
+.pc-spine .author-name {
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+  border-bottom: 0.5px solid #AA1A2D;
+  text-wrap: nowrap;
+}
+.pc-spine .book-spine-title {
+  text-align: center;
+}
 .book-spine-title {
   color: #AA1A2D;
   font-family: 'Crimson Pro', serif; /* Classic book font vibe */
   font-size: 9px;
   font-weight: bold;
   white-space: nowrap;
-  
+  padding: 2%;
   /* Centers the text completely within the dynamic spine box */
   display: flex;
   align-items: center;
@@ -517,10 +528,7 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
   text-transform: uppercase;
   font-weight: 400 !important;
   font-style: normal;
-  font-size: 8px;
-}
-.pc-spine .author-name {
-  font-weight: 600 !important;
+  font-size: 6px;
 }
 .pc-version-v1 {
   background-color: #01151e !important;
@@ -532,6 +540,46 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
   text-wrap: wrap;
 }
 .white-ribbon-v1 {
-  background-color: #fff;
-  height: 8.35%;
+    height: 8.33%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to top, #0000002b 1%, #ffffff -3%, #ffffff 99%, #0000001c 103%);
+    padding: 1%;
+}
+.penguin-logo-v1 {
+    width: 50%;
+    height: 100%;
+    background-position-x: center;
+    background-position-y: 70.8%;
+    background-size: 750% 1300%;
+    max-width: 80%;
+}
+.penguin-text-v1 {
+  color: #FF6600;
+  font-family: "Jost", sans-serif !important;
+  font-optical-sizing: auto;
+  letter-spacing: 1%;
+  text-transform: uppercase;
+  font-style: normal;
+  font-size:4px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  
+  /* Centers the text completely within the dynamic spine box */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 26%;
+
+  /* The Magic Sauce: Vertically rotates the text layout block */
+  writing-mode: vertical-rl;
+  transform: rotate(0);
+  
+  /* Slight padding so long titles don't bleed off the edges */
+  padding: 3px 0;
+  box-sizing: border-box;
+  overflow: hidden;
 }

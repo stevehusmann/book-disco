@@ -18,11 +18,22 @@ const SpinePC = ({ book, pagination, thickness, spineText, showAuthorOnSpine, au
   return (
     <div className={`book-spine pc-spine pc-version-${pcVersion} series-${seriesId}`} style={{ width: `${clampedThickness}px` }}>
       <div className="book-spine-title text-white">
+        {showAuthorOnSpine && <span className="author-name text-white">{author}</span>}
         {spineText}
-        {showAuthorOnSpine && <span className="author-name text-white"><span className="my-1">|</span>{author}</span>}
+
       </div>
       {pcVersion && pcVersion === 'v1' && (
-        <div className="white-ribbon-v1"></div>
+        <div className="white-ribbon-v1">
+          <div
+            className="penguin-logo-v1"
+            style={{ backgroundImage: `url(${book?.Image})` }}
+          ></div>
+        </div>
+      )}
+      {pcVersion && pcVersion === 'v1' && (
+        <div className="penguin-text-v1">
+          PENGUIN CLASSICS
+        </div>
       )}
     </div>
   );
