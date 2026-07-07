@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
 const DEFAULT_LOCAL_IMAGE_PATH = 'Penguin Deluxe Classics.jpg';
@@ -13,15 +13,18 @@ const SpineCropEditor = ({ books, setBooks }) => {
   const [sourceMode, setSourceMode] = useState('public');
   const [imageSrc, setImageSrc] = useState(`/${DEFAULT_LOCAL_IMAGE_PATH}`);
   const [publicPath, setPublicPath] = useState(DEFAULT_LOCAL_IMAGE_PATH);
+  const [directUrl, setDirectUrl] = useState('');
   const [saveStatus, setSaveStatus] = useState('');
   const [bookListHandle, setBookListHandle] = useState(null);
   const [imgNatural, setImgNatural] = useState({ width: 0, height: 0 });
   const [imgRendered, setImgRendered] = useState({ width: 0, height: 0 });
   const [cropDisplay, setCropDisplay] = useState(null);
+  const [rotation, setRotation] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState(null);
 
   const imgRef = useRef(null);
+  const canvasRef = useRef(null);
   const stageRef = useRef(null);
 
   const selectedBook = useMemo(
@@ -48,12 +51,40 @@ const SpineCropEditor = ({ books, setBooks }) => {
     return `/${v}`;
   };
 
+  const mapRotatedToSourcePoint = (rx, ry, width, height, rot) => {
+    if (rot === 90) {
+      return { x: ry, y: height - rx };
+    }
+    if (rot === 180) {
+      return { x: width - rx, y: height - ry };
+    }
+    if (rot === 270) {
+      return { x: width - ry, y: rx };
+    }
+    return { x: rx, y: ry };
+  };
+
+  const mapSourceToRotatedPoint = (x, y, width, height, rot) => {
+    if (rot === 90) {
+      return { x: height - y, y: x };
+    }
+    if (rot === 180) {
+      return { x: width - x, y: height - y };
+    }
+    if (rot === 270) {
+      return { x: y, y: width - x };
+    }
+    return { x, y };
+  };
+
   const getPointInStage = (evt) => {
     if (!stageRef.current) return null;
     const rect = stageRef.current.getBoundingClientRect();
-    const x = clamp(evt.clientX - rect.left, 0, rect.width);
-    const y = clamp(evt.clientY - rect.top, 0, rect.height);
-    return { x, y, width: rect.width, height: rect.height };
+    const maxWidth = imgRendered.width || rect.width;
+    const maxHeight = imgRendered.height || rect.height;
+    const x = clamp(evt.clientX - rect.left, 0, maxWidth);
+    const y = clamp(evt.clientY - rect.top, 0, maxHeight);
+    return { x, y, width: maxWidth, height: maxHeight };
   };
 
   const onStageMouseDown = (evt) => {
@@ -83,9 +114,47 @@ const SpineCropEditor = ({ books, setBooks }) => {
 
   const onImageLoad = () => {
     const img = imgRef.current;
-    if (!img) return;
-    setImgNatural({ width: img.naturalWidth || 0, height: img.naturalHeight || 0 });
-    setImgRendered({ width: img.clientWidth || 0, height: img.clientHeight || 0 });
+    if (!img || !stageRef.current || !canvasRef.current) return;
+
+    const naturalWidth = img.naturalWidth || 0;
+    const naturalHeight = img.naturalHeight || 0;
+    if (!naturalWidth || !naturalHeight) return;
+
+    const stageWidth = stageRef.current.clientWidth || 0;
+    if (!stageWidth) return;
+
+    const rotatedNaturalWidth = rotation % 180 === 0 ? naturalWidth : naturalHeight;
+    const rotatedNaturalHeight = rotation % 180 === 0 ? naturalHeight : naturalWidth;
+    const renderedWidth = stageWidth;
+    const renderedHeight = Math.max(1, Math.round(renderedWidth * (rotatedNaturalHeight / rotatedNaturalWidth)));
+
+    const canvas = canvasRef.current;
+    canvas.width = renderedWidth;
+    canvas.height = renderedHeight;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.clearRect(0, 0, renderedWidth, renderedHeight);
+    ctx.save();
+    if (rotation === 90) {
+      ctx.translate(renderedWidth, 0);
+      ctx.rotate(Math.PI / 2);
+      ctx.drawImage(img, 0, 0, renderedHeight, renderedWidth);
+    } else if (rotation === 180) {
+      ctx.translate(renderedWidth, renderedHeight);
+      ctx.rotate(Math.PI);
+      ctx.drawImage(img, 0, 0, renderedWidth, renderedHeight);
+    } else if (rotation === 270) {
+      ctx.translate(0, renderedHeight);
+      ctx.rotate(-Math.PI / 2);
+      ctx.drawImage(img, 0, 0, renderedHeight, renderedWidth);
+    } else {
+      ctx.drawImage(img, 0, 0, renderedWidth, renderedHeight);
+    }
+    ctx.restore();
+
+    setImgNatural({ width: naturalWidth, height: naturalHeight });
+    setImgRendered({ width: renderedWidth, height: renderedHeight });
   };
 
   const handleFileUpload = (evt) => {
@@ -96,6 +165,7 @@ const SpineCropEditor = ({ books, setBooks }) => {
       setSourceMode('upload');
       setImageSrc(String(reader.result || ''));
       setCropDisplay(null);
+      setRotation(0);
     };
     reader.readAsDataURL(file);
   };
@@ -106,18 +176,51 @@ const SpineCropEditor = ({ books, setBooks }) => {
     setSourceMode('public');
     setImageSrc(normalized);
     setCropDisplay(null);
+    setRotation(0);
+  };
+
+  const loadDirectUrlImage = () => {
+    const url = (directUrl || '').trim();
+    if (!url) return;
+    setSourceMode('url');
+    setImageSrc(url);
+    setCropDisplay(null);
+    setRotation(0);
   };
 
   const cropSourceCoords = useMemo(() => {
     if (!cropDisplay || !imgRendered.width || !imgRendered.height || !imgNatural.width || !imgNatural.height) {
       return null;
     }
-    const scaleX = imgNatural.width / imgRendered.width;
-    const scaleY = imgNatural.height / imgRendered.height;
-    const x = Math.round(cropDisplay.x * scaleX);
-    const y = Math.round(cropDisplay.y * scaleY);
-    const width = Math.max(1, Math.round(cropDisplay.width * scaleX));
-    const height = Math.max(1, Math.round(cropDisplay.height * scaleY));
+
+    const rotatedNaturalWidth = rotation % 180 === 0 ? imgNatural.width : imgNatural.height;
+    const rotatedNaturalHeight = rotation % 180 === 0 ? imgNatural.height : imgNatural.width;
+
+    const rx0 = cropDisplay.x * (rotatedNaturalWidth / imgRendered.width);
+    const ry0 = cropDisplay.y * (rotatedNaturalHeight / imgRendered.height);
+    const rx1 = (cropDisplay.x + cropDisplay.width) * (rotatedNaturalWidth / imgRendered.width);
+    const ry1 = (cropDisplay.y + cropDisplay.height) * (rotatedNaturalHeight / imgRendered.height);
+
+    const p1 = mapRotatedToSourcePoint(rx0, ry0, imgNatural.width, imgNatural.height, rotation);
+    const p2 = mapRotatedToSourcePoint(rx1, ry0, imgNatural.width, imgNatural.height, rotation);
+    const p3 = mapRotatedToSourcePoint(rx0, ry1, imgNatural.width, imgNatural.height, rotation);
+    const p4 = mapRotatedToSourcePoint(rx1, ry1, imgNatural.width, imgNatural.height, rotation);
+
+    const minX = Math.min(p1.x, p2.x, p3.x, p4.x);
+    const maxX = Math.max(p1.x, p2.x, p3.x, p4.x);
+    const minY = Math.min(p1.y, p2.y, p3.y, p4.y);
+    const maxY = Math.max(p1.y, p2.y, p3.y, p4.y);
+
+    let x = Math.round(minX);
+    let y = Math.round(minY);
+    let width = Math.max(1, Math.round(maxX - minX));
+    let height = Math.max(1, Math.round(maxY - minY));
+
+    x = clamp(x, 0, Math.max(0, imgNatural.width - 1));
+    y = clamp(y, 0, Math.max(0, imgNatural.height - 1));
+    width = Math.max(1, Math.min(width, imgNatural.width - x));
+    height = Math.max(1, Math.min(height, imgNatural.height - y));
+
     return {
       x,
       y,
@@ -128,9 +231,83 @@ const SpineCropEditor = ({ books, setBooks }) => {
       nw: Number((width / imgNatural.width).toFixed(6)),
       nh: Number((height / imgNatural.height).toFixed(6)),
       sourceWidth: imgNatural.width,
-      sourceHeight: imgNatural.height
+      sourceHeight: imgNatural.height,
+      editorRotation: rotation
     };
-  }, [cropDisplay, imgRendered, imgNatural]);
+  }, [cropDisplay, imgRendered, imgNatural, rotation]);
+
+  const savedCropDisplay = useMemo(() => {
+    const saved = selectedBook?.SpineCrop;
+    if (!saved || !imgNatural.width || !imgNatural.height || !imgRendered.width || !imgRendered.height) {
+      return null;
+    }
+
+    const sx = Number.isFinite(saved.x)
+      ? Number(saved.x)
+      : Number.isFinite(saved.nx)
+        ? Math.round(Number(saved.nx) * imgNatural.width)
+        : null;
+    const sy = Number.isFinite(saved.y)
+      ? Number(saved.y)
+      : Number.isFinite(saved.ny)
+        ? Math.round(Number(saved.ny) * imgNatural.height)
+        : null;
+    const sw = Number.isFinite(saved.width)
+      ? Number(saved.width)
+      : Number.isFinite(saved.nw)
+        ? Math.max(1, Math.round(Number(saved.nw) * imgNatural.width))
+        : null;
+    const sh = Number.isFinite(saved.height)
+      ? Number(saved.height)
+      : Number.isFinite(saved.nh)
+        ? Math.max(1, Math.round(Number(saved.nh) * imgNatural.height))
+        : null;
+
+    if (sx == null || sy == null || sw == null || sh == null) return null;
+
+    const x = clamp(Math.round(sx), 0, Math.max(0, imgNatural.width - 1));
+    const y = clamp(Math.round(sy), 0, Math.max(0, imgNatural.height - 1));
+    const width = Math.max(1, Math.min(Math.round(sw), imgNatural.width - x));
+    const height = Math.max(1, Math.min(Math.round(sh), imgNatural.height - y));
+
+    const p1 = mapSourceToRotatedPoint(x, y, imgNatural.width, imgNatural.height, rotation);
+    const p2 = mapSourceToRotatedPoint(x + width, y, imgNatural.width, imgNatural.height, rotation);
+    const p3 = mapSourceToRotatedPoint(x, y + height, imgNatural.width, imgNatural.height, rotation);
+    const p4 = mapSourceToRotatedPoint(x + width, y + height, imgNatural.width, imgNatural.height, rotation);
+
+    const minRX = Math.min(p1.x, p2.x, p3.x, p4.x);
+    const maxRX = Math.max(p1.x, p2.x, p3.x, p4.x);
+    const minRY = Math.min(p1.y, p2.y, p3.y, p4.y);
+    const maxRY = Math.max(p1.y, p2.y, p3.y, p4.y);
+
+    const rotatedNaturalWidth = rotation % 180 === 0 ? imgNatural.width : imgNatural.height;
+    const rotatedNaturalHeight = rotation % 180 === 0 ? imgNatural.height : imgNatural.width;
+
+    return {
+      x: (minRX / rotatedNaturalWidth) * imgRendered.width,
+      y: (minRY / rotatedNaturalHeight) * imgRendered.height,
+      width: ((maxRX - minRX) / rotatedNaturalWidth) * imgRendered.width,
+      height: ((maxRY - minRY) / rotatedNaturalHeight) * imgRendered.height
+    };
+  }, [selectedBook, imgNatural, imgRendered, rotation]);
+
+  const isSavedCropSameSource = useMemo(() => {
+    const savedSrc = (selectedBook?.SpineCrop?.src || selectedBook?.SpineCrop?.source || '').toString().trim();
+    const currentSrc = (imageSrc || '').toString().trim();
+    if (!savedSrc || !currentSrc) return false;
+    return savedSrc === currentSrc;
+  }, [selectedBook, imageSrc]);
+
+  useEffect(() => {
+    onImageLoad();
+    setCropDisplay(null);
+  }, [rotation]);
+
+  useEffect(() => {
+    const handleResize = () => onImageLoad();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [rotation, imageSrc]);
 
   const writeBooksToHandle = async (targetBooks, handleArg) => {
     const handle = handleArg || bookListHandle;
@@ -240,7 +417,7 @@ const SpineCropEditor = ({ books, setBooks }) => {
   return (
     <div className="spine-crop-editor">
       <h6 className="mb-2">PCD Spine Crop Editor</h6>
-      <div className="small text-muted mb-2">Select a PCD book, choose a source image from the public folder or upload one, drag a crop over the target spine, then apply and export.</div>
+      <div className="small text-muted mb-2">Select a PCD book, choose a source image from the public folder, direct URL, or upload, drag a crop over the target spine, then apply and export.</div>
 
       <label className="form-label mb-1">PCD Book</label>
       <select
@@ -283,6 +460,17 @@ const SpineCropEditor = ({ books, setBooks }) => {
           />
           <label className="form-check-label" htmlFor="sourceUpload">Upload file</label>
         </div>
+        <div className="form-check">
+          <input
+            className="form-check-input"
+            type="radio"
+            name="cropSourceMode"
+            id="sourceUrl"
+            checked={sourceMode === 'url'}
+            onChange={() => setSourceMode('url')}
+          />
+          <label className="form-check-label" htmlFor="sourceUrl">Direct image URL</label>
+        </div>
       </div>
 
       {sourceMode === 'public' ? (
@@ -310,11 +498,41 @@ const SpineCropEditor = ({ books, setBooks }) => {
             <button className="btn btn-outline-secondary" type="button" onClick={loadPublicImage}>Load</button>
           </div>
         </>
+      ) : sourceMode === 'url' ? (
+        <>
+          <label className="form-label mb-1">Direct Image URL</label>
+          <div className="input-group input-group-sm mb-2">
+            <input
+              className="form-control"
+              placeholder="https://example.com/spine.jpg"
+              value={directUrl}
+              onChange={(e) => setDirectUrl(e.target.value)}
+            />
+            <button className="btn btn-outline-secondary" type="button" onClick={loadDirectUrlImage}>Load</button>
+          </div>
+        </>
       ) : (
         <>
           <label className="form-label mb-1">Upload Image</label>
           <input className="form-control form-control-sm mb-2" type="file" accept="image/*" onChange={handleFileUpload} />
         </>
+      )}
+
+      <label className="form-label mb-1">Rotation</label>
+      <div className="d-flex gap-2 mb-2">
+        <button className="btn btn-sm btn-outline-secondary" type="button" onClick={() => setRotation((r) => (r + 270) % 360)}>
+          Rotate Left 90
+        </button>
+        <button className="btn btn-sm btn-outline-secondary" type="button" onClick={() => setRotation((r) => (r + 90) % 360)}>
+          Rotate Right 90
+        </button>
+        <button className="btn btn-sm btn-outline-secondary" type="button" onClick={() => setRotation(0)}>
+          Reset
+        </button>
+      </div>
+      <div className="small text-muted mb-2">Current rotation: {rotation}deg</div>
+      {selectedBook?.SpineCrop && !isSavedCropSameSource && (
+        <div className="small text-warning mb-2">Saved crop source does not match the currently loaded image, so saved preview is hidden.</div>
       )}
 
       <div
@@ -326,9 +544,12 @@ const SpineCropEditor = ({ books, setBooks }) => {
         onMouseLeave={onStageMouseUp}
       >
         {imageSrc ? (
-          <img ref={imgRef} src={imageSrc} alt="Spine crop source" className="spine-crop-image" onLoad={onImageLoad} />
+          <>
+            <img ref={imgRef} src={imageSrc} alt="Spine crop source loader" className="spine-crop-loader" onLoad={onImageLoad} />
+            <canvas ref={canvasRef} className="spine-crop-image" />
+          </>
         ) : (
-          <div className="spine-crop-placeholder">Load a public image path or upload a file to start cropping.</div>
+          <div className="spine-crop-placeholder">Load a public image path, direct URL, or upload a file to start cropping.</div>
         )}
         {cropDisplay && (
           <div
@@ -338,6 +559,17 @@ const SpineCropEditor = ({ books, setBooks }) => {
               top: `${cropDisplay.y}px`,
               width: `${cropDisplay.width}px`,
               height: `${cropDisplay.height}px`
+            }}
+          />
+        )}
+        {savedCropDisplay && isSavedCropSameSource && (
+          <div
+            className="spine-crop-rect-saved"
+            style={{
+              left: `${savedCropDisplay.x}px`,
+              top: `${savedCropDisplay.y}px`,
+              width: `${savedCropDisplay.width}px`,
+              height: `${savedCropDisplay.height}px`
             }}
           />
         )}

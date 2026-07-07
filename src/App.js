@@ -44,6 +44,7 @@ const App = () => {
   }, [books, searchTerm, searchField, selectedSeries]);
 
   const effectiveSortOption = (searchTerm || '').trim() ? 'title-asc' : sortOption;
+  const mobileResetKey = `${searchTerm}|${sortOption}|${selectedSeries}`;
 
   const sortedBooks = useMemo(() => {
     const arr = [...filteredBooks];
@@ -179,9 +180,9 @@ const App = () => {
                   <hr></hr>
                   <Row className="d-flex">
                     {effectiveSortOption.startsWith('author') ? (
-                      <AuthorView books={currentPageBooks} pageIndex={page * pageSize} />
+                      <AuthorView books={currentPageBooks} pageIndex={page * pageSize} mobileResetKey={mobileResetKey} />
                     ) : (
-                      <TitleView books={currentPageBooks} pageIndex={page * pageSize} />
+                      <TitleView books={currentPageBooks} pageIndex={page * pageSize} mobileResetKey={mobileResetKey} />
                     )}
                   </Row>
                 </Col>

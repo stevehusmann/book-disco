@@ -1,5 +1,39 @@
 
 
+:root {
+  /* Colors */
+  --color-primary: #282c34;
+  --color-accent: #61dafb;
+  --color-light-gray: #f0f0f0;
+  --color-dark-gray: #4a4a4a;
+  --color-red-accent: #AA1A2D;
+  --color-text-dark: #333;
+  --color-text-light: #ffffff;
+  --color-shadow-light: rgba(0, 0, 0, 0.1);
+  --color-shadow-medium: rgba(0, 0, 0, 0.15);
+  --color-shadow-dark: rgba(0, 0, 0, 0.2);
+  --color-orange-accent: #FF6600;
+  --bs-font-sans-serif: "EB Garamond", serif;
+
+  /* Dimensions */
+  --spine-width: 40px;
+  --book-max-width: 280px;
+  --transition-duration: 0.4s;
+  --transition-duration-long: 0.5s;
+  
+  /* Shadows */
+  --shadow-book: -4px 4px 6px var(--color-shadow-light),
+                 -10px 10px 20px var(--color-shadow-medium),
+                 -1px 0px 2px var(--color-shadow-dark);
+  --shadow-book-hover: -8px 8px 16px var(--color-shadow-medium),
+                       -20px 20px 35px rgba(0, 0, 0, 0.2);
+}
+
+body {
+    font-family: "EB Garamond", serif !important;
+    font-size: 18px !important;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -123,7 +157,7 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
   z-index: 2;
   /* Pushes the front cover slightly forward to clear the 3D space */
   transform: translateZ(20px); 
-  transition: 1s ease;
+  transition: filter 1s ease;
   filter: brightness(1);
 }
 
@@ -367,6 +401,10 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
   -webkit-user-drag: none;
 }
 
+.spine-crop-loader {
+  display: none;
+}
+
 .spine-crop-placeholder {
   font-size: 12px;
   color: #666;
@@ -377,6 +415,13 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
   position: absolute;
   border: 2px solid #0d6efd;
   background: rgba(13, 110, 253, 0.15);
+  pointer-events: none;
+}
+
+.spine-crop-rect-saved {
+  position: absolute;
+  border: 2px dashed #198754;
+  background: rgba(25, 135, 84, 0.18);
   pointer-events: none;
 }
 

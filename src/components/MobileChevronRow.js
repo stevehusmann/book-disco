@@ -7,7 +7,8 @@ const MobileChevronRow = ({
   children,
   rowClassName = '',
   itemClassName = '',
-  ariaLabel = 'Scrollable books row'
+  ariaLabel = 'Scrollable books row',
+  resetKey = ''
 }) => {
   const scrollerRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -106,6 +107,21 @@ const MobileChevronRow = ({
       window.removeEventListener('resize', onResize);
     };
   }, [updateArrowState]);
+
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+
+    const rafId = window.requestAnimationFrame(() => {
+      const prevBehavior = el.style.scrollBehavior;
+      el.style.scrollBehavior = 'auto';
+      el.scrollLeft = 0;
+      el.style.scrollBehavior = prevBehavior;
+      updateArrowState();
+    });
+
+    return () => window.cancelAnimationFrame(rafId);
+  }, [resetKey, childArray.length, updateArrowState]);
 
   return (
     <div className="mobile-chevron-row-wrap" aria-label={ariaLabel}>

@@ -18,7 +18,7 @@ const getBookKey = (book, fallbackIndex) => {
   );
 };
 
-const TitleView = ({ books, pageIndex }) => {
+const TitleView = ({ books, pageIndex, mobileResetKey = '' }) => {
   return (
     <>
       <Row className="d-none d-md-flex title-row-desktop">
@@ -28,7 +28,7 @@ const TitleView = ({ books, pageIndex }) => {
       </Row>
 
       <div className="d-md-none">
-        <MobileChevronRow rowClassName="title-row" ariaLabel="Title view books">
+        <MobileChevronRow rowClassName="title-row" ariaLabel="Title view books" resetKey={mobileResetKey}>
           {books.map((book, i) => (
             <BookItem book={book} index={i} pageIndex={pageIndex} key={getBookKey(book, i)} />
           ))}

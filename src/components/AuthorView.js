@@ -18,7 +18,7 @@ const getBookKey = (book, fallbackIndex) => {
   );
 };
 
-const AuthorView = ({ books, pageIndex = 0 }) => {
+const AuthorView = ({ books, pageIndex = 0, mobileResetKey = '' }) => {
   const formatAuthor = (name) => {
     if (!name) return 'Unknown';
     const s = name.trim();
@@ -71,7 +71,7 @@ const AuthorView = ({ books, pageIndex = 0 }) => {
         {mobileGroups.map((group, groupIndex) => (
           <section key={`${group.key}-${groupIndex}`} className="author-mobile-group">
             <h5 className="author-mobile-group-title mb-2">{formatAuthor(group.key)}</h5>
-            <MobileChevronRow rowClassName="author-mobile-row" ariaLabel={`Books by ${formatAuthor(group.key)}`}>
+            <MobileChevronRow rowClassName="author-mobile-row" ariaLabel={`Books by ${formatAuthor(group.key)}`} resetKey={mobileResetKey}>
               {group.items.map((book, i) => (
                 <BookItem
                   key={getBookKey(book, i)}
