@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
 const DEFAULT_LOCAL_IMAGE_PATH = 'Penguin Deluxe Classics.jpg';
@@ -112,7 +112,7 @@ const SpineCropEditor = ({ books, setBooks }) => {
     setDragStart(null);
   };
 
-  const onImageLoad = () => {
+  const onImageLoad = useCallback(() => {
     const img = imgRef.current;
     if (!img || !stageRef.current || !canvasRef.current) return;
 
@@ -155,7 +155,7 @@ const SpineCropEditor = ({ books, setBooks }) => {
 
     setImgNatural({ width: naturalWidth, height: naturalHeight });
     setImgRendered({ width: renderedWidth, height: renderedHeight });
-  };
+  }, [rotation]);
 
   const handleFileUpload = (evt) => {
     const file = evt.target.files && evt.target.files[0];
@@ -301,7 +301,7 @@ const SpineCropEditor = ({ books, setBooks }) => {
   useEffect(() => {
     onImageLoad();
     setCropDisplay(null);
-  }, [rotation]);
+  }, [rotation, onImageLoad]);
 
   useEffect(() => {
     const handleResize = () => onImageLoad();
