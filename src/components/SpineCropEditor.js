@@ -307,7 +307,7 @@ const SpineCropEditor = ({ books, setBooks }) => {
     const handleResize = () => onImageLoad();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [rotation, imageSrc]);
+  }, [rotation, imageSrc, onImageLoad]);
 
   const writeBooksToHandle = async (targetBooks, handleArg) => {
     const handle = handleArg || bookListHandle;
