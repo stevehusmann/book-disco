@@ -28,8 +28,7 @@
     "AlphaAuthor": "Twain",
     "SpineTitle": "Adventures of Tom Sawyer",
     "SeriesId": "BNC",
-    "_uid": "book-1",
-    "PAGINATION": "240"
+    "_uid": "book-1"
   },
   {
     "Title": "Age of Innocence",
@@ -252,8 +251,7 @@
     "AlphaAuthor": "Wharton",
     "SpineTitle": "Ethan Frome & Selected Stories",
     "SeriesId": "BNC",
-    "_uid": "book-15",
-    "PAGINATION": "272"
+    "_uid": "book-15"
   },
   {
     "Title": "Fairy Tales",
@@ -332,8 +330,7 @@
     "AlphaAuthor": "Conrad",
     "SpineTitle": "Heart of Darkness and Selected Short Fiction",
     "SeriesId": "BNC",
-    "_uid": "book-20",
-    "PAGINATION": "267"
+    "_uid": "book-20"
   },
   {
     "Title": "Howards End",
@@ -492,8 +489,7 @@
     "AlphaAuthor": "Lewis",
     "SpineTitle": "Main Street",
     "SeriesId": "BNC",
-    "_uid": "book-30",
-    "PAGINATION": "447"
+    "_uid": "book-30"
   },
   {
     "Title": "Man and Superman and Three Other Plays",
@@ -540,8 +536,7 @@
     "AlphaAuthor": "Hardy",
     "SpineTitle": "Mayor of Casterbridge",
     "SeriesId": "BNC",
-    "_uid": "book-33",
-    "PAGINATION": "224"
+    "_uid": "book-33"
   },
   {
     "Title": "Middlemarch",
@@ -875,8 +870,7 @@
     "AlphaAuthor": "London",
     "SpineTitle": "The Call of the Wild and White Fang",
     "SeriesId": "BNC",
-    "_uid": "book-54",
-    "PAGINATION": "352"
+    "_uid": "book-54"
   },
   {
     "Title": "The Collected Oscar Wilde",
@@ -921,8 +915,7 @@
     "AlphaAuthor": "Doyle",
     "SpineTitle": "The Complete Sherlock Holmes",
     "SeriesId": "BNC",
-    "_uid": "book-57",
-    "PAGINATION": "516"
+    "_uid": "book-57"
   },
   {
     "Title": "The Complete Sherlock Holmes, Volume II",

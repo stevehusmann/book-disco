@@ -1,0 +1,142 @@
+{
+  "startedAt": "2026-07-09T04:53:08.620Z",
+  "inputPath": "/Users/stephenhusmann/code/_mybookshelf/mybookshelf/public/BookList.json",
+  "outputPath": "/Users/stephenhusmann/code/_mybookshelf/mybookshelf/public/AuthorList.json",
+  "usedApi": true,
+  "processedBooks": 2364,
+  "totalBooksInInput": 2364,
+  "createdAuthors": 895,
+  "mergedByExact": 1411,
+  "mergedBySignature": 26,
+  "mergedByWiki": 0,
+  "unresolvedNames": [],
+  "sampleMerges": [
+    {
+      "incoming": "Herman Melville",
+      "mergedInto": "Herman Melville",
+      "reason": "exact"
+    },
+    {
+      "incoming": "Henry James",
+      "mergedInto": "Henry James",
+      "reason": "exact"
+    },
+    {
+      "incoming": "Edith Wharton",
+      "mergedInto": "Edith Wharton",
+      "reason": "exact"
+    },
+    {
+      "incoming": "Various",
+      "mergedInto": "Various",
+      "reason": "exact"
+    },
+    {
+      "incoming": "Thomas Hardy",
+      "mergedInto": "Thomas Hardy",
+      "reason": "exact"
+    },
+    {
+      "incoming": "George Eliot",
+      "mergedInto": "George Eliot",
+      "reason": "exact"
+    },
+    {
+      "incoming": "Joseph Conrad",
+      "mergedInto": "Joseph Conrad",
+      "reason": "exact"
+    },
+    {
+      "incoming": "Mark Twain",
+      "mergedInto": "Mark Twain",
+      "reason": "exact"
+    },
+    {
+      "incoming": "Mark Twain",
+      "mergedInto": "Mark Twain",
+      "reason": "exact"
+    },
+    {
+      "incoming": "George Bernard Shaw",
+      "mergedInto": "George Bernard Shaw",
+      "reason": "exact"
+    },
+    {
+      "incoming": "George Eliot",
+      "mergedInto": "George Eliot",
+      "reason": "exact"
+    },
+    {
+      "incoming": "Arthur Conan Doyle",
+      "mergedInto": "Arthur Conan Doyle",
+      "reason": "exact"
+    },
+    {
+      "incoming": "Victor Hugo",
+      "mergedInto": "Victor Hugo",
+      "reason": "exact"
+    },
+    {
+      "incoming": "Dante Alighieri",
+      "mergedInto": "Dante Alighieri",
+      "reason": "exact"
+    },
+    {
+      "incoming": "Stephen Crane",
+      "mergedInto": "Stephen Crane",
+      "reason": "exact"
+    },
+    {
+      "incoming": "Joseph Conrad",
+      "mergedInto": "Joseph Conrad",
+      "reason": "exact"
+    },
+    {
+      "incoming": "Henry James",
+      "mergedInto": "Henry James",
+      "reason": "exact"
+    },
+    {
+      "incoming": "Anthony Trollope",
+      "mergedInto": "Anthony Trollope",
+      "reason": "exact"
+    },
+    {
+      "incoming": "F. Scott Fitzgerald",
+      "mergedInto": "F. Scott Fitzgerald",
+      "reason": "exact"
+    },
+    {
+      "incoming": "Alexandre Dumas",
+      "mergedInto": "Alexandre Dumas",
+      "reason": "exact"
+    },
+    {
+      "incoming": "Henry James",
+      "mergedInto": "Henry James",
+      "reason": "exact"
+    },
+    {
+      "incoming": "Mark Twain",
+      "mergedInto": "Mark Twain",
+      "reason": "exact"
+    },
+    {
+      "incoming": "Charles Dickens",
+      "mergedInto": "Charles Dickens",
+      "reason": "exact"
+    },
+    {
+      "incoming": "Mark Twain",
+      "mergedInto": "Mark Twain",
+      "reason": "exact"
+    },
+    {
+      "incoming": "Anton Chekhov",
+      "mergedInto": "Anton Chekhov",
+      "reason": "exact"
+    }
+  ],
+  "finishedAt": "2026-07-09T04:53:40.458Z",
+  "outputAuthors": 895
+}

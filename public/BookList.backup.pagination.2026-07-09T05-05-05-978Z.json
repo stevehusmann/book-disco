@@ -28,8 +28,7 @@
     "AlphaAuthor": "Twain",
     "SpineTitle": "Adventures of Tom Sawyer",
     "SeriesId": "BNC",
-    "_uid": "book-1",
-    "PAGINATION": "240"
+    "_uid": "book-1"
   },
   {
     "Title": "Age of Innocence",
@@ -252,8 +251,7 @@
     "AlphaAuthor": "Wharton",
     "SpineTitle": "Ethan Frome & Selected Stories",
     "SeriesId": "BNC",
-    "_uid": "book-15",
-    "PAGINATION": "272"
+    "_uid": "book-15"
   },
   {
     "Title": "Fairy Tales",
@@ -332,8 +330,7 @@
     "AlphaAuthor": "Conrad",
     "SpineTitle": "Heart of Darkness and Selected Short Fiction",
     "SeriesId": "BNC",
-    "_uid": "book-20",
-    "PAGINATION": "267"
+    "_uid": "book-20"
   },
   {
     "Title": "Howards End",
@@ -492,8 +489,7 @@
     "AlphaAuthor": "Lewis",
     "SpineTitle": "Main Street",
     "SeriesId": "BNC",
-    "_uid": "book-30",
-    "PAGINATION": "447"
+    "_uid": "book-30"
   },
   {
     "Title": "Man and Superman and Three Other Plays",
@@ -540,8 +536,7 @@
     "AlphaAuthor": "Hardy",
     "SpineTitle": "Mayor of Casterbridge",
     "SeriesId": "BNC",
-    "_uid": "book-33",
-    "PAGINATION": "224"
+    "_uid": "book-33"
   },
   {
     "Title": "Middlemarch",
@@ -843,8 +838,7 @@
     "AlphaAuthor": "Fitzgerald",
     "SpineTitle": "The Beautiful and Damned",
     "SeriesId": "BNC",
-    "_uid": "book-52",
-    "PAGINATION": "416"
+    "_uid": "book-52"
   },
   {
     "Title": "The Brothers Karamazov",
@@ -859,8 +853,7 @@
     "AlphaAuthor": "Dostoevsky",
     "SpineTitle": "The Brothers Karamazov",
     "SeriesId": "BNC",
-    "_uid": "book-53",
-    "PAGINATION": "720"
+    "_uid": "book-53"
   },
   {
     "Title": "The Call of the Wild and White Fang",
@@ -875,8 +868,7 @@
     "AlphaAuthor": "London",
     "SpineTitle": "The Call of the Wild and White Fang",
     "SeriesId": "BNC",
-    "_uid": "book-54",
-    "PAGINATION": "352"
+    "_uid": "book-54"
   },
   {
     "Title": "The Collected Oscar Wilde",
@@ -921,8 +913,7 @@
     "AlphaAuthor": "Doyle",
     "SpineTitle": "The Complete Sherlock Holmes",
     "SeriesId": "BNC",
-    "_uid": "book-57",
-    "PAGINATION": "516"
+    "_uid": "book-57"
   },
   {
     "Title": "The Complete Sherlock Holmes, Volume II",
@@ -952,8 +943,7 @@
     "AlphaAuthor": "Tolstoy",
     "SpineTitle": "The Death of Ivan Ilych and Other Stories",
     "SeriesId": "BNC",
-    "_uid": "book-59",
-    "PAGINATION": "400"
+    "_uid": "book-59"
   },
   {
     "Title": "The Deerslayer",
@@ -968,8 +958,7 @@
     "AlphaAuthor": "Cooper",
     "SpineTitle": "The Deerslayer",
     "SeriesId": "BNC",
-    "_uid": "book-60",
-    "PAGINATION": "608"
+    "_uid": "book-60"
   },
   {
     "Title": "The Enchanted Castle and Five Children and It",
@@ -984,8 +973,7 @@
     "AlphaAuthor": "Nesbit",
     "SpineTitle": "The Enchanted Castle and Five Children and It",
     "SeriesId": "BNC",
-    "_uid": "book-61",
-    "PAGINATION": "464"
+    "_uid": "book-61"
   },
   {
     "Title": "The Hunchback of Notre Dame",
@@ -1000,8 +988,7 @@
     "AlphaAuthor": "Hugo",
     "SpineTitle": "The Hunchback of Notre Dame",
     "SeriesId": "BNC",
-    "_uid": "book-62",
-    "PAGINATION": "544"
+    "_uid": "book-62"
   },
   {
     "Title": "The Legend of Sleepy Hollow and Other Writings",
@@ -1016,8 +1003,7 @@
     "AlphaAuthor": "Irving",
     "SpineTitle": "The Legend of Sleepy Hollow and Other Writings",
     "SeriesId": "BNC",
-    "_uid": "book-63",
-    "PAGINATION": "528"
+    "_uid": "book-63"
   },
   {
     "Title": "The Life of Charlotte Brontë",
@@ -1032,8 +1018,7 @@
     "AlphaAuthor": "Gaskell",
     "SpineTitle": "The Life of Charlotte Brontë",
     "SeriesId": "BNC",
-    "_uid": "book-64",
-    "PAGINATION": "544"
+    "_uid": "book-64"
   },
   {
     "Title": "The Magnificent Ambersons",
@@ -1048,8 +1033,7 @@
     "AlphaAuthor": "Tarkington",
     "SpineTitle": "The Magnificent Ambersons",
     "SeriesId": "BNC",
-    "_uid": "book-65",
-    "PAGINATION": "336"
+    "_uid": "book-65"
   },
   {
     "Title": "The Metamorphoses",
@@ -1064,8 +1048,7 @@
     "AlphaAuthor": "Ovid",
     "SpineTitle": "The Metamorphoses",
     "SeriesId": "BNC",
-    "_uid": "book-66",
-    "PAGINATION": "416"
+    "_uid": "book-66"
   },
   {
     "Title": "The Moonstone",
@@ -1080,8 +1063,7 @@
     "AlphaAuthor": "Collins",
     "SpineTitle": "The Moonstone",
     "SeriesId": "BNC",
-    "_uid": "book-67",
-    "PAGINATION": "544"
+    "_uid": "book-67"
   },
   {
     "Title": "The Origin of Species",
@@ -1096,8 +1078,7 @@
     "AlphaAuthor": "Darwin",
     "SpineTitle": "The Origin of Species",
     "SeriesId": "BNC",
-    "_uid": "book-68",
-    "PAGINATION": "480"
+    "_uid": "book-68"
   },
   {
     "Title": "The Paradiso",
@@ -1112,8 +1093,7 @@
     "AlphaAuthor": "Alighieri",
     "SpineTitle": "The Paradiso",
     "SeriesId": "BNC",
-    "_uid": "book-69",
-    "PAGINATION": "448"
+    "_uid": "book-69"
   },
   {
     "Title": "The Prince and Other Writings",
@@ -1128,8 +1108,7 @@
     "AlphaAuthor": "Machiavelli",
     "SpineTitle": "The Prince and Other Writings",
     "SeriesId": "BNC",
-    "_uid": "book-70",
-    "PAGINATION": "272"
+    "_uid": "book-70"
   },
   {
     "Title": "The Purgatorio",
@@ -1144,8 +1123,7 @@
     "AlphaAuthor": "Alighieri",
     "SpineTitle": "The Purgatorio",
     "SeriesId": "BNC",
-    "_uid": "book-71",
-    "PAGINATION": "432"
+    "_uid": "book-71"
   },
   {
     "Title": "The Red Badge of Courage and Selected Short Fiction",
@@ -1160,8 +1138,7 @@
     "AlphaAuthor": "Crane",
     "SpineTitle": "The Red Badge of Courage and Selected Short Fiction",
     "SeriesId": "BNC",
-    "_uid": "book-72",
-    "PAGINATION": "198"
+    "_uid": "book-72"
   },
   {
     "Title": "The Rise of Silas Lapham",
@@ -1176,8 +1153,7 @@
     "AlphaAuthor": "Howells",
     "SpineTitle": "The Rise of Silas Lapham",
     "SeriesId": "BNC",
-    "_uid": "book-73",
-    "PAGINATION": "363"
+    "_uid": "book-73"
   },
   {
     "Title": "The Secret Agent",
@@ -1192,8 +1168,7 @@
     "AlphaAuthor": "Conrad",
     "SpineTitle": "The Secret Agent",
     "SeriesId": "BNC",
-    "_uid": "book-74",
-    "PAGINATION": "384"
+    "_uid": "book-74"
   },
   {
     "Title": "The Turn of the Screw, The Aspern Papers and Two Stories",
@@ -1208,8 +1183,7 @@
     "AlphaAuthor": "James",
     "SpineTitle": "The Turn of the Screw, The Aspern Papers and Two Stories",
     "SeriesId": "BNC",
-    "_uid": "book-75",
-    "PAGINATION": "312"
+    "_uid": "book-75"
   },
   {
     "Title": "The Virginian",
@@ -1224,8 +1198,7 @@
     "AlphaAuthor": "Wister",
     "SpineTitle": "The Virginian",
     "SeriesId": "BNC",
-    "_uid": "book-76",
-    "PAGINATION": "432"
+    "_uid": "book-76"
   },
   {
     "Title": "The Way We Live Now",
@@ -1240,8 +1213,7 @@
     "AlphaAuthor": "Trollope",
     "SpineTitle": "The Way We Live Now",
     "SeriesId": "BNC",
-    "_uid": "book-77",
-    "PAGINATION": "880"
+    "_uid": "book-77"
   },
   {
     "Title": "This Side of Paradise",
@@ -1256,8 +1228,7 @@
     "AlphaAuthor": "Fitzgerald",
     "SpineTitle": "This Side of Paradise",
     "SeriesId": "BNC",
-    "_uid": "book-78",
-    "PAGINATION": "320"
+    "_uid": "book-78"
   },
   {
     "Title": "Three Lives",
@@ -1272,8 +1243,7 @@
     "AlphaAuthor": "Stein",
     "SpineTitle": "Three Lives",
     "SeriesId": "BNC",
-    "_uid": "book-79",
-    "PAGINATION": "272"
+    "_uid": "book-79"
   },
   {
     "Title": "Three Musketeers",
@@ -1288,8 +1258,7 @@
     "AlphaAuthor": "Dumas",
     "SpineTitle": "Three Musketeers",
     "SeriesId": "BNC",
-    "_uid": "book-80",
-    "PAGINATION": "768"
+    "_uid": "book-80"
   },
   {
     "Title": "Three Theban Plays",
@@ -1304,8 +1273,7 @@
     "AlphaAuthor": "Sophocles",
     "SpineTitle": "Three Theban Plays",
     "SeriesId": "BNC",
-    "_uid": "book-81",
-    "PAGINATION": "288"
+    "_uid": "book-81"
   },
   {
     "Title": "Thus Spoke Zarathustra",
@@ -1320,8 +1288,7 @@
     "AlphaAuthor": "Nietzsche",
     "SpineTitle": "Thus Spoke Zarathustra",
     "SeriesId": "BNC",
-    "_uid": "book-82",
-    "PAGINATION": "352"
+    "_uid": "book-82"
   },
   {
     "Title": "Two Years Before the Mast",
@@ -1336,8 +1303,7 @@
     "AlphaAuthor": "Dana",
     "SpineTitle": "Two Years Before the Mast",
     "SeriesId": "BNC",
-    "_uid": "book-83",
-    "PAGINATION": "476"
+    "_uid": "book-83"
   },
   {
     "Title": "Walden and Civil Disobedience",
@@ -1352,8 +1318,7 @@
     "AlphaAuthor": "Thoreau",
     "SpineTitle": "Walden and Civil Disobedience",
     "SeriesId": "BNC",
-    "_uid": "book-84",
-    "PAGINATION": "352"
+    "_uid": "book-84"
   },
   {
     "Title": "Ward No. 6 and Other Stories",
@@ -1368,8 +1333,7 @@
     "AlphaAuthor": "Chekhov",
     "SpineTitle": "Ward No. 6 and Other Stories",
     "SeriesId": "BNC",
-    "_uid": "book-85",
-    "PAGINATION": "371"
+    "_uid": "book-85"
   },
   {
     "Title": "Wings of the Dove",
@@ -1384,8 +1348,7 @@
     "AlphaAuthor": "James",
     "SpineTitle": "Wings of the Dove",
     "SeriesId": "BNC",
-    "_uid": "book-86",
-    "PAGINATION": "544"
+    "_uid": "book-86"
   },
   {
     "Title": "A Christmas Carol, The Chimes & The Cricket on the Hearth",
@@ -1401,8 +1364,7 @@
     "EAN": "9781593080334",
     "SpineTitle": "A Christmas Carol, The Chimes & The Cricket on the Hearth",
     "SeriesId": "BNC",
-    "_uid": "book-87",
-    "PAGINATION": "304"
+    "_uid": "book-87"
   },
   {
     "Title": "A Connecticut Yankee in King Arthur's Court",
@@ -1418,8 +1380,7 @@
     "EAN": "9781593082109",
     "SpineTitle": "A Connecticut Yankee in King Arthur's Court",
     "SeriesId": "BNC",
-    "_uid": "book-88",
-    "PAGINATION": "528"
+    "_uid": "book-88"
   },
   {
     "Title": "A Tale of Two Cities",
@@ -1452,8 +1413,7 @@
     "EAN": "9781593081126",
     "SpineTitle": "Adventures of Huckleberry Finn",
     "SeriesId": "BNC",
-    "_uid": "book-90",
-    "PAGINATION": "336"
+    "_uid": "book-90"
   },
   {
     "ISBN": "9780199553860 ",
@@ -35562,7 +35522,7 @@
     "BINDING": "pbk",
     "AlphaTitle": "Around the World in Seventy-Two Days",
     "AlphaAuthor": "Bly, Nellie",
-    "PAGINATION": "331",
+    "PAGINATION": "",
     "Editors": "",
     "Translators": "",
     "Description": "",
@@ -39214,7 +39174,7 @@
     "BINDING": "pbk",
     "AlphaTitle": "Financier",
     "AlphaAuthor": "Dreiser, Theodore",
-    "PAGINATION": "505",
+    "PAGINATION": "",
     "Editors": "",
     "Translators": "",
     "Description": "",
@@ -44956,7 +44916,7 @@
     "BINDING": "pbk",
     "AlphaTitle": "Flaubert in Egypt",
     "AlphaAuthor": "Flaubert, Gustave",
-    "PAGINATION": "230",
+    "PAGINATION": "",
     "Editors": "",
     "Translators": "",
     "Description": "",

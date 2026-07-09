@@ -24,6 +24,11 @@
     "precompute:pcversion": "node scripts/precompute_pc_version.js --limit=50",
     "precompute:pcversion:apply": "node scripts/precompute_pc_version.js --limit=50 --apply",
     "precompute:pcversion:all": "node scripts/precompute_pc_version.js --all --apply",
+    "authors:sample": "node scripts/build_author_objects.js --limit=50",
+    "authors:all": "node scripts/build_author_objects.js --all",
+    "authors:merge": "node scripts/merge_duplicate_authors.js",
+    "pagination:sample": "node scripts/fill_missing_pagination.js --limit=50 --apply",
+    "pagination:all": "node scripts/fill_missing_pagination.js --all --apply",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

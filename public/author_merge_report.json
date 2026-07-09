@@ -1,0 +1,87 @@
+{
+  "startedAt": "2026-07-09T04:56:41.689Z",
+  "inputAuthors": 895,
+  "outputAuthors": 882,
+  "mergedCount": 13,
+  "merges": [
+    {
+      "kept": "Anicius Manlius Severinus Boethius",
+      "merged": "Anicius Manlius Severinus Boethius",
+      "reason": "first-and-surname+title-overlap",
+      "sharedTitles": 1
+    },
+    {
+      "kept": "Baron de Montesquieu Charles de Secondat",
+      "merged": "Baron Montesquieu",
+      "reason": "name-subset+title-overlap",
+      "sharedTitles": 1
+    },
+    {
+      "kept": "Charles Darwin Damien Hirst",
+      "merged": "Charles Darwin Damien Hirst",
+      "reason": "name-subset+title-overlap",
+      "sharedTitles": 1
+    },
+    {
+      "kept": "Charles Dickens H.K. Browne",
+      "merged": "Charles Dickens H.K. Browne",
+      "reason": "name-subset+title-overlap",
+      "sharedTitles": 1
+    },
+    {
+      "kept": "Dante Alighieri",
+      "merged": "Dante Alighieri",
+      "reason": "name-subset+title-overlap",
+      "sharedTitles": 2
+    },
+    {
+      "kept": "Honoré de Balzac Herbert Hunt",
+      "merged": "Honoré de Balzac Herbert Hunt",
+      "reason": "name-subset+title-overlap",
+      "sharedTitles": 1
+    },
+    {
+      "kept": "James Madison Alexander Hamilton",
+      "merged": "James Madison Alexander Hamilton",
+      "reason": "name-subset+title-overlap",
+      "sharedTitles": 1
+    },
+    {
+      "kept": "Karl Marx Friedrich Engels",
+      "merged": "Karl Marx Friedrich Engels",
+      "reason": "name-subset+title-overlap",
+      "sharedTitles": 1
+    },
+    {
+      "kept": "Miguel de Cervantes Saavedra",
+      "merged": "Miguel de Cervantes Saavedra",
+      "reason": "name-subset+title-overlap",
+      "sharedTitles": 1
+    },
+    {
+      "kept": "Nikolai Gogol",
+      "merged": "Nikolay Gogol",
+      "reason": "first-and-surname+title-overlap",
+      "sharedTitles": 1
+    },
+    {
+      "kept": "Petronius Arbiter",
+      "merged": "Petronius Arbiter",
+      "reason": "name-subset+title-overlap",
+      "sharedTitles": 1
+    },
+    {
+      "kept": "Samuel Johnson Boswell James",
+      "merged": "Samuel Johnson Boswell James",
+      "reason": "name-subset+title-overlap",
+      "sharedTitles": 1
+    },
+    {
+      "kept": "Thorsten Veblen Robert Lekachman",
+      "merged": "Thorsten Veblen Robert Lekachman",
+      "reason": "first-and-surname+title-overlap",
+      "sharedTitles": 1
+    }
+  ],
+  "finishedAt": "2026-07-09T04:56:41.690Z"
+}

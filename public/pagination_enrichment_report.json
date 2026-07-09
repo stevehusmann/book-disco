@@ -1,0 +1,104 @@
+{
+  "startedAt": "2026-07-09T05:06:37.982Z",
+  "mode": "full",
+  "apply": true,
+  "totalBooks": 2364,
+  "missingWithIsbn": 12,
+  "targets": 12,
+  "updated": 7,
+  "unresolved": 5,
+  "sourceCounts": {
+    "openlibrary": 0,
+    "google-books": 0,
+    "openlibrary-search": 0,
+    "google-books-search": 0,
+    "openlibrary-work-editions": 7
+  },
+  "failures": [
+    {
+      "uid": "book-41",
+      "title": "Pudd'nhead Wilson and Those Extraordinary Twins",
+      "isbn": "1116934554"
+    },
+    {
+      "uid": "book-132",
+      "title": "Arden of Faversham: The New Oxford Shakespeare",
+      "isbn": "9780192872685"
+    },
+    {
+      "uid": "book-55",
+      "title": "The Collected Oscar Wilde",
+      "isbn": "1100318386"
+    },
+    {
+      "uid": "book-56",
+      "title": "The Collected Stories of Guy de Maupassant",
+      "isbn": "1012995407"
+    },
+    {
+      "uid": "book-58",
+      "title": "The Complete Sherlock Holmes, Volume II",
+      "isbn": "1100318391"
+    }
+  ],
+  "examplesUpdated": [
+    {
+      "uid": "book-33",
+      "title": "Mayor of Casterbridge",
+      "isbn": "1006247423",
+      "isbnUsed": "",
+      "pagination": "224",
+      "source": "openlibrary-work-editions"
+    },
+    {
+      "uid": "book-15",
+      "title": "Ethan Frome & Selected Stories",
+      "isbn": "1100625604",
+      "isbnUsed": "",
+      "pagination": "272",
+      "source": "openlibrary-work-editions"
+    },
+    {
+      "uid": "book-20",
+      "title": "Heart of Darkness and Selected Short Fiction",
+      "isbn": "1100223911",
+      "isbnUsed": "",
+      "pagination": "267",
+      "source": "openlibrary-work-editions"
+    },
+    {
+      "uid": "book-1",
+      "title": "Adventures of Tom Sawyer",
+      "isbn": "1106017534",
+      "isbnUsed": "",
+      "pagination": "240",
+      "source": "openlibrary-work-editions"
+    },
+    {
+      "uid": "book-30",
+      "title": "Main Street",
+      "isbn": "1100175444",
+      "isbnUsed": "",
+      "pagination": "447",
+      "source": "openlibrary-work-editions"
+    },
+    {
+      "uid": "book-54",
+      "title": "The Call of the Wild and White Fang",
+      "isbn": "1116685668",
+      "isbnUsed": "",
+      "pagination": "352",
+      "source": "openlibrary-work-editions"
+    },
+    {
+      "uid": "book-57",
+      "title": "The Complete Sherlock Holmes, Volume I",
+      "isbn": "1100318390",
+      "isbnUsed": "",
+      "pagination": "516",
+      "source": "openlibrary-work-editions"
+    }
+  ],
+  "backupPath": "/Users/stephenhusmann/code/_mybookshelf/mybookshelf/public/BookList.backup.pagination.2026-07-09T05-06-57-742Z.json",
+  "finishedAt": "2026-07-09T05:06:57.811Z"
+}
