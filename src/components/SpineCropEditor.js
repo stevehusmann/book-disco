@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
-const DEFAULT_LOCAL_IMAGE_PATH = 'Penguin Deluxe Classics.jpg';
+const DEFAULT_LOCAL_IMAGE_PATH = 'PenguinDeluxeClassics.jpg';
 
 const SpineCropEditor = ({ books, setBooks }) => {
   const pcdBooks = useMemo(
@@ -11,11 +11,10 @@ const SpineCropEditor = ({ books, setBooks }) => {
 
   const [selectedId, setSelectedId] = useState('');
   const [sourceMode, setSourceMode] = useState('public');
-  const [imageSrc, setImageSrc] = useState(`/${DEFAULT_LOCAL_IMAGE_PATH}`);
+  const [imageSrc, setImageSrc] = useState(encodeURI(`/${DEFAULT_LOCAL_IMAGE_PATH}`));
   const [publicPath, setPublicPath] = useState(DEFAULT_LOCAL_IMAGE_PATH);
   const [directUrl, setDirectUrl] = useState('');
   const [saveStatus, setSaveStatus] = useState('');
-  const [bookListHandle, setBookListHandle] = useState(null);
   const [imgNatural, setImgNatural] = useState({ width: 0, height: 0 });
   const [imgRendered, setImgRendered] = useState({ width: 0, height: 0 });
   const [cropDisplay, setCropDisplay] = useState(null);
@@ -47,8 +46,8 @@ const SpineCropEditor = ({ books, setBooks }) => {
   const normalizePublicPath = (value) => {
     const v = (value || '').trim();
     if (!v) return '';
-    if (v.startsWith('/')) return v;
-    return `/${v}`;
+    const pathValue = v.startsWith('/') ? v : `/${v}`;
+    return encodeURI(pathValue);
   };
 
   const mapRotatedToSourcePoint = (rx, ry, width, height, rot) => {
@@ -309,108 +308,52 @@ const SpineCropEditor = ({ books, setBooks }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, [rotation, imageSrc, onImageLoad]);
 
-  const writeBooksToHandle = async (targetBooks, handleArg) => {
-    const handle = handleArg || bookListHandle;
-    if (!handle) return false;
-    const writable = await handle.createWritable();
-    await writable.write(JSON.stringify(targetBooks, null, 2));
-    await writable.close();
-    return true;
-  };
-
-  const connectBookListFile = async () => {
-    try {
-      if (!window.showOpenFilePicker) {
-        setSaveStatus('File connection is not supported in this browser. Use Download Updated BookList.json instead.');
-        return;
-      }
-      const [handle] = await window.showOpenFilePicker({
-        multiple: false,
-        types: [
-          {
-            description: 'JSON Files',
-            accept: { 'application/json': ['.json'] }
-          }
-        ]
-      });
-      if (!handle) return;
-      setBookListHandle(handle);
-      setSaveStatus(`Connected file: ${handle.name}. Crop saves will write directly to this file.`);
-    } catch (err) {
-      if (err && err.name === 'AbortError') {
-        setSaveStatus('File selection canceled.');
-        return;
-      }
-      setSaveStatus('Failed to connect file.');
+  const saveBookToApi = async (book) => {
+    const bookUid = book?._uid || book?.ISBN || book?.EAN || book?.Title;
+    if (!bookUid) {
+      throw new Error('Book is missing a stable identifier.');
     }
+
+    const response = await fetch(`/api/books/${encodeURIComponent(bookUid)}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(book)
+    });
+
+    if (!response.ok) {
+      const message = await response.text();
+      throw new Error(message || `Failed to save ${bookUid}`);
+    }
+
+    return response.json();
   };
 
   const applyCropToSelected = async () => {
     if (!selectedBook || !cropSourceCoords || !imageSrc) return;
     const id = selectedBook.ISBN || selectedBook.EAN || selectedBook.Title;
+    let nextSelectedBook = null;
     const updatedBooks = books.map((b) => {
       const candidate = b.ISBN || b.EAN || b.Title;
       if (candidate !== id) return b;
-      return {
+      nextSelectedBook = {
         ...b,
         SpineCrop: {
           src: imageSrc,
           ...cropSourceCoords
         }
       };
+      return nextSelectedBook;
     });
     setBooks(updatedBooks);
 
-    if (bookListHandle) {
+    if (nextSelectedBook) {
       try {
-        await writeBooksToHandle(updatedBooks, bookListHandle);
-        setSaveStatus(`Saved crop and wrote directly to ${bookListHandle.name}.`);
+        await saveBookToApi(nextSelectedBook);
+        setSaveStatus('Saved crop to the SQLite database.');
       } catch (err) {
-        setSaveStatus('Crop saved in app state, but writing file failed. Use Download Updated BookList.json.');
+        setSaveStatus('Crop saved in app state, but database write failed.');
+        console.error('Failed to save crop to API:', err);
       }
-    } else {
-      setSaveStatus('Crop saved in app state. Connect BookList.json to write directly, or download updated JSON.');
-    }
-  };
-
-  const exportBookList = () => {
-    const content = JSON.stringify(books, null, 2);
-    const blob = new Blob([content], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'BookList.updated.json';
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  const writeBookListToFile = async () => {
-    try {
-      if (!window.showSaveFilePicker) {
-        setSaveStatus('Direct file write is not supported in this browser. Use Download Updated BookList.json instead.');
-        return;
-      }
-
-      const handle = await window.showSaveFilePicker({
-        suggestedName: 'BookList.json',
-        types: [
-          {
-            description: 'JSON Files',
-            accept: { 'application/json': ['.json'] }
-          }
-        ]
-      });
-
-      const writable = await handle.createWritable();
-      await writable.write(JSON.stringify(books, null, 2));
-      await writable.close();
-      setSaveStatus('Wrote updated JSON to file successfully.');
-    } catch (err) {
-      if (err && err.name === 'AbortError') {
-        setSaveStatus('File write canceled.');
-        return;
-      }
-      setSaveStatus('Failed to write JSON file. You can still use the download button.');
     }
   };
 
@@ -586,17 +529,8 @@ const SpineCropEditor = ({ books, setBooks }) => {
       </div>
 
       <div className="d-flex gap-2 mb-2">
-        <button className="btn btn-sm btn-outline-dark" onClick={connectBookListFile}>
-          {bookListHandle ? `Connected: ${bookListHandle.name}` : 'Connect BookList.json'}
-        </button>
         <button className="btn btn-sm btn-primary" disabled={!selectedBook || !cropSourceCoords || !imageSrc} onClick={applyCropToSelected}>
           Save Crop To Selected Book
-        </button>
-        <button className="btn btn-sm btn-outline-secondary" onClick={exportBookList}>
-          Download Updated BookList.json
-        </button>
-        <button className="btn btn-sm btn-outline-success" onClick={writeBookListToFile}>
-          Write Updated JSON To File
         </button>
       </div>
 

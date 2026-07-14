@@ -3,11 +3,53 @@ import { useState, useEffect, useMemo } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import TitleView from './components/TitleView';
 import AuthorView from './components/AuthorView';
 import SpineCropEditor from './components/SpineCropEditor';
+
+const ADD_BOOK_FIELDS = [
+  { key: 'Title', label: 'Title', required: true },
+  { key: 'FullTitle', label: 'Full Title' },
+  { key: 'Author', label: 'Author' },
+  { key: 'AlphaAuthor', label: 'Alpha Author' },
+  { key: 'AlphaTitle', label: 'Alpha Title' },
+  { key: 'Series', label: 'Series' },
+  { key: 'SeriesId', label: 'Series Id' },
+  { key: 'ISBN', label: 'ISBN' },
+  { key: 'EAN', label: 'EAN' },
+  { key: 'Image', label: 'Image URL' },
+  { key: 'Website', label: 'Website URL' },
+  { key: 'GOODREADS', label: 'GoodReads URL' },
+  { key: 'Price', label: 'Price' },
+  { key: 'PAGINATION', label: 'Pagination', type: 'number' },
+  { key: 'BINDING', label: 'Binding' },
+  { key: 'SpineTitle', label: 'Spine Title' },
+  { key: 'PCversion', label: 'PC Version' },
+  { key: 'PublicationDate', label: 'Publication Date' },
+  { key: 'OriginalPublicationDate', label: 'Original Publication Date' },
+  { key: 'PenguinID', label: 'Penguin ID' },
+  { key: 'BICSubjects', label: 'BIC Subjects' },
+  { key: 'BICQualifiers', label: 'BIC Qualifiers' },
+  { key: 'Subject', label: 'Subject' },
+  { key: 'Illustrations', label: 'Illustrations' },
+  { key: 'Notes', label: 'Notes', multiline: true, rows: 3 },
+  { key: 'Description', label: 'Description', multiline: true, rows: 4 },
+  { key: 'Authors', label: 'Authors (comma-separated)' },
+  { key: 'Editors', label: 'Editors (comma-separated)' },
+  { key: 'Translators', label: 'Translators (comma-separated)' },
+  { key: 'BookWidth', label: 'Book Width', type: 'number' },
+  { key: 'BookHeight', label: 'Book Height', type: 'number' }
+];
+
+const createEmptyAddBookForm = () => ADD_BOOK_FIELDS.reduce((acc, field) => {
+  acc[field.key] = '';
+  return acc;
+}, {});
 
 
 const App = () => {
@@ -19,9 +61,13 @@ const App = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchField] = useState('both');
   const [selectedSeries, setSelectedSeries] = useState('');
+  const [showAddBookModal, setShowAddBookModal] = useState(false);
+  const [addBookForm, setAddBookForm] = useState(() => createEmptyAddBookForm());
+  const [addBookStatus, setAddBookStatus] = useState('');
+  const [isSavingNewBook, setIsSavingNewBook] = useState(false);
   
   useEffect(() => {
-    fetch('/BookList.json')
+    fetch('/api/books')
       .then((response) => response.json())
       .then((data) => setBooks((Array.isArray(data) ? data : []).map((book, idx) => ({ ...book, _uid: book?._uid || `book-${idx}` }))))
       .catch((error) => console.error("Error loading books:", error));
@@ -119,6 +165,44 @@ const App = () => {
 
   useEffect(() => { if (page >= pageCount) setPage(0); }, [pageCount, page]);
 
+  const openAddBookModal = () => {
+    setAddBookForm(createEmptyAddBookForm());
+    setAddBookStatus('');
+    setShowAddBookModal(true);
+  };
+
+  const saveNewBook = async () => {
+    try {
+      setIsSavingNewBook(true);
+      setAddBookStatus('');
+
+      const response = await fetch('/api/books', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(addBookForm)
+      });
+
+      if (!response.ok) {
+        const message = await response.text();
+        throw new Error(message || 'Failed to add book');
+      }
+
+      const savedBook = await response.json();
+      setBooks((currentBooks) => {
+        const nextBooks = currentBooks.filter((book) => (book?._uid || book?.ISBN || book?.EAN || book?.Title) !== savedBook?._uid);
+        return [savedBook, ...nextBooks];
+      });
+      setPage(0);
+      setShowAddBookModal(false);
+      setAddBookForm(createEmptyAddBookForm());
+      setAddBookStatus('Saved to SQLite database.');
+    } catch (error) {
+      setAddBookStatus(error?.message || 'Failed to add book.');
+    } finally {
+      setIsSavingNewBook(false);
+    }
+  };
+
   return (
     <>
       <Container fluid className="bg-gray px-0">
@@ -163,7 +247,10 @@ const App = () => {
                     </div>
                   </div>
                   <div>
-                    <button className="btn btn-outline-primary mb-3" onClick={() => setView('spine-crop')}>Open PCD Spine Crop Page</button>
+                    <div className="d-grid gap-2 mb-3">
+                      <button className="btn btn-outline-primary" onClick={() => setView('spine-crop')}>Open PCD Spine Crop Page</button>
+                      <button className="btn btn-outline-success" onClick={openAddBookModal}>Add Book</button>
+                    </div>
                   </div>
                 </Col>
                 <Col xs={12} lg={10}>
@@ -180,9 +267,9 @@ const App = () => {
                   <hr></hr>
                   <Row className="d-flex">
                     {effectiveSortOption.startsWith('author') ? (
-                      <AuthorView books={currentPageBooks} pageIndex={page * pageSize} mobileResetKey={mobileResetKey} />
+                      <AuthorView books={currentPageBooks} pageIndex={page * pageSize} mobileResetKey={mobileResetKey} setBooks={setBooks} />
                     ) : (
-                      <TitleView books={currentPageBooks} pageIndex={page * pageSize} mobileResetKey={mobileResetKey} />
+                        <TitleView books={currentPageBooks} pageIndex={page * pageSize} mobileResetKey={mobileResetKey} setBooks={setBooks} />
                     )}
                   </Row>
                 </Col>
@@ -195,6 +282,43 @@ const App = () => {
           <span className="me-2">Page {page + 1} / {pageCount}</span>
           <button className="btn btn-secondary" onClick={() => setPage(p => Math.min(pageCount - 1, p + 1))} disabled={page >= pageCount - 1}>Next</button>
         </div>
+
+        <Modal show={showAddBookModal} onHide={() => setShowAddBookModal(false)} size="xl" scrollable>
+          <Modal.Header closeButton>
+            <Modal.Title>Add Book</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="small text-muted mb-3">Create a new book record in SQLite. Leave Series and Series Id blank if the book is not part of a series.</div>
+            <Form>
+              <div className="row g-3">
+                {ADD_BOOK_FIELDS.map((field) => (
+                  <div className={field.multiline ? 'col-12' : 'col-12 col-md-6'} key={field.key}>
+                    <Form.Group controlId={`add-${field.key}`}>
+                      <Form.Label>{field.label}</Form.Label>
+                      <Form.Control
+                        required={field.required}
+                        type={field.type || 'text'}
+                        as={field.multiline ? 'textarea' : undefined}
+                        rows={field.rows}
+                        value={addBookForm[field.key]}
+                        onChange={(e) => setAddBookForm((current) => ({ ...current, [field.key]: e.target.value }))}
+                      />
+                    </Form.Group>
+                  </div>
+                ))}
+              </div>
+            </Form>
+            {addBookStatus && <div className="small mt-3">{addBookStatus}</div>}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="outline-secondary" onClick={() => setShowAddBookModal(false)}>
+              Cancel
+            </Button>
+            <Button variant="success" onClick={saveNewBook} disabled={isSavingNewBook}>
+              {isSavingNewBook ? 'Saving...' : 'Add Book'}
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </Container>
     </>
   );

@@ -8,8 +8,11 @@
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.18.0",
+    "better-sqlite3": "^12.11.1",
     "bootstrap": "^5.3.8",
     "cheerio": "^1.2.0",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
     "jimp": "^1.6.1",
     "puppeteer": "^25.1.0",
     "react": "^19.2.7",
@@ -20,6 +23,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "server": "node server.js",
+    "dev": "concurrently \"npm run server\" \"npm start\"",
     "build": "react-scripts build",
     "precompute:pcversion": "node scripts/precompute_pc_version.js --limit=50",
     "precompute:pcversion:apply": "node scripts/precompute_pc_version.js --limit=50 --apply",
@@ -49,5 +54,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy": "http://localhost:4000"
 }

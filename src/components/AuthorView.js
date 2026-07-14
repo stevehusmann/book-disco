@@ -18,7 +18,7 @@ const getBookKey = (book, fallbackIndex) => {
   );
 };
 
-const AuthorView = ({ books, pageIndex = 0, mobileResetKey = '' }) => {
+const AuthorView = ({ books, pageIndex = 0, mobileResetKey = '', setBooks }) => {
   const formatAuthor = (name) => {
     if (!name) return 'Unknown';
     const s = name.trim();
@@ -62,7 +62,7 @@ const AuthorView = ({ books, pageIndex = 0, mobileResetKey = '' }) => {
           const bounds = authorBounds[key] || { first: -1, last: -1 };
           const header = i === bounds.first ? formatAuthor(key) : null;
           return (
-            <BookItem key={getBookKey(book, i)} book={book} index={i} pageIndex={pageIndex} header={header} layout="author" />
+            <BookItem key={getBookKey(book, i)} book={book} index={i} pageIndex={pageIndex} header={header} layout="author" setBooks={setBooks} />
           );
         })}
       </Row>
@@ -80,6 +80,7 @@ const AuthorView = ({ books, pageIndex = 0, mobileResetKey = '' }) => {
                   pageIndex={pageIndex}
                   header={null}
                   layout="author-mobile"
+                  setBooks={setBooks}
                 />
               ))}
             </MobileChevronRow>

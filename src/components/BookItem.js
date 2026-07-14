@@ -1,5 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
 import SpineOWC from './SpineOWC';
 import SpineBNC from './SpineBNC';
 import SpinePC from './SpinePC';
@@ -13,24 +16,80 @@ const PHYSICAL_SERIES_SIZES = {
   pcd: { width: 5.67, height: 8.35 }
 };
 
-const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colClass = '', layout = 'title' }) => {
+const EDIT_FIELDS = [
+  { key: 'Title', label: 'Title' },
+  { key: 'FullTitle', label: 'Full Title' },
+  { key: 'Author', label: 'Author' },
+  { key: 'AlphaAuthor', label: 'Alpha Author' },
+  { key: 'AlphaTitle', label: 'Alpha Title' },
+  { key: 'SpineTitle', label: 'Spine Title' },
+  { key: 'Series', label: 'Series' },
+  { key: 'SeriesId', label: 'Series Id' },
+  { key: 'BookWidth', label: 'Book Width' },
+  { key: 'BookHeight', label: 'Book Height' },
+  { key: 'ISBN', label: 'ISBN' },
+  { key: 'EAN', label: 'EAN' },
+  { key: 'Website', label: 'Website' },
+  { key: 'Image', label: 'Image URL' },
+  { key: 'GOODREADS', label: 'GoodReads URL' },
+  { key: 'Price', label: 'Price' },
+  { key: 'PAGINATION', label: 'Pagination' },
+  { key: 'BINDING', label: 'Binding' },
+  { key: 'PCversion', label: 'PC Version' },
+  { key: 'PublicationDate', label: 'Publication Date' },
+  { key: 'OriginalPublicationDate', label: 'Original Publication Date' },
+  { key: 'PenguinID', label: 'Penguin ID' },
+  { key: 'BICSubjects', label: 'BIC Subjects' },
+  { key: 'BICQualifiers', label: 'BIC Qualifiers' },
+  { key: 'Subject', label: 'Subject' },
+  { key: 'Illustrations', label: 'Illustrations' },
+  { key: 'Notes', label: 'Notes', multiline: true, rows: 3 },
+  { key: 'Description', label: 'Description', multiline: true, rows: 4 },
+  { key: 'Authors', label: 'Authors (comma-separated)' },
+  { key: 'Editors', label: 'Editors (comma-separated)' },
+  { key: 'Translators', label: 'Translators (comma-separated)' }
+];
+
+const normalizeEditableBook = (book) => {
+  const normalized = {};
+  EDIT_FIELDS.forEach(({ key }) => {
+    normalized[key] = (book?.[key] ?? '').toString();
+  });
+  return normalized;
+};
+
+const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colClass = '', layout = 'title', setBooks }) => {
 
   const pagination = Number(book?.PAGINATION || 300);
   const series = (book?.SeriesId || book?.Series || '').toString();
   const seriesId = (book?.SeriesId || book?.Series || 'GEN').toString().replace(/\s+/g, '-').replace(/[^A-Za-z0-9-_]/g, '').toLowerCase();
 
   const seriesSize = PHYSICAL_SERIES_SIZES[seriesId];
-  const horizontalPaddingRatio = seriesSize
-    ? (PHYSICAL_SERIES_SIZES.container.width - seriesSize.width) / PHYSICAL_SERIES_SIZES.container.width / 2
-    : 0;
-  const topPaddingRatio = seriesSize
-    ? (PHYSICAL_SERIES_SIZES.container.height - seriesSize.height) / PHYSICAL_SERIES_SIZES.container.height
-    : 0;
 
   const bookRef = useRef(null);
   const [thicknessWidth, setThicknessWidth] = useState(null);
   const [horizontalPadding, setHorizontalPadding] = useState(0);
   const [topPadding, setTopPadding] = useState(0);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editStatus, setEditStatus] = useState('');
+  const [editForm, setEditForm] = useState(() => normalizeEditableBook(book));
+
+  useEffect(() => {
+    setEditForm(normalizeEditableBook(book));
+  }, [book]);
+
+  const bookDimensionOverride = {
+    width: Number(book?.BookWidth),
+    height: Number(book?.BookHeight)
+  };
+  const hasBookDimensionOverride = bookDimensionOverride.width > 0 && bookDimensionOverride.height > 0;
+  const physicalBookSize = hasBookDimensionOverride ? bookDimensionOverride : seriesSize;
+  const horizontalPaddingRatio = physicalBookSize
+    ? (PHYSICAL_SERIES_SIZES.container.width - physicalBookSize.width) / PHYSICAL_SERIES_SIZES.container.width / 2
+    : 0;
+  const topPaddingRatio = physicalBookSize
+    ? (PHYSICAL_SERIES_SIZES.container.height - physicalBookSize.height) / PHYSICAL_SERIES_SIZES.container.height
+    : 0;
 
   // Try to compute thickness proportionally from rendered cover width for OWC series.
   // Physical reference: OWC 5-3/16" (83/16 in) wide, 464pp -> thickness 13/16".
@@ -115,6 +174,46 @@ const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colCla
     ? { paddingRight: `${horizontalPadding * 2}px`, paddingTop: `${topPadding}px` }
     : { paddingLeft: `${horizontalPadding }px`, paddingRight: `${horizontalPadding }px`, paddingTop: `${topPadding}px` };
 
+  const saveEditedBook = async () => {
+    try {
+      const uid = book?._uid || book?.ISBN || book?.EAN || book?.Title;
+      if (!uid) {
+        setEditStatus('Book is missing a stable identifier.');
+        return;
+      }
+
+      const nextBook = {
+        ...book,
+        ...editForm,
+        PAGINATION: editForm.PAGINATION,
+      };
+
+      const response = await fetch(`/api/books/${encodeURIComponent(uid)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(nextBook)
+      });
+
+      if (!response.ok) {
+        const message = await response.text();
+        throw new Error(message || 'Failed to save book');
+      }
+
+      const savedBook = await response.json();
+      if (typeof setBooks === 'function') {
+        setBooks((currentBooks) => currentBooks.map((currentBook) => {
+          const currentUid = currentBook?._uid || currentBook?.ISBN || currentBook?.EAN || currentBook?.Title;
+          return currentUid === uid ? { ...currentBook, ...savedBook } : currentBook;
+        }));
+      }
+
+      setEditStatus('Saved to SQLite database.');
+      setShowEditModal(false);
+    } catch (error) {
+      setEditStatus(error?.message || 'Failed to save book.');
+    }
+  };
+
   return (
     <Col xs={12} lg={3} className={`mb-3 ${colClass || ''} ${isAuthorLayout ? 'author-view-col' : ''}`} style={colStyle}>
       <div className="py-2 h-100 book-tile">
@@ -146,6 +245,7 @@ const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colCla
         <div className="book-meta book-meta-row mt-5">
           <strong>{book.Title || 'Untitled Book'}</strong>
           <div>{book?.Author || 'Unknown Author'}</div>
+
           {book.GOODREADS && (
             <a target="_blank" href={book?.GOODREADS} rel="noopener noreferrer">GoodReads</a>
           )}
@@ -161,10 +261,71 @@ const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colCla
           {thickness && (
             <div>Thickness: {thickness}px</div>
           )}
-
-          
+          {hasBookDimensionOverride && (
+              <div>Book Size: {physicalBookSize.width} x {physicalBookSize.height}</div>
+          )}
+        </div>
+        <div>
+          <Button
+            size="sm"
+            variant="outline-primary"
+            className="mt-2"
+            onClick={() => setShowEditModal(true)}
+          >
+            Edit
+          </Button>
         </div>
       </div>
+
+      <Modal show={showEditModal} onHide={() => setShowEditModal(false)} size="lg" scrollable>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Book</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="small text-muted mb-3">Changes are saved to the SQLite database and the current app state updates immediately. Leave Series and Series Id blank for books without a series. Leave Book Width and Book Height blank to use the series defaults.</div>
+          <Form>
+            <div className="row g-3">
+              {EDIT_FIELDS.map(({ key, label }) => (
+                <div className="col-12 col-md-6" key={key}>
+                  <Form.Group controlId={`edit-${key}`}>
+                    <Form.Label>{label}</Form.Label>
+                    {(key === 'PAGINATION' || key === 'BookWidth' || key === 'BookHeight') ? (
+                      <Form.Control
+                        type="number"
+                        step="any"
+                        value={editForm[key]}
+                        onChange={(e) => setEditForm((current) => ({ ...current, [key]: e.target.value }))}
+                      />
+                    ) : (key === 'Description' || key === 'Notes') ? (
+                      <Form.Control
+                        as="textarea"
+                        rows={key === 'Description' ? 4 : 3}
+                        value={editForm[key]}
+                        onChange={(e) => setEditForm((current) => ({ ...current, [key]: e.target.value }))}
+                      />
+                    ) : (
+                      <Form.Control
+                        type="text"
+                        value={editForm[key]}
+                        onChange={(e) => setEditForm((current) => ({ ...current, [key]: e.target.value }))}
+                      />
+                    )}
+                  </Form.Group>
+                </div>
+              ))}
+            </div>
+          </Form>
+          {editStatus && <div className="small mt-3">{editStatus}</div>}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="outline-secondary" onClick={() => setShowEditModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={saveEditedBook}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Col>
   );
 };
