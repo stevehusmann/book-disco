@@ -7,6 +7,7 @@ import SpineOWC from './SpineOWC';
 import SpineBNC from './SpineBNC';
 import SpinePC from './SpinePC';
 import SpinePCD from './SpinePCD';
+import { apiUrl } from '../apiUrl';
 
 const PHYSICAL_SERIES_SIZES = {
   container: { width: 7.0, height: 9 },
@@ -188,7 +189,7 @@ const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colCla
         PAGINATION: editForm.PAGINATION,
       };
 
-      const response = await fetch(`/api/books/${encodeURIComponent(uid)}`, {
+      const response = await fetch(apiUrl(`/api/books/${encodeURIComponent(uid)}`), {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(nextBook)

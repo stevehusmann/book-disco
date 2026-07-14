@@ -11,6 +11,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import TitleView from './components/TitleView';
 import AuthorView from './components/AuthorView';
 import SpineCropEditor from './components/SpineCropEditor';
+import { apiUrl } from './apiUrl';
 
 const ADD_BOOK_FIELDS = [
   { key: 'Title', label: 'Title', required: true },
@@ -67,7 +68,7 @@ const App = () => {
   const [isSavingNewBook, setIsSavingNewBook] = useState(false);
   
   useEffect(() => {
-    fetch('/api/books')
+    fetch(apiUrl('/api/books'))
       .then((response) => response.json())
       .then((data) => setBooks((Array.isArray(data) ? data : []).map((book, idx) => ({ ...book, _uid: book?._uid || `book-${idx}` }))))
       .catch((error) => console.error("Error loading books:", error));
@@ -176,7 +177,7 @@ const App = () => {
       setIsSavingNewBook(true);
       setAddBookStatus('');
 
-      const response = await fetch('/api/books', {
+      const response = await fetch(apiUrl('/api/books'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(addBookForm)

@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { apiUrl } from '../apiUrl';
 
 const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
 const DEFAULT_LOCAL_IMAGE_PATH = 'PenguinDeluxeClassics.jpg';
@@ -314,7 +315,7 @@ const SpineCropEditor = ({ books, setBooks }) => {
       throw new Error('Book is missing a stable identifier.');
     }
 
-    const response = await fetch(`/api/books/${encodeURIComponent(bookUid)}`, {
+    const response = await fetch(apiUrl(`/api/books/${encodeURIComponent(bookUid)}`), {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(book)
