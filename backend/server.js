@@ -371,14 +371,13 @@ if (!useSupabase) {
 }
 
 const supabaseRequest = async (route, options = {}) => {
-  const { includeMeta = false, ...requestOptions } = options;
   const response = await fetch(`${supabaseUrl}/rest/v1/${route}`, {
-    ...requestOptions,
+    ...options,
     headers: {
       apikey: supabaseServiceKey,
       Authorization: `Bearer ${supabaseServiceKey}`,
       'Content-Type': 'application/json',
-      ...requestOptions.headers
+      ...options.headers
     }
   });
   const responseText = await response.text();
@@ -394,9 +393,7 @@ const supabaseRequest = async (route, options = {}) => {
     const message = typeof responseBody === 'string' ? responseBody : responseBody?.message || responseBody?.hint;
     throw new Error(message || `Supabase request failed (${response.status}).`);
   }
-  return includeMeta
-    ? { data: responseBody, contentRange: response.headers.get('content-range') }
-    : responseBody;
+  return responseBody;
 };
 
 const supabaseBookRoute = (filters = {}) => {
@@ -427,31 +424,6 @@ const sortColumns = {
   'title-desc': 'COALESCE(NULLIF(alpha_title, \'\'), title) COLLATE NOCASE DESC, title COLLATE NOCASE DESC',
   'author-asc': 'COALESCE(NULLIF(alpha_author, \'\'), author) COLLATE NOCASE ASC, COALESCE(NULLIF(alpha_title, \'\'), title) COLLATE NOCASE ASC',
   'author-desc': 'COALESCE(NULLIF(alpha_author, \'\'), author) COLLATE NOCASE DESC, COALESCE(NULLIF(alpha_title, \'\'), title) COLLATE NOCASE DESC'
-};
-
-const escapePostgrestValue = (value) => `"${value.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
-
-const buildSupabaseBookFilters = ({ search, series }) => {
-  const filters = {
-    'book->>BINDING': 'eq.pbk',
-    'book->>Image': 'neq.'
-  };
-  const logicalFilters = [];
-  if (series === 'Unknown') {
-    logicalFilters.push('or(book->>SeriesId.is.null,book->>SeriesId.eq.)');
-  } else if (series) {
-    filters['book->>SeriesId'] = `eq.${escapePostgrestValue(series)}`;
-  }
-  if (search) {
-    const term = `*${escapePostgrestValue(search)}*`;
-    logicalFilters.push(`or(book->>Title.ilike.${term},book->>Author.ilike.${term},book->>AlphaAuthor.ilike.${term})`);
-  }
-  if (logicalFilters.length === 1) {
-    filters.or = `(${logicalFilters[0].slice(3, -1)})`;
-  } else if (logicalFilters.length > 1) {
-    filters.and = `(${logicalFilters.join(',')})`;
-  }
-  return filters;
 };
 
 if (allowedOrigins.length > 0) {
@@ -487,25 +459,17 @@ app.get('/api/books', async (req, res) => {
 
   if (useSupabase) {
     try {
-      const order = {
-        'title-asc': 'book->>AlphaTitle.asc.nullslast,book->>Title.asc.nullslast',
-        'title-desc': 'book->>AlphaTitle.desc.nullslast,book->>Title.desc.nullslast',
-        'author-asc': 'book->>AlphaAuthor.asc.nullslast,book->>Author.asc.nullslast,book->>AlphaTitle.asc.nullslast',
-        'author-desc': 'book->>AlphaAuthor.desc.nullslast,book->>Author.desc.nullslast,book->>AlphaTitle.desc.nullslast'
-      }[sort];
-      const filters = buildSupabaseBookFilters({ search, series });
-      const { data, contentRange } = await supabaseRequest(
-        supabaseBookRoute({
-          ...filters,
-          order,
-          limit: String(pageSize),
-          offset: String(offset)
-        }),
-        { includeMeta: true, headers: { Prefer: 'count=exact' } }
-      );
-      const total = Number.parseInt(contentRange?.split('/')[1], 10) || 0;
-      const pageCount = Math.max(1, Math.ceil(total / pageSize));
-      res.json({ books: data.map(supabaseRowToBook), total, page, pageSize, pageCount });
+      const result = await supabaseRequest('rpc/search_books', {
+        method: 'POST',
+        body: JSON.stringify({
+          p_query: search,
+          p_series: series,
+          p_sort: sort,
+          p_page: page,
+          p_page_size: pageSize
+        })
+      });
+      res.json(result);
     } catch (error) {
       console.error('Failed to load books from Supabase:', error);
       res.status(502).json({ error: 'Failed to load books from Supabase.' });

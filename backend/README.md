@@ -28,7 +28,7 @@ This folder is prepared to become a standalone backend repository.
 - `SUPABASE_URL` - Supabase project URL (use the project base URL, not `/rest/v1/books`)
 - `SUPABASE_SERVICE_ROLE_KEY` - private server-side Supabase key; never expose it to the frontend
 
-When both Supabase variables are set, the API reads and writes the `public.books` table with `uid` (text primary key) and `book` (jsonb) columns. When neither is set, it uses local SQLite and optionally seeds from `SEED_PATH`.
+When both Supabase variables are set, the API reads and writes the `public.books` table with `uid` (text primary key) and `book` (jsonb) columns. Run `supabase_books_schema.sql` in the Supabase SQL Editor to install indexes and the `search_books` RPC used for server-side library queries. When neither Supabase variable is set, the API uses local SQLite and optionally seeds from `SEED_PATH`.
 
 ## Splitting Into A Separate Repo
 
