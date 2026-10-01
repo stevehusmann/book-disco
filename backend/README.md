@@ -5,9 +5,13 @@ This folder is prepared to become a standalone backend repository.
 ## Endpoints
 
 - `GET /api/health`
-- `GET /api/books`
+- `GET /api/books?page=0&pageSize=80&sort=title-asc&q=&series=` - filtered, sorted, paginated results
+- `GET /api/series` - series filter options
+- `GET /api/books/spine-crop` - full catalog for the crop editor, loaded only when opened
 - `POST /api/books`
 - `PUT /api/books/:uid`
+
+`GET /api/books` responds with `{ books, total, page, pageSize, pageCount }`. The page size is capped at 100. The frontend submits search text only when the Search button is pressed or Enter is submitted; changing sort, series, or page runs a new server query.
 
 ## Local Run
 
@@ -21,6 +25,10 @@ This folder is prepared to become a standalone backend repository.
 - `DB_PATH` - SQLite file path (default: `./data/books.db`)
 - `SEED_PATH` - JSON seed file path (default: `./BookList.json`)
 - `CORS_ORIGIN` - comma-separated allowed origins
+- `SUPABASE_URL` - Supabase project URL (use the project base URL, not `/rest/v1/books`)
+- `SUPABASE_SERVICE_ROLE_KEY` - private server-side Supabase key; never expose it to the frontend
+
+When both Supabase variables are set, the API reads and writes the `public.books` table with `uid` (text primary key) and `book` (jsonb) columns. When neither is set, it uses local SQLite and optionally seeds from `SEED_PATH`.
 
 ## Splitting Into A Separate Repo
 

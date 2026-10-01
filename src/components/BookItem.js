@@ -208,7 +208,7 @@ const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colCla
         }));
       }
 
-      setEditStatus('Saved to SQLite database.');
+      setEditStatus('Saved to database.');
       setShowEditModal(false);
     } catch (error) {
       setEditStatus(error?.message || 'Failed to save book.');
@@ -283,7 +283,7 @@ const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colCla
           <Modal.Title>Edit Book</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="small text-muted mb-3">Changes are saved to the SQLite database and the current app state updates immediately. Leave Series and Series Id blank for books without a series. Leave Book Width and Book Height blank to use the series defaults.</div>
+          <div className="small text-muted mb-3">Changes are saved to the database and the current app state updates immediately. Leave Series and Series Id blank for books without a series. Leave Book Width and Book Height blank to use the series defaults.</div>
           <Form>
             <div className="row g-3">
               {EDIT_FIELDS.map(({ key, label }) => (

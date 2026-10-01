@@ -332,27 +332,24 @@ const SpineCropEditor = ({ books, setBooks }) => {
   const applyCropToSelected = async () => {
     if (!selectedBook || !cropSourceCoords || !imageSrc) return;
     const id = selectedBook.ISBN || selectedBook.EAN || selectedBook.Title;
-    let nextSelectedBook = null;
-    const updatedBooks = books.map((b) => {
-      const candidate = b.ISBN || b.EAN || b.Title;
-      if (candidate !== id) return b;
-      nextSelectedBook = {
-        ...b,
-        SpineCrop: {
-          src: imageSrc,
-          ...cropSourceCoords
-        }
-      };
-      return nextSelectedBook;
-    });
-    setBooks(updatedBooks);
-
+    const nextSelectedBook = {
+      ...selectedBook,
+      SpineCrop: {
+        src: imageSrc,
+        ...cropSourceCoords
+      }
+    };
     if (nextSelectedBook) {
       try {
-        await saveBookToApi(nextSelectedBook);
-        setSaveStatus('Saved crop to the SQLite database.');
+        const savedBook = await saveBookToApi(nextSelectedBook);
+        setBooks((currentBooks) => currentBooks.map((book) =>
+          (book?._uid || book?.ISBN || book?.EAN || book?.Title) === id
+            ? { ...book, ...savedBook }
+            : book
+        ));
+        setSaveStatus('Saved crop to the database.');
       } catch (err) {
-        setSaveStatus('Crop saved in app state, but database write failed.');
+        setSaveStatus('Database write failed; the crop was not saved.');
         console.error('Failed to save crop to API:', err);
       }
     }

@@ -6,12 +6,24 @@ const Database = require('better-sqlite3');
 
 const app = express();
 const port = process.env.PORT || 4000;
-const dbPath = path.resolve(process.env.DB_PATH || path.join(__dirname, 'data', 'books.db'));
 const seedPath = path.resolve(process.env.SEED_PATH || path.join(__dirname, 'BookList.json'));
 const allowedOrigins = (process.env.CORS_ORIGIN || '')
   .split(',')
   .map((origin) => origin.trim())
   .filter(Boolean);
+const supabaseUrl = (process.env.SUPABASE_URL || '')
+  .trim()
+  .replace(/\/rest\/v1(?:\/books)?\/?$/, '')
+  .replace(/\/+$/, '');
+const supabaseServiceKey = (process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
+const useSupabase = Boolean(supabaseUrl && supabaseServiceKey);
+
+if (Boolean(supabaseUrl) !== Boolean(supabaseServiceKey)) {
+  throw new Error('Set both SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY, or neither.');
+}
+const dbPath = useSupabase
+  ? path.join(__dirname, 'data', 'books.db')
+  : path.resolve(process.env.DB_PATH || path.join(__dirname, 'data', 'books.db'));
 
 fs.mkdirSync(path.dirname(dbPath), { recursive: true });
 
@@ -244,6 +256,7 @@ const upsertBook = db.prepare(`
 function rowToBook(row) {
   return row
     ? {
+        ...JSON.parse(row.raw_json || '{}'),
         _uid: row.uid,
         Title: row.title,
         FullTitle: row.full_title,
@@ -353,7 +366,93 @@ function seedDatabaseFromJson() {
   transaction(Array.isArray(books) ? books : []);
 }
 
-seedDatabaseFromJson();
+if (!useSupabase) {
+  seedDatabaseFromJson();
+}
+
+const supabaseRequest = async (route, options = {}) => {
+  const { includeMeta = false, ...requestOptions } = options;
+  const response = await fetch(`${supabaseUrl}/rest/v1/${route}`, {
+    ...requestOptions,
+    headers: {
+      apikey: supabaseServiceKey,
+      Authorization: `Bearer ${supabaseServiceKey}`,
+      'Content-Type': 'application/json',
+      ...requestOptions.headers
+    }
+  });
+  const responseText = await response.text();
+  let responseBody = null;
+  if (responseText) {
+    try {
+      responseBody = JSON.parse(responseText);
+    } catch (_err) {
+      responseBody = responseText;
+    }
+  }
+  if (!response.ok) {
+    const message = typeof responseBody === 'string' ? responseBody : responseBody?.message || responseBody?.hint;
+    throw new Error(message || `Supabase request failed (${response.status}).`);
+  }
+  return includeMeta
+    ? { data: responseBody, contentRange: response.headers.get('content-range') }
+    : responseBody;
+};
+
+const supabaseBookRoute = (filters = {}) => {
+  const query = new URLSearchParams({ select: 'uid,book', ...filters });
+  return `books?${query.toString()}`;
+};
+
+const supabaseRowToBook = (row) => ({ ...row.book, _uid: row.uid });
+
+const parsePageQuery = (query) => {
+  const requestedPage = Number.parseInt(query.page, 10);
+  const requestedPageSize = Number.parseInt(query.pageSize, 10);
+  return {
+    page: Number.isInteger(requestedPage) && requestedPage >= 0 ? requestedPage : 0,
+    pageSize: Number.isInteger(requestedPageSize)
+      ? Math.min(100, Math.max(1, requestedPageSize))
+      : 80,
+    search: String(query.q || '').trim().slice(0, 100),
+    series: String(query.series || '').trim().slice(0, 100),
+    sort: ['author-asc', 'author-desc', 'title-desc'].includes(query.sort)
+      ? query.sort
+      : 'title-asc'
+  };
+};
+
+const sortColumns = {
+  'title-asc': 'COALESCE(NULLIF(alpha_title, \'\'), title) COLLATE NOCASE ASC, title COLLATE NOCASE ASC',
+  'title-desc': 'COALESCE(NULLIF(alpha_title, \'\'), title) COLLATE NOCASE DESC, title COLLATE NOCASE DESC',
+  'author-asc': 'COALESCE(NULLIF(alpha_author, \'\'), author) COLLATE NOCASE ASC, COALESCE(NULLIF(alpha_title, \'\'), title) COLLATE NOCASE ASC',
+  'author-desc': 'COALESCE(NULLIF(alpha_author, \'\'), author) COLLATE NOCASE DESC, COALESCE(NULLIF(alpha_title, \'\'), title) COLLATE NOCASE DESC'
+};
+
+const escapePostgrestValue = (value) => `"${value.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
+
+const buildSupabaseBookFilters = ({ search, series }) => {
+  const filters = {
+    'book->>BINDING': 'eq.pbk',
+    'book->>Image': 'neq.'
+  };
+  const logicalFilters = [];
+  if (series === 'Unknown') {
+    logicalFilters.push('or(book->>SeriesId.is.null,book->>SeriesId.eq.)');
+  } else if (series) {
+    filters['book->>SeriesId'] = `eq.${escapePostgrestValue(series)}`;
+  }
+  if (search) {
+    const term = `*${escapePostgrestValue(search)}*`;
+    logicalFilters.push(`or(book->>Title.ilike.${term},book->>Author.ilike.${term},book->>AlphaAuthor.ilike.${term})`);
+  }
+  if (logicalFilters.length === 1) {
+    filters.or = `(${logicalFilters[0].slice(3, -1)})`;
+  } else if (logicalFilters.length > 1) {
+    filters.and = `(${logicalFilters.join(',')})`;
+  }
+  return filters;
+};
 
 if (allowedOrigins.length > 0) {
   app.use(
@@ -374,23 +473,167 @@ if (allowedOrigins.length > 0) {
 app.use(express.json());
 
 app.get('/api/health', (_req, res) => {
-  res.json({ ok: true, dbPath, seeded: fs.existsSync(seedPath) });
+  res.json({
+    ok: true,
+    storage: useSupabase ? 'supabase' : 'sqlite',
+    dbPath: useSupabase ? undefined : dbPath,
+    seeded: useSupabase ? undefined : fs.existsSync(seedPath)
+  });
 });
 
-app.get('/api/books', (_req, res) => {
-  const rows = db
-    .prepare(`
-      SELECT *
-      FROM books
-      ORDER BY title COLLATE NOCASE ASC
-    `)
-    .all();
+app.get('/api/books', async (req, res) => {
+  const { page, pageSize, search, series, sort } = parsePageQuery(req.query);
+  const offset = page * pageSize;
 
+  if (useSupabase) {
+    try {
+      const order = {
+        'title-asc': 'book->>AlphaTitle.asc.nullslast,book->>Title.asc.nullslast',
+        'title-desc': 'book->>AlphaTitle.desc.nullslast,book->>Title.desc.nullslast',
+        'author-asc': 'book->>AlphaAuthor.asc.nullslast,book->>Author.asc.nullslast,book->>AlphaTitle.asc.nullslast',
+        'author-desc': 'book->>AlphaAuthor.desc.nullslast,book->>Author.desc.nullslast,book->>AlphaTitle.desc.nullslast'
+      }[sort];
+      const filters = buildSupabaseBookFilters({ search, series });
+      const { data, contentRange } = await supabaseRequest(
+        supabaseBookRoute({
+          ...filters,
+          order,
+          limit: String(pageSize),
+          offset: String(offset)
+        }),
+        { includeMeta: true, headers: { Prefer: 'count=exact' } }
+      );
+      const total = Number.parseInt(contentRange?.split('/')[1], 10) || 0;
+      const pageCount = Math.max(1, Math.ceil(total / pageSize));
+      res.json({ books: data.map(supabaseRowToBook), total, page, pageSize, pageCount });
+    } catch (error) {
+      console.error('Failed to load books from Supabase:', error);
+      res.status(502).json({ error: 'Failed to load books from Supabase.' });
+    }
+    return;
+  }
+
+  const conditions = ["binding = 'pbk'", "image IS NOT NULL", "image <> ''"];
+  const parameters = [];
+  if (series === 'Unknown') {
+    conditions.push("(series_id IS NULL OR series_id = '')");
+  } else if (series) {
+    conditions.push('series_id = ?');
+    parameters.push(series);
+  }
+  if (search) {
+    conditions.push(`(
+      instr(lower(COALESCE(title, '')), lower(?)) > 0 OR
+      instr(lower(COALESCE(author, '')), lower(?)) > 0 OR
+      instr(lower(COALESCE(alpha_author, '')), lower(?)) > 0
+    )`);
+    parameters.push(search, search, search);
+  }
+  const where = conditions.join(' AND ');
+  const total = db.prepare(`SELECT COUNT(*) AS total FROM books WHERE ${where}`).get(...parameters).total;
+  const rows = db.prepare(`
+    SELECT *
+    FROM books
+    WHERE ${where}
+    ORDER BY ${sortColumns[sort]}
+    LIMIT ? OFFSET ?
+  `).all(...parameters, pageSize, offset);
+
+  res.json({ books: rows.map(rowToBook), total, page, pageSize, pageCount: Math.max(1, Math.ceil(total / pageSize)) });
+});
+
+app.get('/api/series', async (_req, res) => {
+  if (useSupabase) {
+    try {
+      const values = new Map();
+      for (let offset = 0; ; offset += 1000) {
+        const params = new URLSearchParams({
+          select: 'series_id:book->>SeriesId,series:book->>Series',
+          limit: '1000',
+          offset: String(offset),
+          order: 'uid.asc'
+        });
+        const rows = await supabaseRequest(
+          `books?${params.toString()}`
+        );
+        for (const row of rows) {
+          const id = row.series_id || 'Unknown';
+          const name = row.series || id;
+          values.set(id, name);
+        }
+        if (rows.length < 1000) break;
+      }
+      res.json([...values].map(([id, name]) => ({ id, name })).sort((a, b) => a.name.localeCompare(b.name)));
+    } catch (error) {
+      console.error('Failed to load series from Supabase:', error);
+      res.status(502).json({ error: 'Failed to load series from Supabase.' });
+    }
+    return;
+  }
+
+  const rows = db.prepare(`
+    SELECT DISTINCT
+      COALESCE(NULLIF(series_id, ''), 'Unknown') AS id,
+      COALESCE(NULLIF(series, ''), NULLIF(series_id, ''), 'Unknown') AS name
+    FROM books
+    ORDER BY name COLLATE NOCASE
+  `).all();
+  res.json(rows);
+});
+
+app.get('/api/books/spine-crop', async (_req, res) => {
+  if (useSupabase) {
+    try {
+      const rows = [];
+      for (let offset = 0; ; offset += 1000) {
+        const page = await supabaseRequest(
+          supabaseBookRoute({ order: 'uid.asc', limit: '1000', offset: String(offset) })
+        );
+        rows.push(...page);
+        if (page.length < 1000) break;
+      }
+      res.json(rows.map(supabaseRowToBook));
+    } catch (error) {
+      console.error('Failed to load spine crop books from Supabase:', error);
+      res.status(502).json({ error: 'Failed to load spine crop books from Supabase.' });
+    }
+    return;
+  }
+
+  const rows = db.prepare('SELECT * FROM books ORDER BY title COLLATE NOCASE ASC').all();
   res.json(rows.map(rowToBook));
 });
 
-app.put('/api/books/:uid', (req, res) => {
+app.put('/api/books/:uid', async (req, res) => {
   const uid = req.params.uid;
+
+  if (useSupabase) {
+    try {
+      const existingRows = await supabaseRequest(
+        supabaseBookRoute({ uid: `eq.${uid}`, limit: '1' })
+      );
+      if (!existingRows.length) {
+        res.status(404).json({ error: 'Book not found' });
+        return;
+      }
+
+      const nextBook = { ...existingRows[0].book, ...req.body, _uid: uid };
+      const updatedRows = await supabaseRequest(
+        supabaseBookRoute({ uid: `eq.${uid}` }),
+        {
+          method: 'PATCH',
+          headers: { Prefer: 'return=representation' },
+          body: JSON.stringify({ book: nextBook })
+        }
+      );
+      res.json(supabaseRowToBook(updatedRows[0]));
+    } catch (error) {
+      console.error(`Failed to update book ${uid} in Supabase:`, error);
+      res.status(502).json({ error: 'Failed to save book to Supabase.' });
+    }
+    return;
+  }
+
   const existing = getBookByUid.get(uid);
 
   if (!existing) {
@@ -407,7 +650,7 @@ app.put('/api/books/:uid', (req, res) => {
   res.json(rowToBook(getBookByUid.get(uid)));
 });
 
-app.post('/api/books', (req, res) => {
+app.post('/api/books', async (req, res) => {
   const nextBook = {
     ...req.body,
     _uid:
@@ -417,6 +660,24 @@ app.post('/api/books', (req, res) => {
       req.body?.EAN ||
       `book-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`
   };
+
+  if (useSupabase) {
+    const uid = String(nextBook._uid);
+    const book = { ...nextBook, _uid: uid };
+    try {
+      const rows = await supabaseRequest(supabaseBookRoute(), {
+        method: 'POST',
+        headers: { Prefer: 'return=representation' },
+        body: JSON.stringify({ uid, book })
+      });
+      res.status(201).json(supabaseRowToBook(rows[0]));
+    } catch (error) {
+      console.error('Failed to add book to Supabase:', error);
+      res.status(502).json({ error: 'Failed to add book to Supabase.' });
+    }
+    return;
+  }
+
   const params = toDbParams(nextBook);
 
   upsertBook.run(params);

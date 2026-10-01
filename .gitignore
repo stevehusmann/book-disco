@@ -18,6 +18,9 @@
 .env.test.local
 .env.production.local
 
+# generated Supabase import data
+/backend/BookList.supabase.csv
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

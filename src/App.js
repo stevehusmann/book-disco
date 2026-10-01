@@ -1,5 +1,5 @@
 import './App.css';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -55,116 +55,92 @@ const createEmptyAddBookForm = () => ADD_BOOK_FIELDS.reduce((acc, field) => {
 
 const App = () => {
   const [books, setBooks] = useState([]);
+  const [spineBooks, setSpineBooks] = useState([]);
   const [view, setView] = useState('library');
   const [page, setPage] = useState(0);
   const pageSize = 80;
+  const [pageCount, setPageCount] = useState(1);
+  const [totalBooks, setTotalBooks] = useState(0);
+  const [isLoadingBooks, setIsLoadingBooks] = useState(true);
+  const [isLoadingSpineBooks, setIsLoadingSpineBooks] = useState(false);
+  const [booksError, setBooksError] = useState('');
+  const [spineBooksError, setSpineBooksError] = useState('');
+  const [refreshVersion, setRefreshVersion] = useState(0);
   const [sortOption, setSortOption] = useState('title-asc');
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchField] = useState('both');
+  const [submittedSearch, setSubmittedSearch] = useState('');
   const [selectedSeries, setSelectedSeries] = useState('');
+  const [seriesOptions, setSeriesOptions] = useState([]);
   const [showAddBookModal, setShowAddBookModal] = useState(false);
   const [addBookForm, setAddBookForm] = useState(() => createEmptyAddBookForm());
   const [addBookStatus, setAddBookStatus] = useState('');
   const [isSavingNewBook, setIsSavingNewBook] = useState(false);
-  
+
   useEffect(() => {
-    fetch(apiUrl('/api/books'))
-      .then((response) => response.json())
-      .then((data) => setBooks((Array.isArray(data) ? data : []).map((book, idx) => ({ ...book, _uid: book?._uid || `book-${idx}` }))))
-      .catch((error) => console.error("Error loading books:", error));
+    const controller = new AbortController();
+    const params = new URLSearchParams({
+      page: String(page),
+      pageSize: String(pageSize),
+      sort: sortOption,
+      q: submittedSearch,
+      series: selectedSeries
+    });
+    setIsLoadingBooks(true);
+    setBooksError('');
+    fetch(apiUrl(`/api/books?${params.toString()}`), { signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok) throw new Error(`Book query failed (${response.status}).`);
+        return response.json();
+      })
+      .then((result) => {
+        setBooks(Array.isArray(result.books) ? result.books : []);
+        setTotalBooks(Number(result.total) || 0);
+        setPageCount(Math.max(1, Number(result.pageCount) || 1));
+      })
+      .catch((error) => {
+        if (error.name !== 'AbortError') setBooksError(error.message || 'Unable to load books.');
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setIsLoadingBooks(false);
+      });
+    return () => controller.abort();
+  }, [page, pageSize, sortOption, submittedSearch, selectedSeries, refreshVersion]);
+
+  useEffect(() => {
+    fetch(apiUrl('/api/series'))
+      .then((response) => {
+        if (!response.ok) throw new Error(`Series query failed (${response.status}).`);
+        return response.json();
+      })
+      .then((result) => setSeriesOptions(Array.isArray(result) ? result : []))
+      .catch((error) => console.error('Error loading series:', error));
   }, []);
 
-  
-  // Sorting + pagination derived values
-  const filteredBooks = useMemo(() => {
-    const term = (searchTerm || '').trim().toLowerCase();
-    return books.filter(book => {
-      if (!(book.BINDING === 'pbk' && book?.Image)) return false;
-      if (selectedSeries && book.SeriesId !== selectedSeries) return false;
-      if (!term) return true;
-      const title = (book.Title || '').toLowerCase();
-      const author = (book.Author || book.AlphaAuthor || '').toLowerCase();
-      if (searchField === 'title') return title.includes(term);
-      if (searchField === 'author') return author.includes(term);
-      return title.includes(term) || author.includes(term);
-    });
-  }, [books, searchTerm, searchField, selectedSeries]);
+  const currentPageBooks = books;
+  const effectiveSortOption = sortOption;
+  const mobileResetKey = `${submittedSearch}|${sortOption}|${selectedSeries}|${page}`;
 
-  const effectiveSortOption = (searchTerm || '').trim() ? 'title-asc' : sortOption;
-  const mobileResetKey = `${searchTerm}|${sortOption}|${selectedSeries}`;
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    setPage(0);
+    setSubmittedSearch(searchTerm.trim());
+  };
 
-  const sortedBooks = useMemo(() => {
-    const arr = [...filteredBooks];
-    const collatorOptions = { sensitivity: 'base', numeric: true };
-    const byAuthor = (a, b) => (a.AlphaAuthor || a.Author || '').localeCompare(b.AlphaAuthor || b.Author || '', undefined, collatorOptions);
-    const byTitle = (a, b) => (a.AlphaTitle || a.Title || '').localeCompare(b.AlphaTitle || b.Title || '', undefined, collatorOptions);
-    if (effectiveSortOption === 'author-asc') arr.sort(byAuthor);
-    else if (effectiveSortOption === 'author-desc') arr.sort((a, b) => byAuthor(b, a));
-    else if (effectiveSortOption === 'title-asc') arr.sort(byTitle);
-    else if (effectiveSortOption === 'title-desc') arr.sort((a, b) => byTitle(b, a));
-    return arr;
-  }, [filteredBooks, effectiveSortOption]);
-
-  const uniqueSeries = useMemo(() => {
-    const map = new Map();
-    books.forEach(book => {
-      const seriesId = book.SeriesId || 'Unknown';
-      const seriesName = book.Series || seriesId;
-      if (!map.has(seriesId)) {
-        map.set(seriesId, seriesName);
-      }
-    });
-    return Array.from(map.entries())
-      .map(([id, name]) => ({ id, name }))
-      .sort((a, b) => a.name.localeCompare(b.name));
-  }, [books]);
-
-  const pagination = useMemo(() => {
-    // Default: simple slice pagination (Title sort)
-    if (!effectiveSortOption.startsWith('author')) {
-      const pc = Math.max(1, Math.ceil(sortedBooks.length / pageSize));
-      const cp = sortedBooks.slice(page * pageSize, (page + 1) * pageSize);
-      return { pageCount: pc, currentPageBooks: cp };
+  const openSpineCropPage = async () => {
+    setIsLoadingSpineBooks(true);
+    setSpineBooksError('');
+    try {
+      const response = await fetch(apiUrl('/api/books/spine-crop'));
+      if (!response.ok) throw new Error(`Spine book query failed (${response.status}).`);
+      const result = await response.json();
+      setSpineBooks(Array.isArray(result) ? result : []);
+      setView('spine-crop');
+    } catch (error) {
+      setSpineBooksError(error.message || 'Unable to load spine books.');
+    } finally {
+      setIsLoadingSpineBooks(false);
     }
-
-    // Author-aware pagination: group by author and avoid splitting an author across pages
-    const groups = [];
-    const map = new Map();
-    for (const b of sortedBooks) {
-      // Group by the displayed `Author` field, but keep sortedBooks ordered by AlphaAuthor
-      const key = (b.Author || b.AlphaAuthor || 'Unknown').trim();
-      if (!map.has(key)) {
-        map.set(key, []);
-        groups.push(key);
-      }
-      map.get(key).push(b);
-    }
-
-    const pages = [];
-    let current = [];
-    let count = 0;
-    for (const key of groups) {
-      const grp = map.get(key) || [];
-      // if adding this group would overflow and we already have items on the page, start a new page
-      if (count + grp.length > pageSize && current.length > 0) {
-        pages.push(current);
-        current = [];
-        count = 0;
-      }
-      current = current.concat(grp);
-      count += grp.length;
-    }
-    if (current.length) pages.push(current);
-
-    const pc = Math.max(1, pages.length || 1);
-    const cp = pages[page] || [];
-    return { pageCount: pc, currentPageBooks: cp };
-  }, [sortedBooks, effectiveSortOption, pageSize, page]);
-
-  const pageCount = pagination.pageCount;
-  const currentPageBooks = pagination.currentPageBooks;
-
-  useEffect(() => { if (page >= pageCount) setPage(0); }, [pageCount, page]);
+  };
 
   const openAddBookModal = () => {
     setAddBookForm(createEmptyAddBookForm());
@@ -188,15 +164,12 @@ const App = () => {
         throw new Error(message || 'Failed to add book');
       }
 
-      const savedBook = await response.json();
-      setBooks((currentBooks) => {
-        const nextBooks = currentBooks.filter((book) => (book?._uid || book?.ISBN || book?.EAN || book?.Title) !== savedBook?._uid);
-        return [savedBook, ...nextBooks];
-      });
+      await response.json();
       setPage(0);
+      setRefreshVersion((version) => version + 1);
       setShowAddBookModal(false);
       setAddBookForm(createEmptyAddBookForm());
-      setAddBookStatus('Saved to SQLite database.');
+      setAddBookStatus('Saved to database.');
     } catch (error) {
       setAddBookStatus(error?.message || 'Failed to add book.');
     } finally {
@@ -217,17 +190,20 @@ const App = () => {
                       <button className="btn btn-secondary" onClick={() => setView('library')}>Back To Library</button>
                     </Col>
                   </Row>
-                  <SpineCropEditor books={books} setBooks={setBooks} />
+                  <SpineCropEditor books={spineBooks} setBooks={setSpineBooks} />
                 </Col>
               </Row>
             ) : (
               <Row>
                 <Col xs={12} lg={2} className="d-flex flex-column align-items-stretch">
                   <div className="">
-                    <div className="mb-3">
-                      <label htmlFor="searchInput" className="form-label">Search:</label>
-                      <input id="searchInput" className="form-control form-control-sm" value={searchTerm} onChange={(e) => { setSearchTerm(e.target.value); setPage(0); }} placeholder="Title or author" />
-                    </div>
+                    <Form onSubmit={handleSearchSubmit} className="mb-3">
+                      <Form.Label htmlFor="searchInput">Search:</Form.Label>
+                      <div className="input-group input-group-sm">
+                        <Form.Control id="searchInput" value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} placeholder="Title or author" />
+                        <Button type="submit" variant="primary" disabled={isLoadingBooks}>Search</Button>
+                      </div>
+                    </Form>
                     <div className="mb-3">
                       <label htmlFor="sortSelect" className="form-label">Sort:</label>
                       <select id="sortSelect" value={effectiveSortOption} onChange={(e) => { setSortOption(e.target.value); setPage(0); }} className="form-select form-select-sm">
@@ -241,7 +217,7 @@ const App = () => {
                       <label htmlFor="seriesSelect" className="form-label">Series:</label>
                       <select id="seriesSelect" value={selectedSeries} onChange={(e) => { setSelectedSeries(e.target.value); setPage(0); }} className="form-select form-select-sm">
                         <option value="">All Series</option>
-                        {uniqueSeries.map(series => (
+                        {seriesOptions.map(series => (
                           <option key={series.id} value={series.id}>{series.name}</option>
                         ))}
                       </select>
@@ -249,7 +225,8 @@ const App = () => {
                   </div>
                   <div>
                     <div className="d-grid gap-2 mb-3">
-                      <button className="btn btn-outline-primary" onClick={() => setView('spine-crop')}>Open PCD Spine Crop Page</button>
+                      <button className="btn btn-outline-primary" onClick={openSpineCropPage} disabled={isLoadingSpineBooks}>{isLoadingSpineBooks ? 'Loading PCD Books...' : 'Open PCD Spine Crop Page'}</button>
+                      {spineBooksError && <div className="small text-danger">{spineBooksError}</div>}
                       <button className="btn btn-outline-success" onClick={openAddBookModal}>Add Book</button>
                     </div>
                   </div>
@@ -257,21 +234,22 @@ const App = () => {
                 <Col xs={12} lg={10}>
                   <Row className="d-flex justify-content-between align-items-center mb-3">
                     <Col xs={12} lg={6} className="d-flex align-items-center">
-                      <h4 className="mb-0">{filteredBooks.length} Books</h4>
+                      <h4 className="mb-0">{isLoadingBooks ? 'Loading books...' : `${totalBooks} Books`}</h4>
                     </Col>
                     <Col xs={12} lg={6} className="d-flex justify-content-end align-items-center">
-                      <button className="btn btn-secondary me-2" onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0}>Back</button>
+                      <button className="btn btn-secondary me-2" onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0 || isLoadingBooks}>Back</button>
                       <span className="me-2">Page {page + 1} / {pageCount}</span>
-                      <button className="btn btn-secondary" onClick={() => setPage(p => Math.min(pageCount - 1, p + 1))} disabled={page >= pageCount - 1}>Next</button>
+                      <button className="btn btn-secondary" onClick={() => setPage(p => Math.min(pageCount - 1, p + 1))} disabled={page >= pageCount - 1 || isLoadingBooks}>Next</button>
                     </Col>
                   </Row>
+                  {booksError && <div className="alert alert-danger" role="alert">{booksError}</div>}
                   <hr></hr>
                   <Row className="d-flex">
-                    {effectiveSortOption.startsWith('author') ? (
+                    {!isLoadingBooks && !booksError && effectiveSortOption.startsWith('author') ? (
                       <AuthorView books={currentPageBooks} pageIndex={page * pageSize} mobileResetKey={mobileResetKey} setBooks={setBooks} />
-                    ) : (
+                    ) : !isLoadingBooks && !booksError ? (
                         <TitleView books={currentPageBooks} pageIndex={page * pageSize} mobileResetKey={mobileResetKey} setBooks={setBooks} />
-                    )}
+                    ) : null}
                   </Row>
                 </Col>
               </Row>
@@ -279,9 +257,9 @@ const App = () => {
         </Container>
         <hr></hr>
         <div>
-          <button className="btn btn-secondary me-2" onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0}>Back</button>
+          <button className="btn btn-secondary me-2" onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0 || isLoadingBooks}>Back</button>
           <span className="me-2">Page {page + 1} / {pageCount}</span>
-          <button className="btn btn-secondary" onClick={() => setPage(p => Math.min(pageCount - 1, p + 1))} disabled={page >= pageCount - 1}>Next</button>
+          <button className="btn btn-secondary" onClick={() => setPage(p => Math.min(pageCount - 1, p + 1))} disabled={page >= pageCount - 1 || isLoadingBooks}>Next</button>
         </div>
 
         <Modal show={showAddBookModal} onHide={() => setShowAddBookModal(false)} size="xl" scrollable>
@@ -289,7 +267,7 @@ const App = () => {
             <Modal.Title>Add Book</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <div className="small text-muted mb-3">Create a new book record in SQLite. Leave Series and Series Id blank if the book is not part of a series.</div>
+            <div className="small text-muted mb-3">Create a new book record. Leave Series and Series Id blank if the book is not part of a series.</div>
             <Form>
               <div className="row g-3">
                 {ADD_BOOK_FIELDS.map((field) => (
