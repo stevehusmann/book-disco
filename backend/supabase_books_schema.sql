@@ -44,8 +44,7 @@ as $$
   with filtered as (
     select uid, book
     from public.books
-    where book ->> 'BINDING' = 'pbk'
-      and coalesce(book ->> 'Image', '') <> ''
+    where lower(coalesce(book ->> 'BINDING', 'pbk')) = 'pbk'
       and (
         coalesce(p_series, '') = ''
         or (p_series = 'Unknown' and coalesce(book ->> 'SeriesId', '') = '')

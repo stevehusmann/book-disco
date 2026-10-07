@@ -477,7 +477,7 @@ app.get('/api/books', async (req, res) => {
     return;
   }
 
-  const conditions = ["binding = 'pbk'", "image IS NOT NULL", "image <> ''"];
+  const conditions = ["LOWER(COALESCE(binding, 'pbk')) = 'pbk'"];
   const parameters = [];
   if (series === 'Unknown') {
     conditions.push("(series_id IS NULL OR series_id = '')");
