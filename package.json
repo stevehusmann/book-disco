@@ -34,6 +34,8 @@
     "authors:merge": "node scripts/merge_duplicate_authors.js",
     "pagination:sample": "node scripts/fill_missing_pagination.js --limit=50 --apply",
     "pagination:all": "node scripts/fill_missing_pagination.js --all --apply",
+    "supabase:dry-run": "node scripts/sync_supabase_books.js --dry-run",
+    "supabase:sync": "node scripts/sync_supabase_books.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

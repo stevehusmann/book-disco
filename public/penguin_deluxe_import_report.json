@@ -1,0 +1,12 @@
+{
+  "startedAt": "2026-10-07T04:56:44.518Z",
+  "seriesUrl": "https://www.penguinrandomhouse.com/series/254/penguin-classics-deluxe-edition/",
+  "requestedLimit": 20,
+  "discovered": 20,
+  "captured": 20,
+  "dryRun": false,
+  "apply": true,
+  "added": 17,
+  "updated": 3,
+  "finalBooks": 2381
+}

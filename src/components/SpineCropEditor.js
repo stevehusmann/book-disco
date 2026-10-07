@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { apiUrl } from '../apiUrl';
+import { getQuadBounds, normalizeQuadPoints, quadToPointsString } from './spineCropUtils';
 
 const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
 const DEFAULT_LOCAL_IMAGE_PATH = 'PenguinDeluxeClassics.jpg';
@@ -20,6 +21,7 @@ const SpineCropEditor = ({ books, setBooks }) => {
   const [imgRendered, setImgRendered] = useState({ width: 0, height: 0 });
   const [cropDisplay, setCropDisplay] = useState(null);
   const [rotation, setRotation] = useState(0);
+  const [selectionMode, setSelectionMode] = useState('quad');
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState(null);
 
@@ -87,24 +89,45 @@ const SpineCropEditor = ({ books, setBooks }) => {
     return { x, y, width: maxWidth, height: maxHeight };
   };
 
+  const beginRectSelection = (point) => {
+    setIsDragging(true);
+    setDragStart({ x: point.x, y: point.y });
+    setCropDisplay({ mode: 'rect', x: point.x, y: point.y, width: 0, height: 0 });
+  };
+
+  const addQuadPoint = (point) => {
+    setCropDisplay((current) => {
+      const points = Array.isArray(current?.points) ? [...current.points] : [];
+      if (points.length >= 4) {
+        points.length = 0;
+      }
+      points.push({ x: point.x, y: point.y });
+      return { mode: 'quad', points: points.slice(0, 4) };
+    });
+  };
+
   const onStageMouseDown = (evt) => {
     if (!imageSrc) return;
     const p = getPointInStage(evt);
     if (!p) return;
-    setIsDragging(true);
-    setDragStart({ x: p.x, y: p.y });
-    setCropDisplay({ x: p.x, y: p.y, width: 0, height: 0 });
+
+    if (selectionMode === 'quad') {
+      addQuadPoint(p);
+      return;
+    }
+
+    beginRectSelection(p);
   };
 
   const onStageMouseMove = (evt) => {
-    if (!isDragging || !dragStart) return;
+    if (!isDragging || !dragStart || selectionMode === 'quad') return;
     const p = getPointInStage(evt);
     if (!p) return;
     const x = Math.min(dragStart.x, p.x);
     const y = Math.min(dragStart.y, p.y);
     const width = Math.abs(p.x - dragStart.x);
     const height = Math.abs(p.y - dragStart.y);
-    setCropDisplay({ x, y, width, height });
+    setCropDisplay({ mode: 'rect', x, y, width, height });
   };
 
   const onStageMouseUp = () => {
@@ -193,6 +216,37 @@ const SpineCropEditor = ({ books, setBooks }) => {
       return null;
     }
 
+    if (cropDisplay.mode === 'quad' && Array.isArray(cropDisplay.points) && cropDisplay.points.length === 4) {
+      const rotatedNaturalWidth = rotation % 180 === 0 ? imgNatural.width : imgNatural.height;
+      const rotatedNaturalHeight = rotation % 180 === 0 ? imgNatural.height : imgNatural.width;
+
+      const sourcePoints = cropDisplay.points.map((point) => {
+        const px = (point.x / imgRendered.width) * rotatedNaturalWidth;
+        const py = (point.y / imgRendered.height) * rotatedNaturalHeight;
+        return mapRotatedToSourcePoint(px, py, imgNatural.width, imgNatural.height, rotation);
+      });
+
+      const normalized = normalizeQuadPoints(sourcePoints, imgNatural.width, imgNatural.height);
+      const bounds = getQuadBounds(normalized);
+
+      return {
+        mode: 'quad',
+        points: normalized,
+        x: bounds.x,
+        y: bounds.y,
+        width: bounds.width,
+        height: bounds.height,
+        nx: Number((bounds.x / imgNatural.width).toFixed(6)),
+        ny: Number((bounds.y / imgNatural.height).toFixed(6)),
+        nw: Number((bounds.width / imgNatural.width).toFixed(6)),
+        nh: Number((bounds.height / imgNatural.height).toFixed(6)),
+        sourceWidth: imgNatural.width,
+        sourceHeight: imgNatural.height,
+        editorRotation: rotation,
+        pointsString: quadToPointsString(normalized)
+      };
+    }
+
     const rotatedNaturalWidth = rotation % 180 === 0 ? imgNatural.width : imgNatural.height;
     const rotatedNaturalHeight = rotation % 180 === 0 ? imgNatural.height : imgNatural.width;
 
@@ -222,6 +276,7 @@ const SpineCropEditor = ({ books, setBooks }) => {
     height = Math.max(1, Math.min(height, imgNatural.height - y));
 
     return {
+      mode: 'rect',
       x,
       y,
       width,
@@ -240,6 +295,25 @@ const SpineCropEditor = ({ books, setBooks }) => {
     const saved = selectedBook?.SpineCrop;
     if (!saved || !imgNatural.width || !imgNatural.height || !imgRendered.width || !imgRendered.height) {
       return null;
+    }
+
+    if (saved.mode === 'quad' && Array.isArray(saved.points) && saved.points.length === 4) {
+      const rotatedNaturalWidth = rotation % 180 === 0 ? imgNatural.width : imgNatural.height;
+      const rotatedNaturalHeight = rotation % 180 === 0 ? imgNatural.height : imgNatural.width;
+      const displayPoints = saved.points.map((point) => {
+        const px = Number(point.x);
+        const py = Number(point.y);
+        const rotatedPoint = mapSourceToRotatedPoint(px, py, imgNatural.width, imgNatural.height, rotation);
+        return {
+          x: (rotatedPoint.x / rotatedNaturalWidth) * imgRendered.width,
+          y: (rotatedPoint.y / rotatedNaturalHeight) * imgRendered.height
+        };
+      });
+
+      return {
+        mode: 'quad',
+        points: displayPoints
+      };
     }
 
     const sx = Number.isFinite(saved.x)
@@ -284,6 +358,7 @@ const SpineCropEditor = ({ books, setBooks }) => {
     const rotatedNaturalHeight = rotation % 180 === 0 ? imgNatural.height : imgNatural.width;
 
     return {
+      mode: 'rect',
       x: (minRX / rotatedNaturalWidth) * imgRendered.width,
       y: (minRY / rotatedNaturalHeight) * imgRendered.height,
       width: ((maxRX - minRX) / rotatedNaturalWidth) * imgRendered.width,
@@ -336,7 +411,9 @@ const SpineCropEditor = ({ books, setBooks }) => {
       ...selectedBook,
       SpineCrop: {
         src: imageSrc,
-        ...cropSourceCoords
+        ...cropSourceCoords,
+        mode: cropSourceCoords.mode || 'rect',
+        points: cropSourceCoords.points || undefined
       }
     };
     if (nextSelectedBook) {
@@ -459,6 +536,38 @@ const SpineCropEditor = ({ books, setBooks }) => {
         </>
       )}
 
+      <label className="form-label mb-1">Selection Mode</label>
+      <div className="d-flex gap-3 mb-2">
+        <div className="form-check">
+          <input
+            className="form-check-input"
+            type="radio"
+            name="cropSelectionMode"
+            id="cropSelectionQuad"
+            checked={selectionMode === 'quad'}
+            onChange={() => {
+              setSelectionMode('quad');
+              setCropDisplay(null);
+            }}
+          />
+          <label className="form-check-label" htmlFor="cropSelectionQuad">4-point skew</label>
+        </div>
+        <div className="form-check">
+          <input
+            className="form-check-input"
+            type="radio"
+            name="cropSelectionMode"
+            id="cropSelectionRect"
+            checked={selectionMode === 'rect'}
+            onChange={() => {
+              setSelectionMode('rect');
+              setCropDisplay(null);
+            }}
+          />
+          <label className="form-check-label" htmlFor="cropSelectionRect">Rectangle</label>
+        </div>
+      </div>
+
       <label className="form-label mb-1">Rotation</label>
       <div className="d-flex gap-2 mb-2">
         <button className="btn btn-sm btn-outline-secondary" type="button" onClick={() => setRotation((r) => (r + 270) % 360)}>
@@ -492,7 +601,12 @@ const SpineCropEditor = ({ books, setBooks }) => {
         ) : (
           <div className="spine-crop-placeholder">Load a public image path, direct URL, or upload a file to start cropping.</div>
         )}
-        {cropDisplay && (
+        {selectionMode === 'quad' && Array.isArray(cropDisplay?.points) && cropDisplay.points.length > 0 && (
+          <svg className="spine-crop-polygon-layer" viewBox={`0 0 ${imgRendered.width || 1} ${imgRendered.height || 1}`} preserveAspectRatio="none">
+            <polygon points={quadToPointsString(cropDisplay.points)} />
+          </svg>
+        )}
+        {selectionMode === 'rect' && cropDisplay && (
           <div
             className="spine-crop-rect"
             style={{
@@ -504,15 +618,21 @@ const SpineCropEditor = ({ books, setBooks }) => {
           />
         )}
         {savedCropDisplay && isSavedCropSameSource && (
-          <div
-            className="spine-crop-rect-saved"
-            style={{
-              left: `${savedCropDisplay.x}px`,
-              top: `${savedCropDisplay.y}px`,
-              width: `${savedCropDisplay.width}px`,
-              height: `${savedCropDisplay.height}px`
-            }}
-          />
+          savedCropDisplay.mode === 'quad' ? (
+            <svg className="spine-crop-polygon-layer saved" viewBox={`0 0 ${imgRendered.width || 1} ${imgRendered.height || 1}`} preserveAspectRatio="none">
+              <polygon points={quadToPointsString(savedCropDisplay.points)} />
+            </svg>
+          ) : (
+            <div
+              className="spine-crop-rect-saved"
+              style={{
+                left: `${savedCropDisplay.x}px`,
+                top: `${savedCropDisplay.y}px`,
+                width: `${savedCropDisplay.width}px`,
+                height: `${savedCropDisplay.height}px`
+              }}
+            />
+          )
         )}
       </div>
 

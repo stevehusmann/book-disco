@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { normalizeQuadPoints, renderPerspectiveQuadToCanvas } from './spineCropUtils';
 
 const SpinePCD = ({ book, pagination, thickness, spineText, showAuthorOnSpine, author }) => {
   // PCD thickness: prefer parent-provided measured thickness,
@@ -35,6 +36,25 @@ const SpinePCD = ({ book, pagination, thickness, spineText, showAuthorOnSpine, a
         const naturalH = img.naturalHeight || 0;
         if (!naturalW || !naturalH) {
           if (mounted) setSpineImage(null);
+          return;
+        }
+
+        if (crop.mode === 'quad' && Array.isArray(crop.points) && crop.points.length === 4) {
+          const normalized = normalizeQuadPoints(crop.points, naturalW, naturalH);
+          const quadBounds = normalized.length === 4
+            ? {
+                x: Math.min(...normalized.map((point) => point.x)),
+                y: Math.min(...normalized.map((point) => point.y)),
+                width: Math.max(...normalized.map((point) => point.x)) - Math.min(...normalized.map((point) => point.x)),
+                height: Math.max(...normalized.map((point) => point.y)) - Math.min(...normalized.map((point) => point.y))
+              }
+            : { x: 0, y: 0, width: naturalW, height: naturalH };
+
+          const targetWidth = Math.max(1, Math.round(quadBounds.width || naturalW));
+          const targetHeight = Math.max(1, Math.round(quadBounds.height || naturalH));
+          const canvas = renderPerspectiveQuadToCanvas(img, normalized, targetWidth, targetHeight);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+          if (mounted) setSpineImage(dataUrl);
           return;
         }
 
