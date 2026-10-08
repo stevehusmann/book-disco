@@ -3,7 +3,7 @@ export const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 export const normalizeQuadPoints = (points, width, height) => {
   if (!Array.isArray(points)) return [];
 
-  return points.slice(0, 4).map((point) => {
+  const normalized = points.slice(0, 4).map((point) => {
     const x = Number.isFinite(Number(point?.x)) ? Number(point.x) : 0;
     const y = Number.isFinite(Number(point?.y)) ? Number(point.y) : 0;
     return {
@@ -11,6 +11,43 @@ export const normalizeQuadPoints = (points, width, height) => {
       y: clamp(y, 0, Math.max(0, Number(height) || 0))
     };
   });
+
+  if (normalized.length < 4) return normalized;
+
+  const centroid = normalized.reduce((acc, point) => {
+    acc.x += point.x;
+    acc.y += point.y;
+    return acc;
+  }, { x: 0, y: 0 });
+
+  centroid.x /= normalized.length;
+  centroid.y /= normalized.length;
+
+  const sorted = [...normalized].sort((a, b) => {
+    const aAngle = Math.atan2(a.y - centroid.y, a.x - centroid.x);
+    const bAngle = Math.atan2(b.y - centroid.y, b.x - centroid.x);
+    return aAngle - bAngle;
+  });
+
+  const area = sorted.reduce((sum, point, index) => {
+    const next = sorted[(index + 1) % sorted.length];
+    return sum + (point.x * next.y - next.x * point.y);
+  }, 0);
+
+  if (area < 0) {
+    sorted.reverse();
+  }
+
+  const startIndex = sorted.reduce((bestIdx, point, index, arr) => {
+    const bestPoint = arr[bestIdx];
+    if (point.y < bestPoint.y || (point.y === bestPoint.y && point.x < bestPoint.x)) {
+      return index;
+    }
+    return bestIdx;
+  }, 0);
+
+  const rotated = [...sorted.slice(startIndex), ...sorted.slice(0, startIndex)];
+  return rotated;
 };
 
 export const getQuadBounds = (points) => {
@@ -52,13 +89,19 @@ export const renderPerspectiveQuadToCanvas = (sourceCanvas, quadPoints, targetWi
 
   const sourceImageData = sourceCtx.getImageData(0, 0, sourceCanvas.width, sourceCanvas.height);
   const normalized = normalizeQuadPoints(quadPoints, sourceCanvas.width, sourceCanvas.height);
+  if (normalized.length !== 4) {
+    ctx.drawImage(sourceCanvas, 0, 0, canvas.width, canvas.height);
+    return canvas;
+  }
+
+  const [p0, p1, p2, p3] = normalized;
   const targetImage = ctx.createImageData(canvas.width, canvas.height);
 
   for (let y = 0; y < canvas.height; y += 1) {
     const v = canvas.height > 1 ? y / (canvas.height - 1) : 0;
     for (let x = 0; x < canvas.width; x += 1) {
       const u = canvas.width > 1 ? x / (canvas.width - 1) : 0;
-      const [p0, p1, p2, p3] = normalized;
+
       const sourceX = ((1 - u) * (1 - v) * p0.x)
         + (u * (1 - v) * p1.x)
         + (u * v * p2.x)

@@ -37,4 +37,20 @@ describe('spine crop quad helpers', () => {
       { x: 10, y: 100 }
     ])).toBe('0,0 50,10 80,90 10,100');
   });
+
+  test('normalizeQuadPoints reorders arbitrary clicks into a consistent corner order', () => {
+    const points = [
+      { x: 80, y: 90 },
+      { x: 10, y: 10 },
+      { x: 110, y: 20 },
+      { x: 20, y: 120 }
+    ];
+
+    expect(normalizeQuadPoints(points, 200, 200)).toEqual([
+      { x: 10, y: 10 },
+      { x: 110, y: 20 },
+      { x: 80, y: 90 },
+      { x: 20, y: 120 }
+    ]);
+  });
 });
