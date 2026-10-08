@@ -391,6 +391,8 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
   border-radius: 6px;
   overflow: hidden;
   cursor: crosshair;
+  touch-action: none;
+  user-select: none;
 }
 
 .spine-crop-image {

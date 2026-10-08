@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { normalizeQuadPoints, renderPerspectiveQuadToCanvas } from './spineCropUtils';
+import { getQuadBounds, normalizeQuadPoints } from './spineCropUtils';
 
 const SpinePCD = ({ book, pagination, thickness, spineText, showAuthorOnSpine, author }) => {
   // PCD thickness: prefer parent-provided measured thickness,
@@ -41,18 +41,22 @@ const SpinePCD = ({ book, pagination, thickness, spineText, showAuthorOnSpine, a
 
         if (crop.mode === 'quad' && Array.isArray(crop.points) && crop.points.length === 4) {
           const normalized = normalizeQuadPoints(crop.points, naturalW, naturalH);
-          const quadBounds = normalized.length === 4
-            ? {
-                x: Math.min(...normalized.map((point) => point.x)),
-                y: Math.min(...normalized.map((point) => point.y)),
-                width: Math.max(...normalized.map((point) => point.x)) - Math.min(...normalized.map((point) => point.x)),
-                height: Math.max(...normalized.map((point) => point.y)) - Math.min(...normalized.map((point) => point.y))
-              }
-            : { x: 0, y: 0, width: naturalW, height: naturalH };
+          const quadBounds = normalized.length === 4 ? getQuadBounds(normalized) : { x: 0, y: 0, width: naturalW, height: naturalH };
+          const sx = Math.max(0, Math.round(quadBounds.x));
+          const sy = Math.max(0, Math.round(quadBounds.y));
+          const sw = Math.max(1, Math.round(quadBounds.width));
+          const sh = Math.max(1, Math.round(quadBounds.height));
 
-          const targetWidth = Math.max(1, Math.round(quadBounds.width || naturalW));
-          const targetHeight = Math.max(1, Math.round(quadBounds.height || naturalH));
-          const canvas = renderPerspectiveQuadToCanvas(img, normalized, targetWidth, targetHeight);
+          const canvas = document.createElement('canvas');
+          canvas.width = sw;
+          canvas.height = sh;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            if (mounted) setSpineImage(null);
+            return;
+          }
+
+          ctx.drawImage(img, sx, sy, sw, sh, 0, 0, sw, sh);
           const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
           if (mounted) setSpineImage(dataUrl);
           return;

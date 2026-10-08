@@ -89,6 +89,43 @@ const SpineCropEditor = ({ books, setBooks }) => {
     return { x, y, width: maxWidth, height: maxHeight };
   };
 
+  const onStagePointerDown = (evt) => {
+    evt.preventDefault();
+    if (stageRef.current && evt.pointerId != null) {
+      stageRef.current.setPointerCapture(evt.pointerId);
+    }
+    if (!imageSrc) return;
+    const p = getPointInStage(evt);
+    if (!p) return;
+
+    if (selectionMode === 'quad') {
+      addQuadPoint(p);
+      return;
+    }
+
+    beginRectSelection(p);
+  };
+
+  const onStagePointerMove = (evt) => {
+    if (!isDragging || !dragStart || selectionMode === 'quad') return;
+    evt.preventDefault();
+    const p = getPointInStage(evt);
+    if (!p) return;
+    const x = Math.min(dragStart.x, p.x);
+    const y = Math.min(dragStart.y, p.y);
+    const width = Math.abs(p.x - dragStart.x);
+    const height = Math.abs(p.y - dragStart.y);
+    setCropDisplay({ mode: 'rect', x, y, width, height });
+  };
+
+  const onStagePointerUp = (evt) => {
+    if (evt.pointerId != null && stageRef.current && stageRef.current.hasPointerCapture?.(evt.pointerId)) {
+      stageRef.current.releasePointerCapture(evt.pointerId);
+    }
+    setIsDragging(false);
+    setDragStart(null);
+  };
+
   const beginRectSelection = (point) => {
     setIsDragging(true);
     setDragStart({ x: point.x, y: point.y });
@@ -106,34 +143,6 @@ const SpineCropEditor = ({ books, setBooks }) => {
     });
   };
 
-  const onStageMouseDown = (evt) => {
-    if (!imageSrc) return;
-    const p = getPointInStage(evt);
-    if (!p) return;
-
-    if (selectionMode === 'quad') {
-      addQuadPoint(p);
-      return;
-    }
-
-    beginRectSelection(p);
-  };
-
-  const onStageMouseMove = (evt) => {
-    if (!isDragging || !dragStart || selectionMode === 'quad') return;
-    const p = getPointInStage(evt);
-    if (!p) return;
-    const x = Math.min(dragStart.x, p.x);
-    const y = Math.min(dragStart.y, p.y);
-    const width = Math.abs(p.x - dragStart.x);
-    const height = Math.abs(p.y - dragStart.y);
-    setCropDisplay({ mode: 'rect', x, y, width, height });
-  };
-
-  const onStageMouseUp = () => {
-    setIsDragging(false);
-    setDragStart(null);
-  };
 
   const onImageLoad = useCallback(() => {
     const img = imgRef.current;
@@ -588,10 +597,11 @@ const SpineCropEditor = ({ books, setBooks }) => {
       <div
         ref={stageRef}
         className="spine-crop-stage mb-2"
-        onMouseDown={onStageMouseDown}
-        onMouseMove={onStageMouseMove}
-        onMouseUp={onStageMouseUp}
-        onMouseLeave={onStageMouseUp}
+        onPointerDown={onStagePointerDown}
+        onPointerMove={onStagePointerMove}
+        onPointerUp={onStagePointerUp}
+        onPointerLeave={onStagePointerUp}
+        onPointerCancel={onStagePointerUp}
       >
         {imageSrc ? (
           <>

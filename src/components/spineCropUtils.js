@@ -84,13 +84,28 @@ export const renderPerspectiveQuadToCanvas = (sourceCanvas, quadPoints, targetWi
   const ctx = canvas.getContext('2d');
   if (!ctx || !sourceCanvas) return canvas;
 
-  const sourceCtx = sourceCanvas.getContext('2d');
+  const sourceBitmap = sourceCanvas instanceof HTMLCanvasElement
+    ? sourceCanvas
+    : (() => {
+        const tempCanvas = document.createElement('canvas');
+        const width = Number(sourceCanvas?.naturalWidth || sourceCanvas?.width || 1);
+        const height = Number(sourceCanvas?.naturalHeight || sourceCanvas?.height || 1);
+        tempCanvas.width = Math.max(1, width);
+        tempCanvas.height = Math.max(1, height);
+        const tempCtx = tempCanvas.getContext('2d');
+        if (tempCtx) {
+          tempCtx.drawImage(sourceCanvas, 0, 0, tempCanvas.width, tempCanvas.height);
+        }
+        return tempCanvas;
+      })();
+
+  const sourceCtx = sourceBitmap.getContext('2d');
   if (!sourceCtx) return canvas;
 
-  const sourceImageData = sourceCtx.getImageData(0, 0, sourceCanvas.width, sourceCanvas.height);
-  const normalized = normalizeQuadPoints(quadPoints, sourceCanvas.width, sourceCanvas.height);
+  const sourceImageData = sourceCtx.getImageData(0, 0, sourceBitmap.width, sourceBitmap.height);
+  const normalized = normalizeQuadPoints(quadPoints, sourceBitmap.width, sourceBitmap.height);
   if (normalized.length !== 4) {
-    ctx.drawImage(sourceCanvas, 0, 0, canvas.width, canvas.height);
+    ctx.drawImage(sourceBitmap, 0, 0, canvas.width, canvas.height);
     return canvas;
   }
 
@@ -111,9 +126,9 @@ export const renderPerspectiveQuadToCanvas = (sourceCanvas, quadPoints, targetWi
         + (u * v * p2.y)
         + ((1 - u) * v * p3.y);
 
-      const sampleX = clamp(Math.round(sourceX), 0, sourceCanvas.width - 1);
-      const sampleY = clamp(Math.round(sourceY), 0, sourceCanvas.height - 1);
-      const sourceIndex = (sampleY * sourceCanvas.width + sampleX) * 4;
+      const sampleX = clamp(Math.round(sourceX), 0, sourceBitmap.width - 1);
+      const sampleY = clamp(Math.round(sourceY), 0, sourceBitmap.height - 1);
+      const sourceIndex = (sampleY * sourceBitmap.width + sampleX) * 4;
       const targetIndex = (y * canvas.width + x) * 4;
 
       targetImage.data[targetIndex] = sourceImageData.data[sourceIndex];
