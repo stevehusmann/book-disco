@@ -108,6 +108,98 @@ export const getLandscapeCropRotation = (width, height, selectedRotation) => {
   return 0;
 };
 
+const rotateCanvas = (sourceCanvas, rotation) => {
+  const normalizedRotation = ((Number(rotation) % 360) + 360) % 360;
+  if (!normalizedRotation) return sourceCanvas;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = normalizedRotation % 180 === 0 ? sourceCanvas.width : sourceCanvas.height;
+  canvas.height = normalizedRotation % 180 === 0 ? sourceCanvas.height : sourceCanvas.width;
+  const context = canvas.getContext('2d');
+  if (!context) return sourceCanvas;
+
+  if (normalizedRotation === 90) {
+    context.translate(canvas.width, 0);
+    context.rotate(Math.PI / 2);
+  } else if (normalizedRotation === 180) {
+    context.translate(canvas.width, canvas.height);
+    context.rotate(Math.PI);
+  } else if (normalizedRotation === 270) {
+    context.translate(0, canvas.height);
+    context.rotate(-Math.PI / 2);
+  }
+  context.drawImage(sourceCanvas, 0, 0);
+  return canvas;
+};
+
+export const renderSpineCropCanvas = (sourceImage, crop) => {
+  const sourceWidth = Number(sourceImage?.naturalWidth || sourceImage?.width || 0);
+  const sourceHeight = Number(sourceImage?.naturalHeight || sourceImage?.height || 0);
+  if (!sourceWidth || !sourceHeight || !crop) return null;
+
+  const editorRotation = [90, 180, 270].includes(Number(crop.editorRotation))
+    ? Number(crop.editorRotation)
+    : 0;
+  let result;
+
+  if (crop.mode === 'quad' && Array.isArray(crop.points) && crop.points.length === 4) {
+    const rotatedWidth = editorRotation % 180 === 0 ? sourceWidth : sourceHeight;
+    const rotatedHeight = editorRotation % 180 === 0 ? sourceHeight : sourceWidth;
+    const rotatedSource = document.createElement('canvas');
+    rotatedSource.width = rotatedWidth;
+    rotatedSource.height = rotatedHeight;
+    const context = rotatedSource.getContext('2d');
+    if (!context) return null;
+
+    if (editorRotation === 90) {
+      context.translate(rotatedWidth, 0);
+      context.rotate(Math.PI / 2);
+    } else if (editorRotation === 180) {
+      context.translate(rotatedWidth, rotatedHeight);
+      context.rotate(Math.PI);
+    } else if (editorRotation === 270) {
+      context.translate(0, rotatedHeight);
+      context.rotate(-Math.PI / 2);
+    }
+    context.drawImage(sourceImage, 0, 0, sourceWidth, sourceHeight);
+
+    const points = normalizeQuadPoints(
+      crop.points.map((point) => mapSourcePointToRotated(
+        Number(point.x), Number(point.y), sourceWidth, sourceHeight, editorRotation
+      )),
+      rotatedWidth,
+      rotatedHeight
+    );
+    const size = getQuadOutputSize(points);
+    result = renderPerspectiveQuadToCanvas(rotatedSource, points, size.width, size.height);
+    result = rotateCanvas(result, getLandscapeCropRotation(result.width, result.height, editorRotation));
+  } else {
+    let x = Number(crop.x);
+    let y = Number(crop.y);
+    let width = Number(crop.width);
+    let height = Number(crop.height);
+    if (!Number.isFinite(x) && Number.isFinite(Number(crop.nx))) x = Number(crop.nx) * sourceWidth;
+    if (!Number.isFinite(y) && Number.isFinite(Number(crop.ny))) y = Number(crop.ny) * sourceHeight;
+    if (!Number.isFinite(width) && Number.isFinite(Number(crop.nw))) width = Number(crop.nw) * sourceWidth;
+    if (!Number.isFinite(height) && Number.isFinite(Number(crop.nh))) height = Number(crop.nh) * sourceHeight;
+    x = clamp(Math.round(x || 0), 0, sourceWidth - 1);
+    y = clamp(Math.round(y || 0), 0, sourceHeight - 1);
+    width = clamp(Math.round(width || sourceWidth), 1, sourceWidth - x);
+    height = clamp(Math.round(height || sourceHeight), 1, sourceHeight - y);
+
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    const context = canvas.getContext('2d');
+    if (!context) return null;
+    context.drawImage(sourceImage, x, y, width, height, 0, 0, width, height);
+    result = rotateCanvas(canvas, editorRotation);
+    result = rotateCanvas(result, getLandscapeCropRotation(result.width, result.height, editorRotation));
+  }
+
+  return rotateCanvas(result, crop.outputRotation || 0);
+};
+
 export const quadToPointsString = (points) =>
   points
     .map((point) => `${Number(point?.x ?? 0)},${Number(point?.y ?? 0)}`)

@@ -5,7 +5,8 @@ import {
   mapRotatedPointToSource,
   mapSourcePointToRotated,
   orderRotatedQuadPointsAsSource,
-  quadToPointsString
+  quadToPointsString,
+  renderSpineCropCanvas
 } from './spineCropUtils';
 
 const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
@@ -29,6 +30,8 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
   const [directUrl, setDirectUrl] = useState('');
   const [saveStatus, setSaveStatus] = useState('');
   const [isSavingCrop, setIsSavingCrop] = useState(false);
+  const [previewSrc, setPreviewSrc] = useState('');
+  const [previewRotation, setPreviewRotation] = useState(0);
   const [imgNatural, setImgNatural] = useState({ width: 0, height: 0 });
   const [imgRendered, setImgRendered] = useState({ width: 0, height: 0 });
   const [cropDisplay, setCropDisplay] = useState(null);
@@ -188,6 +191,7 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
       setImageSrc(String(reader.result || ''));
       setCropDisplay(null);
       setRotation(0);
+      setPreviewRotation(0);
     };
     reader.readAsDataURL(file);
   };
@@ -199,6 +203,7 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
     setImageSrc(normalized);
     setCropDisplay(null);
     setRotation(0);
+    setPreviewRotation(0);
   };
 
   const loadDirectUrlImage = () => {
@@ -208,6 +213,7 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
     setImageSrc(url);
     setCropDisplay(null);
     setRotation(0);
+    setPreviewRotation(0);
   };
 
   const cropSourceCoords = useMemo(() => {
@@ -289,6 +295,25 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
       editorRotation: rotation
     };
   }, [cropDisplay, imgRendered, imgNatural, rotation]);
+
+  useEffect(() => {
+    const sourceImage = imgRef.current;
+    if (!sourceImage || !cropSourceCoords || !sourceImage.complete) {
+      setPreviewSrc('');
+      return;
+    }
+
+    try {
+      const previewCanvas = renderSpineCropCanvas(sourceImage, {
+        ...cropSourceCoords,
+        outputRotation: previewRotation
+      });
+      setPreviewSrc(previewCanvas ? previewCanvas.toDataURL('image/jpeg', 0.92) : '');
+    } catch (error) {
+      setPreviewSrc('');
+      console.error('Could not render crop preview:', error);
+    }
+  }, [cropSourceCoords, imageSrc, previewRotation, imgNatural]);
 
   const savedCropDisplay = useMemo(() => {
     const saved = selectedBook?.SpineCrop;
@@ -375,6 +400,7 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
   useEffect(() => {
     onImageLoad();
     setCropDisplay(null);
+    setPreviewRotation(0);
   }, [rotation, onImageLoad]);
 
   useEffect(() => {
@@ -411,6 +437,7 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
       SpineCrop: {
         src: imageSrc,
         ...cropSourceCoords,
+        outputRotation: previewRotation,
         mode: cropSourceCoords.mode || 'rect',
         points: cropSourceCoords.points || undefined
       }
@@ -445,7 +472,9 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
         value={selectedId}
         onChange={(e) => {
           setSelectedId(e.target.value);
+          setCropDisplay(null);
           setSaveStatus('');
+          setPreviewRotation(0);
         }}
       >
         <option value="">Select a book...</option>
@@ -586,6 +615,30 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
         </button>
       </div>
       <div className="small text-muted mb-2">Current rotation: {rotation}deg</div>
+      {cropSourceCoords && (
+        <section className="spine-crop-preview mb-3" aria-label="Unsaved crop preview">
+          <div className="d-flex align-items-center justify-content-between gap-2 mb-2">
+            <strong>Preview before saving</strong>
+            <div className="d-flex gap-2">
+              <button className="btn btn-sm btn-outline-secondary" type="button" aria-label="Rotate crop preview left" title="Rotate preview left" onClick={() => setPreviewRotation((value) => (value + 270) % 360)} disabled={!previewSrc}>
+                Rotate Left
+              </button>
+              <button className="btn btn-sm btn-outline-secondary" type="button" aria-label="Rotate crop preview right" title="Rotate preview right" onClick={() => setPreviewRotation((value) => (value + 90) % 360)} disabled={!previewSrc}>
+                Rotate Right
+              </button>
+              <button className="btn btn-sm btn-outline-secondary" type="button" onClick={() => setPreviewRotation(0)} disabled={!previewSrc || previewRotation === 0}>
+                Reset
+              </button>
+            </div>
+          </div>
+          {previewSrc ? (
+            <img className="spine-crop-preview-image" src={previewSrc} alt="Generated crop preview; not saved yet" />
+          ) : (
+            <div className="small text-muted">Preparing preview...</div>
+          )}
+          <div className="small text-muted mt-1">Preview rotation: {previewRotation}deg. This is still unsaved.</div>
+        </section>
+      )}
       {selectedBook && (
         <div className={`small mb-2 ${selectedBook.SpineCrop ? 'text-success' : 'text-muted'}`} role="status">
           {selectedBook.SpineCrop ? 'A crop is saved for this book.' : 'No crop is saved for this book yet.'}
@@ -658,8 +711,8 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
       </div>
 
       <div className="d-flex gap-2 mb-2">
-        <button className="btn btn-sm btn-primary" disabled={!selectedBook || !cropSourceCoords || !imageSrc || isSavingCrop} onClick={applyCropToSelected}>
-          {isSavingCrop ? 'Saving Crop...' : 'Save Crop To Selected Book'}
+        <button className="btn btn-sm btn-primary" disabled={!selectedBook || !cropSourceCoords || !previewSrc || !imageSrc || isSavingCrop} onClick={applyCropToSelected}>
+          {isSavingCrop ? 'Saving Crop...' : 'Confirm & Save Crop'}
         </button>
       </div>
 
