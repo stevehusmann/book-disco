@@ -92,6 +92,16 @@ export const getQuadBounds = (points) => {
   };
 };
 
+export const getQuadOutputSize = (points) => {
+  if (!Array.isArray(points) || points.length !== 4) return { width: 1, height: 1 };
+  const [topLeft, topRight, bottomRight, bottomLeft] = points;
+  const distance = (first, second) => Math.hypot(second.x - first.x, second.y - first.y);
+  return {
+    width: Math.max(1, Math.round((distance(topLeft, topRight) + distance(bottomLeft, bottomRight)) / 2)),
+    height: Math.max(1, Math.round((distance(topLeft, bottomLeft) + distance(topRight, bottomRight)) / 2))
+  };
+};
+
 export const quadToPointsString = (points) =>
   points
     .map((point) => `${Number(point?.x ?? 0)},${Number(point?.y ?? 0)}`)

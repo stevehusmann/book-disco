@@ -1,5 +1,7 @@
 import {
+  getQuadOutputSize,
   getQuadBounds,
+  mapSourcePointToRotated,
   normalizeQuadPoints,
   orderRotatedQuadPointsAsSource,
   quadToPointsString
@@ -89,5 +91,21 @@ describe('spine crop quad helpers', () => {
       { x: 0, y: 200 },
       { x: 0, y: 0 }
     ]);
+  });
+
+  test('a landscape crop rotated 90 degrees produces a portrait output size', () => {
+    const sourceCorners = [
+      { x: 0, y: 0 },
+      { x: 200, y: 0 },
+      { x: 200, y: 80 },
+      { x: 0, y: 80 }
+    ];
+    const rotatedCorners = normalizeQuadPoints(
+      sourceCorners.map((point) => mapSourcePointToRotated(point.x, point.y, 200, 80, 90)),
+      80,
+      200
+    );
+
+    expect(getQuadOutputSize(rotatedCorners)).toEqual({ width: 80, height: 200 });
   });
 });

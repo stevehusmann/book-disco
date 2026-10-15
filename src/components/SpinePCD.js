@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { getQuadBounds, normalizeQuadPoints } from './spineCropUtils';
+import {
+  getQuadOutputSize,
+  mapSourcePointToRotated,
+  normalizeQuadPoints,
+  renderPerspectiveQuadToCanvas
+} from './spineCropUtils';
 
 const SpinePCD = ({ book, pagination, thickness, spineText, showAuthorOnSpine, author }) => {
   // PCD thickness: prefer parent-provided measured thickness,
@@ -40,23 +45,47 @@ const SpinePCD = ({ book, pagination, thickness, spineText, showAuthorOnSpine, a
         }
 
         if (crop.mode === 'quad' && Array.isArray(crop.points) && crop.points.length === 4) {
-          const normalized = normalizeQuadPoints(crop.points, naturalW, naturalH);
-          const quadBounds = normalized.length === 4 ? getQuadBounds(normalized) : { x: 0, y: 0, width: naturalW, height: naturalH };
-          const sx = Math.max(0, Math.round(quadBounds.x));
-          const sy = Math.max(0, Math.round(quadBounds.y));
-          const sw = Math.max(1, Math.round(quadBounds.width));
-          const sh = Math.max(1, Math.round(quadBounds.height));
-
-          const canvas = document.createElement('canvas');
-          canvas.width = sw;
-          canvas.height = sh;
-          const ctx = canvas.getContext('2d');
-          if (!ctx) {
+          const rotation = [90, 180, 270].includes(Number(crop.editorRotation))
+            ? Number(crop.editorRotation)
+            : 0;
+          const rotatedWidth = rotation % 180 === 0 ? naturalW : naturalH;
+          const rotatedHeight = rotation % 180 === 0 ? naturalH : naturalW;
+          const rotatedSource = document.createElement('canvas');
+          rotatedSource.width = rotatedWidth;
+          rotatedSource.height = rotatedHeight;
+          const rotateContext = rotatedSource.getContext('2d');
+          if (!rotateContext) {
             if (mounted) setSpineImage(null);
             return;
           }
 
-          ctx.drawImage(img, sx, sy, sw, sh, 0, 0, sw, sh);
+          if (rotation === 90) {
+            rotateContext.translate(rotatedWidth, 0);
+            rotateContext.rotate(Math.PI / 2);
+          } else if (rotation === 180) {
+            rotateContext.translate(rotatedWidth, rotatedHeight);
+            rotateContext.rotate(Math.PI);
+          } else if (rotation === 270) {
+            rotateContext.translate(0, rotatedHeight);
+            rotateContext.rotate(-Math.PI / 2);
+          }
+          rotateContext.drawImage(img, 0, 0, naturalW, naturalH);
+
+          const rotatedPoints = crop.points.map((point) => mapSourcePointToRotated(
+            Number(point.x),
+            Number(point.y),
+            naturalW,
+            naturalH,
+            rotation
+          ));
+          const normalized = normalizeQuadPoints(rotatedPoints, rotatedWidth, rotatedHeight);
+          const outputSize = getQuadOutputSize(normalized);
+          const canvas = renderPerspectiveQuadToCanvas(
+            rotatedSource,
+            normalized,
+            outputSize.width,
+            outputSize.height
+          );
           const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
           if (mounted) setSpineImage(dataUrl);
           return;
