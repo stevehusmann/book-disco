@@ -50,6 +50,27 @@ export const normalizeQuadPoints = (points, width, height) => {
   return rotated;
 };
 
+export const mapRotatedPointToSource = (x, y, width, height, rotation) => {
+  if (rotation === 90) return { x: y, y: height - x };
+  if (rotation === 180) return { x: width - x, y: height - y };
+  if (rotation === 270) return { x: width - y, y: x };
+  return { x, y };
+};
+
+export const mapSourcePointToRotated = (x, y, width, height, rotation) => {
+  if (rotation === 90) return { x: height - y, y: x };
+  if (rotation === 180) return { x: width - x, y: height - y };
+  if (rotation === 270) return { x: y, y: width - x };
+  return { x, y };
+};
+
+export const orderRotatedQuadPointsAsSource = (points, width, height, rotation) => {
+  const rotatedWidth = rotation % 180 === 0 ? width : height;
+  const rotatedHeight = rotation % 180 === 0 ? height : width;
+  return normalizeQuadPoints(points, rotatedWidth, rotatedHeight)
+    .map((point) => mapRotatedPointToSource(point.x, point.y, width, height, rotation));
+};
+
 export const getQuadBounds = (points) => {
   if (!Array.isArray(points) || points.length === 0) {
     return { x: 0, y: 0, width: 0, height: 0 };

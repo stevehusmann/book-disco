@@ -74,6 +74,7 @@ db.exec(`
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
     height_width_ratio REAL,
+    thickness_multiplier REAL NOT NULL DEFAULT 1.0,
     spine_mode TEXT NOT NULL DEFAULT 'automatic',
     updated_at TEXT DEFAULT CURRENT_TIMESTAMP
   );
@@ -107,6 +108,10 @@ const ensureBookColumns = () => {
 };
 
 ensureBookColumns();
+const seriesColumns = db.prepare('PRAGMA table_info(series)').all().map((column) => column.name);
+if (!seriesColumns.includes('thickness_multiplier')) {
+  db.exec('ALTER TABLE series ADD COLUMN thickness_multiplier REAL NOT NULL DEFAULT 1.0');
+}
 
 const updateBook = db.prepare(`
   UPDATE books
@@ -431,6 +436,33 @@ const supabaseBookRoute = (filters = {}) => {
 };
 
 const supabaseRowToBook = (row) => ({ ...row.book, _uid: row.uid });
+const isMissingSupabaseSeriesTable = (error) => {
+  const message = String(error?.message || error || '');
+  return /series/i.test(message) && /(schema cache|could not find|does not exist|PGRST205|42P01)/i.test(message);
+};
+
+const supabaseSeriesMigrationMessage = 'The Supabase series table is missing. Run backend/supabase_series_migration.sql in the Supabase SQL Editor, then retry.';
+
+const loadSupabaseSeriesFromBooks = async () => {
+  const values = new Map();
+  for (let offset = 0; ; offset += 1000) {
+    const params = new URLSearchParams({ select: 'uid,book', limit: '1000', offset: String(offset), order: 'uid.asc' });
+    const books = await supabaseRequest(`books?${params.toString()}`);
+    for (const row of books) {
+      const id = String(row.book?.SeriesId || '').trim();
+      if (!id || values.has(id)) continue;
+      values.set(id, {
+        id,
+        name: String(row.book?.Series || id),
+        heightWidthRatio: knownSeriesRatios[id] || null,
+        thicknessMultiplier: 1,
+        spineMode: id === 'PCD' ? 'pcd-crop' : 'automatic'
+      });
+    }
+    if (books.length < 1000) break;
+  }
+  return [...values.values()].sort((left, right) => left.name.localeCompare(right.name));
+};
 
 const parsePageQuery = (query) => {
   const requestedPage = Number.parseInt(query.page, 10);
@@ -540,22 +572,27 @@ const normalizeSeriesInput = (input, id = '') => {
   const name = String(input?.name || '').trim();
   const rawRatio = input?.heightWidthRatio;
   const heightWidthRatio = rawRatio === '' || rawRatio == null ? null : Number(rawRatio);
+  const rawThicknessMultiplier = input?.thicknessMultiplier;
+  const thicknessMultiplier = rawThicknessMultiplier === '' || rawThicknessMultiplier == null ? 1 : Number(rawThicknessMultiplier);
   const spineMode = input?.spineMode === 'pcd-crop' ? 'pcd-crop' : 'automatic';
-  if (!normalizedId || !name || (heightWidthRatio != null && (!Number.isFinite(heightWidthRatio) || heightWidthRatio <= 0))) {
+  if (!normalizedId || !name
+    || (heightWidthRatio != null && (!Number.isFinite(heightWidthRatio) || heightWidthRatio <= 0))
+    || !Number.isFinite(thicknessMultiplier) || thicknessMultiplier <= 0) {
     return null;
   }
-  return { id: normalizedId, name, heightWidthRatio, spineMode };
+  return { id: normalizedId, name, heightWidthRatio, thicknessMultiplier, spineMode };
 };
 
 const seriesFromSqlite = (row) => ({
   id: row.id,
   name: row.name,
   heightWidthRatio: row.height_width_ratio,
+  thicknessMultiplier: row.thickness_multiplier,
   spineMode: row.spine_mode
 });
 
 const ensureSupabaseSeriesCatalog = async () => {
-  let rows = await supabaseRequest('series?select=id,name,height_width_ratio,spine_mode&order=name.asc');
+  let rows = await supabaseRequest('series?select=id,name,height_width_ratio,thickness_multiplier,spine_mode&order=name.asc');
   if (rows.length) return rows;
 
   const values = new Map();
@@ -569,6 +606,7 @@ const ensureSupabaseSeriesCatalog = async () => {
         id,
         name: String(row.book?.Series || id),
         height_width_ratio: knownSeriesRatios[id] || null,
+        thickness_multiplier: 1,
         spine_mode: id === 'PCD' ? 'pcd-crop' : 'automatic'
       });
     }
@@ -581,7 +619,7 @@ const ensureSupabaseSeriesCatalog = async () => {
       body: JSON.stringify([...values.values()])
     });
   }
-  rows = await supabaseRequest('series?select=id,name,height_width_ratio,spine_mode&order=name.asc');
+  rows = await supabaseRequest('series?select=id,name,height_width_ratio,thickness_multiplier,spine_mode&order=name.asc');
   return rows;
 };
 
@@ -606,14 +644,24 @@ app.get('/api/series', async (_req, res) => {
   if (useSupabase) {
     try {
       const rows = await ensureSupabaseSeriesCatalog();
-      res.json(rows.map((row) => ({ id: row.id, name: row.name, heightWidthRatio: row.height_width_ratio, spineMode: row.spine_mode })));
+      res.json(rows.map((row) => ({ id: row.id, name: row.name, heightWidthRatio: row.height_width_ratio, thicknessMultiplier: row.thickness_multiplier, spineMode: row.spine_mode })));
     } catch (error) {
+      if (isMissingSupabaseSeriesTable(error)) {
+        try {
+          console.warn(supabaseSeriesMigrationMessage);
+          res.json(await loadSupabaseSeriesFromBooks());
+        } catch (fallbackError) {
+          console.error('Failed to load series from books in Supabase:', fallbackError);
+          res.status(502).json({ error: 'Failed to load series from Supabase.' });
+        }
+        return;
+      }
       console.error('Failed to load series from Supabase:', error);
       res.status(502).json({ error: 'Failed to load series from Supabase.' });
     }
     return;
   }
-  const rows = db.prepare('SELECT id, name, height_width_ratio, spine_mode FROM series ORDER BY name COLLATE NOCASE').all();
+  const rows = db.prepare('SELECT id, name, height_width_ratio, thickness_multiplier, spine_mode FROM series ORDER BY name COLLATE NOCASE').all();
   res.json(rows.map(seriesFromSqlite));
 });
 
@@ -625,14 +673,17 @@ app.post('/api/series', async (req, res) => {
       const rows = await supabaseRequest('series', {
         method: 'POST',
         headers: { Prefer: 'return=representation' },
-        body: JSON.stringify({ id: series.id, name: series.name, height_width_ratio: series.heightWidthRatio, spine_mode: series.spineMode })
+        body: JSON.stringify({ id: series.id, name: series.name, height_width_ratio: series.heightWidthRatio, thickness_multiplier: series.thicknessMultiplier, spine_mode: series.spineMode })
       });
-      return res.status(201).json({ id: rows[0].id, name: rows[0].name, heightWidthRatio: rows[0].height_width_ratio, spineMode: rows[0].spine_mode });
+      return res.status(201).json({ id: rows[0].id, name: rows[0].name, heightWidthRatio: rows[0].height_width_ratio, thicknessMultiplier: rows[0].thickness_multiplier, spineMode: rows[0].spine_mode });
     }
-    db.prepare('INSERT INTO series (id, name, height_width_ratio, spine_mode) VALUES (?, ?, ?, ?)')
-      .run(series.id, series.name, series.heightWidthRatio, series.spineMode);
+    db.prepare('INSERT INTO series (id, name, height_width_ratio, thickness_multiplier, spine_mode) VALUES (?, ?, ?, ?, ?)')
+      .run(series.id, series.name, series.heightWidthRatio, series.thicknessMultiplier, series.spineMode);
     return res.status(201).json(series);
   } catch (error) {
+    if (useSupabase && isMissingSupabaseSeriesTable(error)) {
+      return res.status(503).json({ error: supabaseSeriesMigrationMessage });
+    }
     const conflict = String(error?.message || '').includes('unique') || String(error?.message || '').includes('duplicate');
     return res.status(conflict ? 409 : 502).json({ error: conflict ? 'A series with this ID already exists.' : 'Failed to create series.' });
   }
@@ -646,18 +697,21 @@ app.put('/api/series/:id', async (req, res) => {
       const rows = await supabaseRequest(`series?id=eq.${encodeURIComponent(series.id)}`, {
         method: 'PATCH',
         headers: { Prefer: 'return=representation' },
-        body: JSON.stringify({ name: series.name, height_width_ratio: series.heightWidthRatio, spine_mode: series.spineMode })
+        body: JSON.stringify({ name: series.name, height_width_ratio: series.heightWidthRatio, thickness_multiplier: series.thicknessMultiplier, spine_mode: series.spineMode })
       });
       if (!rows.length) return res.status(404).json({ error: 'Series not found.' });
       await updateSupabaseBookSeries(series.id, { Series: series.name, SeriesId: series.id });
-      return res.json({ id: rows[0].id, name: rows[0].name, heightWidthRatio: rows[0].height_width_ratio, spineMode: rows[0].spine_mode });
+      return res.json({ id: rows[0].id, name: rows[0].name, heightWidthRatio: rows[0].height_width_ratio, thicknessMultiplier: rows[0].thickness_multiplier, spineMode: rows[0].spine_mode });
     }
-    const result = db.prepare('UPDATE series SET name = ?, height_width_ratio = ?, spine_mode = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
-      .run(series.name, series.heightWidthRatio, series.spineMode, series.id);
+    const result = db.prepare('UPDATE series SET name = ?, height_width_ratio = ?, thickness_multiplier = ?, spine_mode = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
+      .run(series.name, series.heightWidthRatio, series.thicknessMultiplier, series.spineMode, series.id);
     if (!result.changes) return res.status(404).json({ error: 'Series not found.' });
     db.prepare('UPDATE books SET series = ?, updated_at = CURRENT_TIMESTAMP WHERE series_id = ?').run(series.name, series.id);
     return res.json(series);
   } catch (error) {
+    if (useSupabase && isMissingSupabaseSeriesTable(error)) {
+      return res.status(503).json({ error: supabaseSeriesMigrationMessage });
+    }
     console.error('Failed to update series:', error);
     return res.status(502).json({ error: 'Failed to update series.' });
   }
@@ -680,6 +734,9 @@ app.delete('/api/series/:id', async (req, res) => {
     if (!remove()) return res.status(404).json({ error: 'Series not found.' });
     return res.status(204).end();
   } catch (error) {
+    if (useSupabase && isMissingSupabaseSeriesTable(error)) {
+      return res.status(503).json({ error: supabaseSeriesMigrationMessage });
+    }
     console.error('Failed to delete series:', error);
     return res.status(502).json({ error: 'Failed to delete series.' });
   }

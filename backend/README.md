@@ -7,10 +7,10 @@ This folder is prepared to become a standalone backend repository.
 - `GET /api/health`
 - `GET /api/books?page=0&pageSize=80&sort=title-asc&q=&series=` - filtered, sorted, paginated results
 - `GET /api/series` - series filter options
-- `POST /api/series` - create a series with an optional height/width ratio and spine mode
-- `PUT /api/series/:id` - update series name, ratio, or spine mode
+- `POST /api/series` - create a series with an optional height/width ratio, thickness multiplier, and spine mode
+- `PUT /api/series/:id` - update series name, ratio, thickness multiplier, or spine mode
 - `DELETE /api/series/:id` - remove a series and unassign its books without deleting them
-When both Supabase variables are set, the API reads and writes the `public.books` table with `uid` (text primary key) and `book` (jsonb) columns, and stores series metadata in `public.series`. Run `supabase_books_schema.sql` in the Supabase SQL Editor to install the tables, indexes, and `search_books` RPC used for server-side library queries. The first series request imports existing series IDs and names from books. When neither Supabase variable is set, the API uses local SQLite and optionally seeds from `SEED_PATH`; existing book series are migrated into the local series catalog automatically.
+When both Supabase variables are set, the API reads and writes the `public.books` table with `uid` (text primary key) and `book` (jsonb) columns, and stores series metadata in `public.series`. For an existing deployment, run `supabase_series_migration.sql` in the Supabase SQL Editor; for a fresh setup, run `supabase_books_schema.sql` to install the tables, indexes, and `search_books` RPC. The first series request imports existing series IDs and names from books. Until the series migration is applied, `GET /api/series` falls back to book data; creating, editing, or deleting series requires the migration. When neither Supabase variable is set, the API uses local SQLite and optionally seeds from `SEED_PATH`; existing book series are migrated into the local series catalog automatically.
 - `GET /api/books/spine-crop` - full catalog for the crop editor, loaded only when opened
 - `POST /api/books`
 - `PUT /api/books/:uid`

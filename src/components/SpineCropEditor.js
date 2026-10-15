@@ -1,6 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { apiUrl } from '../apiUrl';
-import { getQuadBounds, normalizeQuadPoints, quadToPointsString } from './spineCropUtils';
+import {
+  getQuadBounds,
+  mapRotatedPointToSource,
+  mapSourcePointToRotated,
+  orderRotatedQuadPointsAsSource,
+  quadToPointsString
+} from './spineCropUtils';
 
 const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
 const DEFAULT_LOCAL_IMAGE_PATH = 'PenguinDeluxeClassics.jpg';
@@ -56,32 +62,6 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
     if (!v) return '';
     const pathValue = v.startsWith('/') ? v : `/${v}`;
     return encodeURI(pathValue);
-  };
-
-  const mapRotatedToSourcePoint = (rx, ry, width, height, rot) => {
-    if (rot === 90) {
-      return { x: ry, y: height - rx };
-    }
-    if (rot === 180) {
-      return { x: width - rx, y: height - ry };
-    }
-    if (rot === 270) {
-      return { x: width - ry, y: rx };
-    }
-    return { x: rx, y: ry };
-  };
-
-  const mapSourceToRotatedPoint = (x, y, width, height, rot) => {
-    if (rot === 90) {
-      return { x: height - y, y: x };
-    }
-    if (rot === 180) {
-      return { x: width - x, y: height - y };
-    }
-    if (rot === 270) {
-      return { x: y, y: width - x };
-    }
-    return { x, y };
   };
 
   const getPointInStage = (evt) => {
@@ -234,13 +214,13 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
       const rotatedNaturalWidth = rotation % 180 === 0 ? imgNatural.width : imgNatural.height;
       const rotatedNaturalHeight = rotation % 180 === 0 ? imgNatural.height : imgNatural.width;
 
-      const sourcePoints = cropDisplay.points.map((point) => {
+      const rotatedPoints = cropDisplay.points.map((point) => {
         const px = (point.x / imgRendered.width) * rotatedNaturalWidth;
         const py = (point.y / imgRendered.height) * rotatedNaturalHeight;
-        return mapRotatedToSourcePoint(px, py, imgNatural.width, imgNatural.height, rotation);
+        return { x: px, y: py };
       });
 
-      const normalized = normalizeQuadPoints(sourcePoints, imgNatural.width, imgNatural.height);
+      const normalized = orderRotatedQuadPointsAsSource(rotatedPoints, imgNatural.width, imgNatural.height, rotation);
       const bounds = getQuadBounds(normalized);
 
       return {
@@ -269,10 +249,10 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
     const rx1 = (cropDisplay.x + cropDisplay.width) * (rotatedNaturalWidth / imgRendered.width);
     const ry1 = (cropDisplay.y + cropDisplay.height) * (rotatedNaturalHeight / imgRendered.height);
 
-    const p1 = mapRotatedToSourcePoint(rx0, ry0, imgNatural.width, imgNatural.height, rotation);
-    const p2 = mapRotatedToSourcePoint(rx1, ry0, imgNatural.width, imgNatural.height, rotation);
-    const p3 = mapRotatedToSourcePoint(rx0, ry1, imgNatural.width, imgNatural.height, rotation);
-    const p4 = mapRotatedToSourcePoint(rx1, ry1, imgNatural.width, imgNatural.height, rotation);
+    const p1 = mapRotatedPointToSource(rx0, ry0, imgNatural.width, imgNatural.height, rotation);
+    const p2 = mapRotatedPointToSource(rx1, ry0, imgNatural.width, imgNatural.height, rotation);
+    const p3 = mapRotatedPointToSource(rx0, ry1, imgNatural.width, imgNatural.height, rotation);
+    const p4 = mapRotatedPointToSource(rx1, ry1, imgNatural.width, imgNatural.height, rotation);
 
     const minX = Math.min(p1.x, p2.x, p3.x, p4.x);
     const maxX = Math.max(p1.x, p2.x, p3.x, p4.x);
@@ -317,7 +297,7 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
       const displayPoints = saved.points.map((point) => {
         const px = Number(point.x);
         const py = Number(point.y);
-        const rotatedPoint = mapSourceToRotatedPoint(px, py, imgNatural.width, imgNatural.height, rotation);
+        const rotatedPoint = mapSourcePointToRotated(px, py, imgNatural.width, imgNatural.height, rotation);
         return {
           x: (rotatedPoint.x / rotatedNaturalWidth) * imgRendered.width,
           y: (rotatedPoint.y / rotatedNaturalHeight) * imgRendered.height
@@ -358,10 +338,10 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
     const width = Math.max(1, Math.min(Math.round(sw), imgNatural.width - x));
     const height = Math.max(1, Math.min(Math.round(sh), imgNatural.height - y));
 
-    const p1 = mapSourceToRotatedPoint(x, y, imgNatural.width, imgNatural.height, rotation);
-    const p2 = mapSourceToRotatedPoint(x + width, y, imgNatural.width, imgNatural.height, rotation);
-    const p3 = mapSourceToRotatedPoint(x, y + height, imgNatural.width, imgNatural.height, rotation);
-    const p4 = mapSourceToRotatedPoint(x + width, y + height, imgNatural.width, imgNatural.height, rotation);
+    const p1 = mapSourcePointToRotated(x, y, imgNatural.width, imgNatural.height, rotation);
+    const p2 = mapSourcePointToRotated(x + width, y, imgNatural.width, imgNatural.height, rotation);
+    const p3 = mapSourcePointToRotated(x, y + height, imgNatural.width, imgNatural.height, rotation);
+    const p4 = mapSourcePointToRotated(x + width, y + height, imgNatural.width, imgNatural.height, rotation);
 
     const minRX = Math.min(p1.x, p2.x, p3.x, p4.x);
     const maxRX = Math.max(p1.x, p2.x, p3.x, p4.x);

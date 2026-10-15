@@ -58,10 +58,16 @@ db.exec(`
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
     height_width_ratio REAL,
+    thickness_multiplier REAL NOT NULL DEFAULT 1.0,
     spine_mode TEXT NOT NULL DEFAULT 'automatic',
     updated_at TEXT DEFAULT CURRENT_TIMESTAMP
   );
 `);
+
+const seriesColumns = db.prepare('PRAGMA table_info(series)').all().map((column) => column.name);
+if (!seriesColumns.includes('thickness_multiplier')) {
+  db.exec('ALTER TABLE series ADD COLUMN thickness_multiplier REAL NOT NULL DEFAULT 1.0');
+}
 
 const ensureBookColumns = () => {
   const columns = db.prepare('PRAGMA table_info(books)').all().map((column) => column.name);
@@ -393,22 +399,24 @@ app.get('/api/books', (_req, res) => {
 });
 
 app.get('/api/series', (_req, res) => {
-  const rows = db.prepare('SELECT id, name, height_width_ratio, spine_mode FROM series ORDER BY name COLLATE NOCASE').all();
-  res.json(rows.map((row) => ({ id: row.id, name: row.name, heightWidthRatio: row.height_width_ratio, spineMode: row.spine_mode })));
+  const rows = db.prepare('SELECT id, name, height_width_ratio, thickness_multiplier, spine_mode FROM series ORDER BY name COLLATE NOCASE').all();
+  res.json(rows.map((row) => ({ id: row.id, name: row.name, heightWidthRatio: row.height_width_ratio, thicknessMultiplier: row.thickness_multiplier, spineMode: row.spine_mode })));
 });
 
 app.post('/api/series', (req, res) => {
   const id = String(req.body?.id || '').trim();
   const name = String(req.body?.name || '').trim();
   const ratio = req.body?.heightWidthRatio === '' || req.body?.heightWidthRatio == null ? null : Number(req.body.heightWidthRatio);
+  const multiplier = req.body?.thicknessMultiplier == null || req.body?.thicknessMultiplier === '' ? 1 : Number(req.body.thicknessMultiplier);
   const spineMode = req.body?.spineMode === 'pcd-crop' ? 'pcd-crop' : 'automatic';
-  if (!id || !name || (ratio != null && (!Number.isFinite(ratio) || ratio <= 0))) {
-    return res.status(400).json({ error: 'Series ID and name are required; ratio must be positive when provided.' });
+  if (!id || !name || (ratio != null && (!Number.isFinite(ratio) || ratio <= 0)) || !Number.isFinite(multiplier) || multiplier <= 0) {
+    return res.status(400).json({ error: 'Series ID and name are required; ratio and multiplier must be positive when provided.' });
   }
   try {
-    insertSeries.run(id, name, ratio, spineMode);
-    const row = db.prepare('SELECT id, name, height_width_ratio, spine_mode FROM series WHERE id = ?').get(id);
-    return res.status(201).json({ id: row.id, name: row.name, heightWidthRatio: row.height_width_ratio, spineMode: row.spine_mode });
+    db.prepare('INSERT INTO series (id, name, height_width_ratio, thickness_multiplier, spine_mode) VALUES (?, ?, ?, ?, ?)')
+      .run(id, name, ratio, multiplier, spineMode);
+    const row = db.prepare('SELECT id, name, height_width_ratio, thickness_multiplier, spine_mode FROM series WHERE id = ?').get(id);
+    return res.status(201).json({ id: row.id, name: row.name, heightWidthRatio: row.height_width_ratio, thicknessMultiplier: row.thickness_multiplier, spineMode: row.spine_mode });
   } catch (_error) {
     return res.status(409).json({ error: 'A series with this ID already exists.' });
   }
@@ -417,20 +425,21 @@ app.post('/api/series', (req, res) => {
 app.put('/api/series/:id', (req, res) => {
   const name = String(req.body?.name || '').trim();
   const ratio = req.body?.heightWidthRatio === '' || req.body?.heightWidthRatio == null ? null : Number(req.body.heightWidthRatio);
+  const multiplier = req.body?.thicknessMultiplier == null || req.body?.thicknessMultiplier === '' ? 1 : Number(req.body.thicknessMultiplier);
   const spineMode = req.body?.spineMode === 'pcd-crop' ? 'pcd-crop' : 'automatic';
-  if (!name || (ratio != null && (!Number.isFinite(ratio) || ratio <= 0))) {
-    return res.status(400).json({ error: 'Series name is required; ratio must be positive when provided.' });
+  if (!name || (ratio != null && (!Number.isFinite(ratio) || ratio <= 0)) || !Number.isFinite(multiplier) || multiplier <= 0) {
+    return res.status(400).json({ error: 'Series name is required; ratio and multiplier must be positive when provided.' });
   }
   const update = db.transaction(() => {
-    const result = db.prepare('UPDATE series SET name = ?, height_width_ratio = ?, spine_mode = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
-      .run(name, ratio, spineMode, req.params.id);
+    const result = db.prepare('UPDATE series SET name = ?, height_width_ratio = ?, thickness_multiplier = ?, spine_mode = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
+      .run(name, ratio, multiplier, spineMode, req.params.id);
     if (!result.changes) return null;
     db.prepare('UPDATE books SET series = ?, updated_at = CURRENT_TIMESTAMP WHERE series_id = ?').run(name, req.params.id);
-    return db.prepare('SELECT id, name, height_width_ratio, spine_mode FROM series WHERE id = ?').get(req.params.id);
+    return db.prepare('SELECT id, name, height_width_ratio, thickness_multiplier, spine_mode FROM series WHERE id = ?').get(req.params.id);
   });
   const row = update();
   if (!row) return res.status(404).json({ error: 'Series not found.' });
-  return res.json({ id: row.id, name: row.name, heightWidthRatio: row.height_width_ratio, spineMode: row.spine_mode });
+  return res.json({ id: row.id, name: row.name, heightWidthRatio: row.height_width_ratio, thicknessMultiplier: row.thickness_multiplier, spineMode: row.spine_mode });
 });
 
 app.delete('/api/series/:id', (req, res) => {

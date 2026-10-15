@@ -1,4 +1,9 @@
-import { getQuadBounds, normalizeQuadPoints, quadToPointsString } from '../spineCropUtils';
+import {
+  getQuadBounds,
+  normalizeQuadPoints,
+  orderRotatedQuadPointsAsSource,
+  quadToPointsString
+} from '../spineCropUtils';
 
 describe('spine crop quad helpers', () => {
   test('normalizeQuadPoints clamps points to canvas bounds', () => {
@@ -51,6 +56,38 @@ describe('spine crop quad helpers', () => {
       { x: 110, y: 20 },
       { x: 80, y: 90 },
       { x: 20, y: 120 }
+    ]);
+  });
+
+  test('90-degree rotation saves the original bottom-left corner first', () => {
+    const rotatedCorners = [
+      { x: 200, y: 100 },
+      { x: 0, y: 0 },
+      { x: 200, y: 0 },
+      { x: 0, y: 100 }
+    ];
+
+    expect(orderRotatedQuadPointsAsSource(rotatedCorners, 100, 200, 90)).toEqual([
+      { x: 0, y: 200 },
+      { x: 0, y: 0 },
+      { x: 100, y: 0 },
+      { x: 100, y: 200 }
+    ]);
+  });
+
+  test('270-degree rotation orders corners from the rotated top-left', () => {
+    const rotatedCorners = [
+      { x: 0, y: 100 },
+      { x: 200, y: 0 },
+      { x: 0, y: 0 },
+      { x: 200, y: 100 }
+    ];
+
+    expect(orderRotatedQuadPointsAsSource(rotatedCorners, 100, 200, 270)).toEqual([
+      { x: 100, y: 0 },
+      { x: 100, y: 200 },
+      { x: 0, y: 200 },
+      { x: 0, y: 0 }
     ]);
   });
 });

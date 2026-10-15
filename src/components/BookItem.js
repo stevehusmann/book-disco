@@ -110,22 +110,22 @@ const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colCla
   const PCD_PER_PAGE_REL = 0.000684;
   const isPCD = /Penguin Classics Deluxe/i.test(series) || seriesId === 'pcd';
   const isPC = seriesId === 'pc' || (/Penguin Classics/i.test(series) && !/Deluxe/i.test(series));
-
-  let thickness = null;
-  // If we can measure the displayed cover width, compute a pixel thickness for OWC
   const thicknessBaseWidth = thicknessWidth;
-  if (thicknessBaseWidth && /OWC|Oxford/i.test(series)) {
-    thickness = Math.ceil(thicknessBaseWidth * pagination * OWC_PER_PAGE_REL);
-  }
-  if (thicknessBaseWidth && /BNC|Barnes/i.test(series)) {
-    thickness= Math.ceil(thicknessBaseWidth * pagination * BNC_PER_PAGE_REL);
-  }
-  if (thicknessBaseWidth && isPCD) {
-    thickness = Math.ceil(thicknessBaseWidth * pagination * PCD_PER_PAGE_REL);
-  }
-  if (thicknessBaseWidth && isPC) {
-    thickness = Math.ceil(thicknessBaseWidth * pagination * PC_PER_PAGE_REL);
-  }
+  const thicknessMultiplier = Number(seriesMeta?.thicknessMultiplier) > 0
+    ? Number(seriesMeta.thicknessMultiplier)
+    : 1;
+  const thicknessPerPage = /OWC|Oxford/i.test(series)
+    ? OWC_PER_PAGE_REL
+    : /BNC|Barnes/i.test(series)
+      ? BNC_PER_PAGE_REL
+      : isPCD
+        ? PCD_PER_PAGE_REL
+        : isPC
+          ? PC_PER_PAGE_REL
+          : PC_PER_PAGE_REL;
+  const thickness = thicknessBaseWidth
+    ? Math.ceil(thicknessBaseWidth * pagination * thicknessPerPage * thicknessMultiplier)
+    : null;
 
   const spineText = (book.SpineTitle || book.Title || '').trim();
   const lastName = (book.AlphaAuthor || '').split(',')[0] || '';

@@ -75,7 +75,7 @@ const App = () => {
   const [addBookStatus, setAddBookStatus] = useState('');
   const [isSavingNewBook, setIsSavingNewBook] = useState(false);
   const [showSeriesModal, setShowSeriesModal] = useState(false);
-  const [seriesForm, setSeriesForm] = useState({ id: '', name: '', heightWidthRatio: '', spineMode: 'automatic' });
+  const [seriesForm, setSeriesForm] = useState({ id: '', name: '', heightWidthRatio: '', thicknessMultiplier: '1', spineMode: 'automatic' });
   const [editingSeriesId, setEditingSeriesId] = useState('');
   const [seriesStatus, setSeriesStatus] = useState('');
   const [isSavingSeries, setIsSavingSeries] = useState(false);
@@ -169,7 +169,7 @@ const App = () => {
   };
 
   const openSeriesManager = () => {
-    setSeriesForm({ id: '', name: '', heightWidthRatio: '', spineMode: 'automatic' });
+    setSeriesForm({ id: '', name: '', heightWidthRatio: '', thicknessMultiplier: '1', spineMode: 'automatic' });
     setEditingSeriesId('');
     setSeriesStatus('');
     setShowSeriesModal(true);
@@ -181,6 +181,7 @@ const App = () => {
       id: series.id,
       name: series.name,
       heightWidthRatio: series.heightWidthRatio ?? '',
+      thicknessMultiplier: series.thicknessMultiplier ?? 1,
       spineMode: series.spineMode || 'automatic'
     });
     setSeriesStatus('');
@@ -204,7 +205,7 @@ const App = () => {
       await refreshSeriesOptions();
       setRefreshVersion((version) => version + 1);
       setEditingSeriesId('');
-      setSeriesForm({ id: '', name: '', heightWidthRatio: '', spineMode: 'automatic' });
+      setSeriesForm({ id: '', name: '', heightWidthRatio: '', thicknessMultiplier: '1', spineMode: 'automatic' });
       setSeriesStatus('Series saved.');
     } catch (error) {
       setSeriesStatus(error.message || 'Unable to save series.');
@@ -224,7 +225,7 @@ const App = () => {
       setRefreshVersion((version) => version + 1);
       if (editingSeriesId === series.id) {
         setEditingSeriesId('');
-        setSeriesForm({ id: '', name: '', heightWidthRatio: '', spineMode: 'automatic' });
+        setSeriesForm({ id: '', name: '', heightWidthRatio: '', thicknessMultiplier: '1', spineMode: 'automatic' });
       }
       setSeriesStatus('Series removed. Books were kept.');
     } catch (error) {
@@ -409,6 +410,11 @@ const App = () => {
                   <Form.Control id="series-ratio" type="number" min="0.01" step="0.01" value={seriesForm.heightWidthRatio} onChange={(event) => setSeriesForm((current) => ({ ...current, heightWidthRatio: event.target.value }))} />
                 </div>
                 <div className="col-md-6">
+                  <Form.Label htmlFor="series-thickness-multiplier">Thickness multiplier</Form.Label>
+                  <Form.Control id="series-thickness-multiplier" type="number" min="0.01" step="0.05" value={seriesForm.thicknessMultiplier} onChange={(event) => setSeriesForm((current) => ({ ...current, thicknessMultiplier: event.target.value }))} />
+                  <Form.Text>1.00 is the base thickness; 1.20 increases it by 20%.</Form.Text>
+                </div>
+                <div className="col-md-6">
                   <Form.Label htmlFor="series-spine-mode">Spine rendering</Form.Label>
                   <Form.Select id="series-spine-mode" value={seriesForm.spineMode} onChange={(event) => setSeriesForm((current) => ({ ...current, spineMode: event.target.value }))}>
                     <option value="automatic">Generated automatically</option>
@@ -418,13 +424,13 @@ const App = () => {
               </div>
               <div className="d-flex gap-2 mt-3">
                 <Button variant="primary" onClick={saveSeries} disabled={isSavingSeries || !seriesForm.id.trim() || !seriesForm.name.trim()}>{isSavingSeries ? 'Saving...' : editingSeriesId ? 'Save Series' : 'Add Series'}</Button>
-                {editingSeriesId && <Button variant="outline-secondary" onClick={() => { setEditingSeriesId(''); setSeriesForm({ id: '', name: '', heightWidthRatio: '', spineMode: 'automatic' }); }}>Cancel Edit</Button>}
+                {editingSeriesId && <Button variant="outline-secondary" onClick={() => { setEditingSeriesId(''); setSeriesForm({ id: '', name: '', heightWidthRatio: '', thicknessMultiplier: '1', spineMode: 'automatic' }); }}>Cancel Edit</Button>}
               </div>
             </Form>
             <div className="list-group">
               {seriesOptions.map((series) => (
                 <div className="list-group-item d-flex align-items-center justify-content-between gap-3" key={series.id}>
-                  <div><strong>{series.name}</strong><div className="small text-muted">{series.id} · {series.heightWidthRatio ? `H/W ${Number(series.heightWidthRatio).toFixed(2)}` : 'No ratio'} · {series.spineMode === 'pcd-crop' ? 'PCD Crop' : 'Automatic'}</div></div>
+                  <div><strong>{series.name}</strong><div className="small text-muted">{series.id} · {series.heightWidthRatio ? `H/W ${Number(series.heightWidthRatio).toFixed(2)}` : 'No ratio'} · Thickness ×{Number(series.thicknessMultiplier ?? 1).toFixed(2)} · {series.spineMode === 'pcd-crop' ? 'PCD Crop' : 'Automatic'}</div></div>
                   <div className="d-flex gap-2 flex-shrink-0">
                     <Button size="sm" variant="outline-primary" onClick={() => editSeries(series)}>Edit</Button>
                     <Button size="sm" variant="outline-danger" onClick={() => deleteSeries(series)}>Delete</Button>

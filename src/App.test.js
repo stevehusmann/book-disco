@@ -5,5 +5,6 @@ test('opens series management settings', async () => {
   render(<App />);
   fireEvent.click(screen.getByRole('button', { name: 'Manage Series' }));
   expect(await screen.findByLabelText('Height / width ratio')).toBeInTheDocument();
+  expect(screen.getByLabelText('Thickness multiplier')).toHaveValue(1);
   expect(screen.getByLabelText('Spine rendering')).toBeInTheDocument();
 });
