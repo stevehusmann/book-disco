@@ -53,6 +53,14 @@ db.exec(`
     created_at TEXT DEFAULT CURRENT_TIMESTAMP,
     updated_at TEXT DEFAULT CURRENT_TIMESTAMP
   );
+
+  CREATE TABLE IF NOT EXISTS series (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    height_width_ratio REAL,
+    spine_mode TEXT NOT NULL DEFAULT 'automatic',
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+  );
 `);
 
 const ensureBookColumns = () => {
@@ -349,6 +357,24 @@ function seedDatabaseFromJson() {
 
 seedDatabaseFromJson();
 
+const knownSeriesRatios = { OWC: 7.6875 / 5.1875, BNC: 8 / 5.25, PC: 7.75 / 5, PCD: 8.35 / 5.67 };
+const existingSeries = db.prepare(`
+  SELECT DISTINCT series_id AS id, COALESCE(NULLIF(series, ''), series_id) AS name
+  FROM books
+  WHERE COALESCE(series_id, '') <> ''
+`).all();
+const insertSeries = db.prepare(`
+  INSERT OR IGNORE INTO series (id, name, height_width_ratio, spine_mode)
+  VALUES (?, ?, ?, ?)
+`);
+const seedSeries = db.transaction((rows) => rows.forEach((series) => insertSeries.run(
+  series.id,
+  series.name,
+  knownSeriesRatios[series.id] || null,
+  series.id === 'PCD' ? 'pcd-crop' : 'automatic'
+)));
+seedSeries(existingSeries);
+
 app.use(cors());
 app.use(express.json());
 
@@ -364,6 +390,56 @@ app.get('/api/books', (_req, res) => {
   `).all();
 
   res.json(rows.map(rowToBook));
+});
+
+app.get('/api/series', (_req, res) => {
+  const rows = db.prepare('SELECT id, name, height_width_ratio, spine_mode FROM series ORDER BY name COLLATE NOCASE').all();
+  res.json(rows.map((row) => ({ id: row.id, name: row.name, heightWidthRatio: row.height_width_ratio, spineMode: row.spine_mode })));
+});
+
+app.post('/api/series', (req, res) => {
+  const id = String(req.body?.id || '').trim();
+  const name = String(req.body?.name || '').trim();
+  const ratio = req.body?.heightWidthRatio === '' || req.body?.heightWidthRatio == null ? null : Number(req.body.heightWidthRatio);
+  const spineMode = req.body?.spineMode === 'pcd-crop' ? 'pcd-crop' : 'automatic';
+  if (!id || !name || (ratio != null && (!Number.isFinite(ratio) || ratio <= 0))) {
+    return res.status(400).json({ error: 'Series ID and name are required; ratio must be positive when provided.' });
+  }
+  try {
+    insertSeries.run(id, name, ratio, spineMode);
+    const row = db.prepare('SELECT id, name, height_width_ratio, spine_mode FROM series WHERE id = ?').get(id);
+    return res.status(201).json({ id: row.id, name: row.name, heightWidthRatio: row.height_width_ratio, spineMode: row.spine_mode });
+  } catch (_error) {
+    return res.status(409).json({ error: 'A series with this ID already exists.' });
+  }
+});
+
+app.put('/api/series/:id', (req, res) => {
+  const name = String(req.body?.name || '').trim();
+  const ratio = req.body?.heightWidthRatio === '' || req.body?.heightWidthRatio == null ? null : Number(req.body.heightWidthRatio);
+  const spineMode = req.body?.spineMode === 'pcd-crop' ? 'pcd-crop' : 'automatic';
+  if (!name || (ratio != null && (!Number.isFinite(ratio) || ratio <= 0))) {
+    return res.status(400).json({ error: 'Series name is required; ratio must be positive when provided.' });
+  }
+  const update = db.transaction(() => {
+    const result = db.prepare('UPDATE series SET name = ?, height_width_ratio = ?, spine_mode = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
+      .run(name, ratio, spineMode, req.params.id);
+    if (!result.changes) return null;
+    db.prepare('UPDATE books SET series = ?, updated_at = CURRENT_TIMESTAMP WHERE series_id = ?').run(name, req.params.id);
+    return db.prepare('SELECT id, name, height_width_ratio, spine_mode FROM series WHERE id = ?').get(req.params.id);
+  });
+  const row = update();
+  if (!row) return res.status(404).json({ error: 'Series not found.' });
+  return res.json({ id: row.id, name: row.name, heightWidthRatio: row.height_width_ratio, spineMode: row.spine_mode });
+});
+
+app.delete('/api/series/:id', (req, res) => {
+  const remove = db.transaction(() => {
+    db.prepare("UPDATE books SET series = '', series_id = '', updated_at = CURRENT_TIMESTAMP WHERE series_id = ?").run(req.params.id);
+    return db.prepare('DELETE FROM series WHERE id = ?').run(req.params.id).changes;
+  });
+  if (!remove()) return res.status(404).json({ error: 'Series not found.' });
+  return res.status(204).end();
 });
 
 app.put('/api/books/:uid', (req, res) => {

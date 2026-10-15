@@ -24,8 +24,7 @@ const EDIT_FIELDS = [
   { key: 'AlphaAuthor', label: 'Alpha Author' },
   { key: 'AlphaTitle', label: 'Alpha Title' },
   { key: 'SpineTitle', label: 'Spine Title' },
-  { key: 'Series', label: 'Series' },
-  { key: 'SeriesId', label: 'Series Id' },
+  { key: 'SeriesId', label: 'Series' },
   { key: 'BookWidth', label: 'Book Width' },
   { key: 'BookHeight', label: 'Book Height' },
   { key: 'ISBN', label: 'ISBN' },
@@ -56,16 +55,20 @@ const normalizeEditableBook = (book) => {
   EDIT_FIELDS.forEach(({ key }) => {
     normalized[key] = (book?.[key] ?? '').toString();
   });
+  normalized.Series = (book?.Series ?? '').toString();
   return normalized;
 };
 
-const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colClass = '', layout = 'title', setBooks }) => {
+const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colClass = '', layout = 'title', setBooks, seriesOptions = [] }) => {
 
   const pagination = Number(book?.PAGINATION || 300);
   const series = (book?.SeriesId || book?.Series || '').toString();
   const seriesId = (book?.SeriesId || book?.Series || 'GEN').toString().replace(/\s+/g, '-').replace(/[^A-Za-z0-9-_]/g, '').toLowerCase();
 
-  const seriesSize = PHYSICAL_SERIES_SIZES[seriesId];
+  const seriesMeta = seriesOptions.find((option) => option.id === (book?.SeriesId || ''));
+  const seriesSize = PHYSICAL_SERIES_SIZES[seriesId] || (Number(seriesMeta?.heightWidthRatio) > 0
+    ? { width: 5.25, height: 5.25 * Number(seriesMeta.heightWidthRatio) }
+    : null);
 
   const bookRef = useRef(null);
   const [thicknessWidth, setThicknessWidth] = useState(null);
@@ -215,6 +218,11 @@ const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colCla
     }
   };
 
+  const setBookSeries = (seriesId) => {
+    const selected = seriesOptions.find((option) => option.id === seriesId);
+    setEditForm((current) => ({ ...current, Series: selected?.name || '', SeriesId: selected?.id || '' }));
+  };
+
   return (
     <Col xs={12} lg={3} className={`mb-3 ${colClass || ''} ${isAuthorLayout ? 'author-view-col' : ''}`} style={colStyle}>
       <div className="py-2 h-100 book-tile">
@@ -224,7 +232,7 @@ const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colCla
         </div>)}
         <div className="book-stage-link">
           <div className="book-container" style={containerPaddingStyle}>
-            <div ref={bookRef} className={`book series-${seriesId}`} style={{ transform: `translateZ(-${thickness || 0}px)` }}>
+            <div ref={bookRef} className={`book series-${seriesId}`} style={{ aspectRatio: Number(seriesMeta?.heightWidthRatio) > 0 ? `1 / ${seriesMeta.heightWidthRatio}` : undefined, transform: `translateZ(-${thickness || 0}px)` }}>
               <div className="book-front" style={{ transform: `translateZ(${(thickness || 0) - 1}px)` }}>
                 <img src={book.Image} alt={book.Title} draggable="false" />
               </div>
@@ -237,7 +245,9 @@ const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colCla
                   PC: SpinePC,
                   PCD: hasPcdSpineImage ? SpinePCD : SpinePC
                 };
-                const SpineComponent = spineMap[book.SeriesId];
+                const SpineComponent = seriesMeta?.spineMode === 'pcd-crop'
+                  ? (hasPcdSpineImage ? SpinePCD : SpinePC)
+                  : spineMap[(book.SeriesId || '').toUpperCase()] || SpinePC;
                 return SpineComponent ? <SpineComponent {...spineProps} /> : null;
               })()}
             </div>
@@ -290,7 +300,13 @@ const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colCla
                 <div className="col-12 col-md-6" key={key}>
                   <Form.Group controlId={`edit-${key}`}>
                     <Form.Label>{label}</Form.Label>
-                    {(key === 'PAGINATION' || key === 'BookWidth' || key === 'BookHeight') ? (
+                    {key === 'SeriesId' ? (
+                      <Form.Select value={editForm.SeriesId || ''} onChange={(event) => setBookSeries(event.target.value)}>
+                        <option value="">No series</option>
+                        {editForm.SeriesId && !seriesOptions.some((option) => option.id === editForm.SeriesId) && <option value={editForm.SeriesId}>{editForm.Series || editForm.SeriesId}</option>}
+                        {seriesOptions.map((seriesOption) => <option key={seriesOption.id} value={seriesOption.id}>{seriesOption.name}</option>)}
+                      </Form.Select>
+                    ) : (key === 'PAGINATION' || key === 'BookWidth' || key === 'BookHeight') ? (
                       <Form.Control
                         type="number"
                         step="any"

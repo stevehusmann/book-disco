@@ -18,19 +18,19 @@ const getBookKey = (book, fallbackIndex) => {
   );
 };
 
-const TitleView = ({ books, pageIndex, mobileResetKey = '', setBooks }) => {
+const TitleView = ({ books, pageIndex, mobileResetKey = '', setBooks, seriesOptions = [] }) => {
   return (
     <>
       <Row className="d-none d-md-flex title-row-desktop">
         {books.map((book, i) => (
-          <BookItem book={book} index={i} pageIndex={pageIndex} setBooks={setBooks} key={getBookKey(book, i)} />
+          <BookItem book={book} index={i} pageIndex={pageIndex} setBooks={setBooks} seriesOptions={seriesOptions} key={getBookKey(book, i)} />
         ))}
       </Row>
 
       <div className="d-md-none">
         <MobileChevronRow rowClassName="title-row" ariaLabel="Title view books" resetKey={mobileResetKey}>
           {books.map((book, i) => (
-            <BookItem book={book} index={i} pageIndex={pageIndex} setBooks={setBooks} key={getBookKey(book, i)} />
+            <BookItem book={book} index={i} pageIndex={pageIndex} setBooks={setBooks} seriesOptions={seriesOptions} key={getBookKey(book, i)} />
           ))}
         </MobileChevronRow>
       </div>

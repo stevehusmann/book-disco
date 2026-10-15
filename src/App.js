@@ -19,8 +19,7 @@ const ADD_BOOK_FIELDS = [
   { key: 'Author', label: 'Author' },
   { key: 'AlphaAuthor', label: 'Alpha Author' },
   { key: 'AlphaTitle', label: 'Alpha Title' },
-  { key: 'Series', label: 'Series' },
-  { key: 'SeriesId', label: 'Series Id' },
+  { key: 'SeriesId', label: 'Series', type: 'series' },
   { key: 'ISBN', label: 'ISBN' },
   { key: 'EAN', label: 'EAN' },
   { key: 'Image', label: 'Image URL' },
@@ -75,6 +74,11 @@ const App = () => {
   const [addBookForm, setAddBookForm] = useState(() => createEmptyAddBookForm());
   const [addBookStatus, setAddBookStatus] = useState('');
   const [isSavingNewBook, setIsSavingNewBook] = useState(false);
+  const [showSeriesModal, setShowSeriesModal] = useState(false);
+  const [seriesForm, setSeriesForm] = useState({ id: '', name: '', heightWidthRatio: '', spineMode: 'automatic' });
+  const [editingSeriesId, setEditingSeriesId] = useState('');
+  const [seriesStatus, setSeriesStatus] = useState('');
+  const [isSavingSeries, setIsSavingSeries] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -116,6 +120,13 @@ const App = () => {
       .catch((error) => console.error('Error loading series:', error));
   }, []);
 
+  const refreshSeriesOptions = async () => {
+    const response = await fetch(apiUrl('/api/series'));
+    if (!response.ok) throw new Error(`Series query failed (${response.status}).`);
+    const result = await response.json();
+    setSeriesOptions(Array.isArray(result) ? result : []);
+  };
+
   const currentPageBooks = books;
   const effectiveSortOption = sortOption;
   const mobileResetKey = `${submittedSearch}|${sortOption}|${selectedSeries}|${page}`;
@@ -146,6 +157,79 @@ const App = () => {
     setAddBookForm(createEmptyAddBookForm());
     setAddBookStatus('');
     setShowAddBookModal(true);
+  };
+
+  const updateBookSeries = (setter, seriesId) => {
+    const selected = seriesOptions.find((option) => option.id === seriesId);
+    setter((current) => ({
+      ...current,
+      Series: selected?.name || '',
+      SeriesId: selected?.id || ''
+    }));
+  };
+
+  const openSeriesManager = () => {
+    setSeriesForm({ id: '', name: '', heightWidthRatio: '', spineMode: 'automatic' });
+    setEditingSeriesId('');
+    setSeriesStatus('');
+    setShowSeriesModal(true);
+  };
+
+  const editSeries = (series) => {
+    setEditingSeriesId(series.id);
+    setSeriesForm({
+      id: series.id,
+      name: series.name,
+      heightWidthRatio: series.heightWidthRatio ?? '',
+      spineMode: series.spineMode || 'automatic'
+    });
+    setSeriesStatus('');
+  };
+
+  const saveSeries = async () => {
+    setIsSavingSeries(true);
+    setSeriesStatus('');
+    try {
+      const response = await fetch(apiUrl(editingSeriesId
+        ? `/api/series/${encodeURIComponent(editingSeriesId)}`
+        : '/api/series'), {
+        method: editingSeriesId ? 'PUT' : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(seriesForm)
+      });
+      if (!response.ok) {
+        const result = await response.json().catch(() => ({}));
+        throw new Error(result.error || 'Unable to save series.');
+      }
+      await refreshSeriesOptions();
+      setRefreshVersion((version) => version + 1);
+      setEditingSeriesId('');
+      setSeriesForm({ id: '', name: '', heightWidthRatio: '', spineMode: 'automatic' });
+      setSeriesStatus('Series saved.');
+    } catch (error) {
+      setSeriesStatus(error.message || 'Unable to save series.');
+    } finally {
+      setIsSavingSeries(false);
+    }
+  };
+
+  const deleteSeries = async (series) => {
+    if (!window.confirm(`Remove "${series.name}"? Books will be kept and unassigned from this series.`)) return;
+    setSeriesStatus('');
+    try {
+      const response = await fetch(apiUrl(`/api/series/${encodeURIComponent(series.id)}`), { method: 'DELETE' });
+      if (!response.ok) throw new Error('Unable to remove series.');
+      await refreshSeriesOptions();
+      setSelectedSeries((current) => current === series.id ? '' : current);
+      setRefreshVersion((version) => version + 1);
+      if (editingSeriesId === series.id) {
+        setEditingSeriesId('');
+        setSeriesForm({ id: '', name: '', heightWidthRatio: '', spineMode: 'automatic' });
+      }
+      setSeriesStatus('Series removed. Books were kept.');
+    } catch (error) {
+      setSeriesStatus(error.message || 'Unable to remove series.');
+    }
   };
 
   const saveNewBook = async () => {
@@ -190,7 +274,7 @@ const App = () => {
                       <button className="btn btn-secondary" onClick={() => setView('library')}>Back To Library</button>
                     </Col>
                   </Row>
-                  <SpineCropEditor books={spineBooks} setBooks={setSpineBooks} />
+                  <SpineCropEditor books={spineBooks} setBooks={setSpineBooks} seriesOptions={seriesOptions} />
                 </Col>
               </Row>
             ) : (
@@ -225,8 +309,9 @@ const App = () => {
                   </div>
                   <div>
                     <div className="d-grid gap-2 mb-3">
-                      <button className="btn btn-outline-primary" onClick={openSpineCropPage} disabled={isLoadingSpineBooks}>{isLoadingSpineBooks ? 'Loading PCD Books...' : 'Open PCD Spine Crop Page'}</button>
+                      <button className="btn btn-outline-primary" onClick={openSpineCropPage} disabled={isLoadingSpineBooks}>{isLoadingSpineBooks ? 'Loading Spine Books...' : 'Open Spine Crop Tool'}</button>
                       {spineBooksError && <div className="small text-danger">{spineBooksError}</div>}
+                      <button className="btn btn-outline-secondary" onClick={openSeriesManager}>Manage Series</button>
                       <button className="btn btn-outline-success" onClick={openAddBookModal}>Add Book</button>
                     </div>
                   </div>
@@ -246,9 +331,9 @@ const App = () => {
                   <hr></hr>
                   <Row className="d-flex">
                     {!isLoadingBooks && !booksError && effectiveSortOption.startsWith('author') ? (
-                      <AuthorView books={currentPageBooks} pageIndex={page * pageSize} mobileResetKey={mobileResetKey} setBooks={setBooks} />
+                      <AuthorView books={currentPageBooks} pageIndex={page * pageSize} mobileResetKey={mobileResetKey} setBooks={setBooks} seriesOptions={seriesOptions} />
                     ) : !isLoadingBooks && !booksError ? (
-                        <TitleView books={currentPageBooks} pageIndex={page * pageSize} mobileResetKey={mobileResetKey} setBooks={setBooks} />
+                        <TitleView books={currentPageBooks} pageIndex={page * pageSize} mobileResetKey={mobileResetKey} setBooks={setBooks} seriesOptions={seriesOptions} />
                     ) : null}
                   </Row>
                 </Col>
@@ -274,14 +359,19 @@ const App = () => {
                   <div className={field.multiline ? 'col-12' : 'col-12 col-md-6'} key={field.key}>
                     <Form.Group controlId={`add-${field.key}`}>
                       <Form.Label>{field.label}</Form.Label>
-                      <Form.Control
+                        {field.type === 'series' ? (
+                          <Form.Select value={addBookForm.SeriesId || ''} onChange={(e) => updateBookSeries(setAddBookForm, e.target.value)}>
+                            <option value="">No series</option>
+                            {seriesOptions.map((series) => <option key={series.id} value={series.id}>{series.name}</option>)}
+                          </Form.Select>
+                        ) : <Form.Control
                         required={field.required}
                         type={field.type || 'text'}
                         as={field.multiline ? 'textarea' : undefined}
                         rows={field.rows}
                         value={addBookForm[field.key]}
                         onChange={(e) => setAddBookForm((current) => ({ ...current, [field.key]: e.target.value }))}
-                      />
+                      />}
                     </Form.Group>
                   </div>
                 ))}
@@ -297,6 +387,54 @@ const App = () => {
               {isSavingNewBook ? 'Saving...' : 'Add Book'}
             </Button>
           </Modal.Footer>
+        </Modal>
+
+        <Modal show={showSeriesModal} onHide={() => setShowSeriesModal(false)} size="lg" scrollable>
+          <Modal.Header closeButton>
+            <Modal.Title>Manage Series</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form className="mb-4">
+              <div className="row g-3">
+                <div className="col-md-6">
+                  <Form.Label htmlFor="series-name">Name</Form.Label>
+                  <Form.Control id="series-name" value={seriesForm.name} onChange={(event) => setSeriesForm((current) => ({ ...current, name: event.target.value, id: editingSeriesId ? current.id : event.target.value.trim().toUpperCase().replace(/[^A-Z0-9]+/g, '-') }))} />
+                </div>
+                <div className="col-md-6">
+                  <Form.Label htmlFor="series-id">Series ID</Form.Label>
+                  <Form.Control id="series-id" value={seriesForm.id} disabled={Boolean(editingSeriesId)} onChange={(event) => setSeriesForm((current) => ({ ...current, id: event.target.value.trim() }))} />
+                </div>
+                <div className="col-md-6">
+                  <Form.Label htmlFor="series-ratio">Height / width ratio</Form.Label>
+                  <Form.Control id="series-ratio" type="number" min="0.01" step="0.01" value={seriesForm.heightWidthRatio} onChange={(event) => setSeriesForm((current) => ({ ...current, heightWidthRatio: event.target.value }))} />
+                </div>
+                <div className="col-md-6">
+                  <Form.Label htmlFor="series-spine-mode">Spine rendering</Form.Label>
+                  <Form.Select id="series-spine-mode" value={seriesForm.spineMode} onChange={(event) => setSeriesForm((current) => ({ ...current, spineMode: event.target.value }))}>
+                    <option value="automatic">Generated automatically</option>
+                    <option value="pcd-crop">PCD Crop tool</option>
+                  </Form.Select>
+                </div>
+              </div>
+              <div className="d-flex gap-2 mt-3">
+                <Button variant="primary" onClick={saveSeries} disabled={isSavingSeries || !seriesForm.id.trim() || !seriesForm.name.trim()}>{isSavingSeries ? 'Saving...' : editingSeriesId ? 'Save Series' : 'Add Series'}</Button>
+                {editingSeriesId && <Button variant="outline-secondary" onClick={() => { setEditingSeriesId(''); setSeriesForm({ id: '', name: '', heightWidthRatio: '', spineMode: 'automatic' }); }}>Cancel Edit</Button>}
+              </div>
+            </Form>
+            <div className="list-group">
+              {seriesOptions.map((series) => (
+                <div className="list-group-item d-flex align-items-center justify-content-between gap-3" key={series.id}>
+                  <div><strong>{series.name}</strong><div className="small text-muted">{series.id} · {series.heightWidthRatio ? `H/W ${Number(series.heightWidthRatio).toFixed(2)}` : 'No ratio'} · {series.spineMode === 'pcd-crop' ? 'PCD Crop' : 'Automatic'}</div></div>
+                  <div className="d-flex gap-2 flex-shrink-0">
+                    <Button size="sm" variant="outline-primary" onClick={() => editSeries(series)}>Edit</Button>
+                    <Button size="sm" variant="outline-danger" onClick={() => deleteSeries(series)}>Delete</Button>
+                  </div>
+                </div>
+              ))}
+              {!seriesOptions.length && <div className="text-muted small">No series yet.</div>}
+            </div>
+            {seriesStatus && <div className="small mt-3" role="status">{seriesStatus}</div>}
+          </Modal.Body>
         </Modal>
       </Container>
     </>

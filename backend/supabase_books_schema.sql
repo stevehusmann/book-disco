@@ -1,8 +1,19 @@
-create table if not exists public.books (
+`create table if not exists public.books (
   uid text primary key,
   book jsonb not null,
   updated_at timestamptz not null default now()
 );
+
+create table if not exists public.series (
+  id text primary key,
+  name text not null,
+  height_width_ratio double precision,
+  spine_mode text not null default 'automatic' check (spine_mode in ('automatic', 'pcd-crop')),
+  updated_at timestamptz not null default now(),
+  check (height_width_ratio is null or height_width_ratio > 0)
+);
+
+create index if not exists series_name_idx on public.series (name);
 
 alter table public.books enable row level security;
 
@@ -102,4 +113,4 @@ $$;
 revoke all on function public.search_books(text, text, text, integer, integer) from public;
 grant execute on function public.search_books(text, text, text, integer, integer) to service_role;
 
-notify pgrst, 'reload schema';
+notify pgrst, 'reload schema';`

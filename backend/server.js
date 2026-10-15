@@ -69,6 +69,14 @@ db.exec(`
     created_at TEXT DEFAULT CURRENT_TIMESTAMP,
     updated_at TEXT DEFAULT CURRENT_TIMESTAMP
   );
+
+  CREATE TABLE IF NOT EXISTS series (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    height_width_ratio REAL,
+    spine_mode TEXT NOT NULL DEFAULT 'automatic',
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+  );
 `);
 
 const ensureBookColumns = () => {
@@ -370,6 +378,27 @@ if (!useSupabase) {
   seedDatabaseFromJson();
 }
 
+const knownSeriesRatios = { OWC: 7.6875 / 5.1875, BNC: 8 / 5.25, PC: 7.75 / 5, PCD: 8.35 / 5.67 };
+const seedSqliteSeriesCatalog = () => {
+  const books = db.prepare(`
+    SELECT DISTINCT series_id AS id, COALESCE(NULLIF(series, ''), series_id) AS name
+    FROM books
+    WHERE COALESCE(series_id, '') <> ''
+  `).all();
+  const insert = db.prepare(`
+    INSERT OR IGNORE INTO series (id, name, height_width_ratio, spine_mode)
+    VALUES (@id, @name, @ratio, @spineMode)
+  `);
+  const transaction = db.transaction((rows) => rows.forEach((row) => insert.run({
+    ...row,
+    ratio: knownSeriesRatios[row.id] || null,
+    spineMode: row.id === 'PCD' ? 'pcd-crop' : 'automatic'
+  })));
+  transaction(books);
+};
+
+if (!useSupabase) seedSqliteSeriesCatalog();
+
 const supabaseRequest = async (route, options = {}) => {
   const response = await fetch(`${supabaseUrl}/rest/v1/${route}`, {
     ...options,
@@ -506,43 +535,154 @@ app.get('/api/books', async (req, res) => {
   res.json({ books: rows.map(rowToBook), total, page, pageSize, pageCount: Math.max(1, Math.ceil(total / pageSize)) });
 });
 
+const normalizeSeriesInput = (input, id = '') => {
+  const normalizedId = String(id || input?.id || '').trim();
+  const name = String(input?.name || '').trim();
+  const rawRatio = input?.heightWidthRatio;
+  const heightWidthRatio = rawRatio === '' || rawRatio == null ? null : Number(rawRatio);
+  const spineMode = input?.spineMode === 'pcd-crop' ? 'pcd-crop' : 'automatic';
+  if (!normalizedId || !name || (heightWidthRatio != null && (!Number.isFinite(heightWidthRatio) || heightWidthRatio <= 0))) {
+    return null;
+  }
+  return { id: normalizedId, name, heightWidthRatio, spineMode };
+};
+
+const seriesFromSqlite = (row) => ({
+  id: row.id,
+  name: row.name,
+  heightWidthRatio: row.height_width_ratio,
+  spineMode: row.spine_mode
+});
+
+const ensureSupabaseSeriesCatalog = async () => {
+  let rows = await supabaseRequest('series?select=id,name,height_width_ratio,spine_mode&order=name.asc');
+  if (rows.length) return rows;
+
+  const values = new Map();
+  for (let offset = 0; ; offset += 1000) {
+    const params = new URLSearchParams({ select: 'uid,book', limit: '1000', offset: String(offset), order: 'uid.asc' });
+    const books = await supabaseRequest(`books?${params.toString()}`);
+    for (const row of books) {
+      const id = String(row.book?.SeriesId || '').trim();
+      if (!id || values.has(id)) continue;
+      values.set(id, {
+        id,
+        name: String(row.book?.Series || id),
+        height_width_ratio: knownSeriesRatios[id] || null,
+        spine_mode: id === 'PCD' ? 'pcd-crop' : 'automatic'
+      });
+    }
+    if (books.length < 1000) break;
+  }
+  if (values.size) {
+    await supabaseRequest('series?on_conflict=id', {
+      method: 'POST',
+      headers: { Prefer: 'resolution=ignore-duplicates' },
+      body: JSON.stringify([...values.values()])
+    });
+  }
+  rows = await supabaseRequest('series?select=id,name,height_width_ratio,spine_mode&order=name.asc');
+  return rows;
+};
+
+const updateSupabaseBookSeries = async (id, series) => {
+  let offset = 0;
+  for (;;) {
+    const params = new URLSearchParams({ select: 'uid,book', 'book->>SeriesId': `eq.${id}`, limit: '1000', offset: String(offset), order: 'uid.asc' });
+    const rows = await supabaseRequest(`books?${params.toString()}`);
+    for (const row of rows) {
+      await supabaseRequest(supabaseBookRoute({ uid: `eq.${row.uid}` }), {
+        method: 'PATCH',
+        headers: { Prefer: 'return=minimal' },
+        body: JSON.stringify({ book: { ...row.book, ...series } })
+      });
+    }
+    if (rows.length < 1000) break;
+    offset = series.SeriesId === '' ? 0 : offset + 1000;
+  }
+};
+
 app.get('/api/series', async (_req, res) => {
   if (useSupabase) {
     try {
-      const values = new Map();
-      for (let offset = 0; ; offset += 1000) {
-        const params = new URLSearchParams({
-          select: 'series_id:book->>SeriesId,series:book->>Series',
-          limit: '1000',
-          offset: String(offset),
-          order: 'uid.asc'
-        });
-        const rows = await supabaseRequest(
-          `books?${params.toString()}`
-        );
-        for (const row of rows) {
-          const id = row.series_id || 'Unknown';
-          const name = row.series || id;
-          values.set(id, name);
-        }
-        if (rows.length < 1000) break;
-      }
-      res.json([...values].map(([id, name]) => ({ id, name })).sort((a, b) => a.name.localeCompare(b.name)));
+      const rows = await ensureSupabaseSeriesCatalog();
+      res.json(rows.map((row) => ({ id: row.id, name: row.name, heightWidthRatio: row.height_width_ratio, spineMode: row.spine_mode })));
     } catch (error) {
       console.error('Failed to load series from Supabase:', error);
       res.status(502).json({ error: 'Failed to load series from Supabase.' });
     }
     return;
   }
+  const rows = db.prepare('SELECT id, name, height_width_ratio, spine_mode FROM series ORDER BY name COLLATE NOCASE').all();
+  res.json(rows.map(seriesFromSqlite));
+});
 
-  const rows = db.prepare(`
-    SELECT DISTINCT
-      COALESCE(NULLIF(series_id, ''), 'Unknown') AS id,
-      COALESCE(NULLIF(series, ''), NULLIF(series_id, ''), 'Unknown') AS name
-    FROM books
-    ORDER BY name COLLATE NOCASE
-  `).all();
-  res.json(rows);
+app.post('/api/series', async (req, res) => {
+  const series = normalizeSeriesInput(req.body);
+  if (!series) return res.status(400).json({ error: 'Series ID, name, and a positive height/width ratio are required when a ratio is provided.' });
+  try {
+    if (useSupabase) {
+      const rows = await supabaseRequest('series', {
+        method: 'POST',
+        headers: { Prefer: 'return=representation' },
+        body: JSON.stringify({ id: series.id, name: series.name, height_width_ratio: series.heightWidthRatio, spine_mode: series.spineMode })
+      });
+      return res.status(201).json({ id: rows[0].id, name: rows[0].name, heightWidthRatio: rows[0].height_width_ratio, spineMode: rows[0].spine_mode });
+    }
+    db.prepare('INSERT INTO series (id, name, height_width_ratio, spine_mode) VALUES (?, ?, ?, ?)')
+      .run(series.id, series.name, series.heightWidthRatio, series.spineMode);
+    return res.status(201).json(series);
+  } catch (error) {
+    const conflict = String(error?.message || '').includes('unique') || String(error?.message || '').includes('duplicate');
+    return res.status(conflict ? 409 : 502).json({ error: conflict ? 'A series with this ID already exists.' : 'Failed to create series.' });
+  }
+});
+
+app.put('/api/series/:id', async (req, res) => {
+  const series = normalizeSeriesInput(req.body, req.params.id);
+  if (!series) return res.status(400).json({ error: 'Series name and a positive height/width ratio are required when a ratio is provided.' });
+  try {
+    if (useSupabase) {
+      const rows = await supabaseRequest(`series?id=eq.${encodeURIComponent(series.id)}`, {
+        method: 'PATCH',
+        headers: { Prefer: 'return=representation' },
+        body: JSON.stringify({ name: series.name, height_width_ratio: series.heightWidthRatio, spine_mode: series.spineMode })
+      });
+      if (!rows.length) return res.status(404).json({ error: 'Series not found.' });
+      await updateSupabaseBookSeries(series.id, { Series: series.name, SeriesId: series.id });
+      return res.json({ id: rows[0].id, name: rows[0].name, heightWidthRatio: rows[0].height_width_ratio, spineMode: rows[0].spine_mode });
+    }
+    const result = db.prepare('UPDATE series SET name = ?, height_width_ratio = ?, spine_mode = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
+      .run(series.name, series.heightWidthRatio, series.spineMode, series.id);
+    if (!result.changes) return res.status(404).json({ error: 'Series not found.' });
+    db.prepare('UPDATE books SET series = ?, updated_at = CURRENT_TIMESTAMP WHERE series_id = ?').run(series.name, series.id);
+    return res.json(series);
+  } catch (error) {
+    console.error('Failed to update series:', error);
+    return res.status(502).json({ error: 'Failed to update series.' });
+  }
+});
+
+app.delete('/api/series/:id', async (req, res) => {
+  const id = req.params.id;
+  try {
+    if (useSupabase) {
+      const existing = await supabaseRequest(`series?id=eq.${encodeURIComponent(id)}&select=id`);
+      if (!existing.length) return res.status(404).json({ error: 'Series not found.' });
+      await updateSupabaseBookSeries(id, { Series: '', SeriesId: '' });
+      await supabaseRequest(`series?id=eq.${encodeURIComponent(id)}`, { method: 'DELETE', headers: { Prefer: 'return=minimal' } });
+      return res.status(204).end();
+    }
+    const remove = db.transaction(() => {
+      db.prepare("UPDATE books SET series = '', series_id = '', updated_at = CURRENT_TIMESTAMP WHERE series_id = ?").run(id);
+      return db.prepare('DELETE FROM series WHERE id = ?').run(id).changes;
+    });
+    if (!remove()) return res.status(404).json({ error: 'Series not found.' });
+    return res.status(204).end();
+  } catch (error) {
+    console.error('Failed to delete series:', error);
+    return res.status(502).json({ error: 'Failed to delete series.' });
+  }
 });
 
 app.get('/api/books/spine-crop', async (_req, res) => {

@@ -5,10 +5,15 @@ import { getQuadBounds, normalizeQuadPoints, quadToPointsString } from './spineC
 const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
 const DEFAULT_LOCAL_IMAGE_PATH = 'PenguinDeluxeClassics.jpg';
 
-const SpineCropEditor = ({ books, setBooks }) => {
+const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
+  const cropSeriesIds = useMemo(
+    () => new Set(seriesOptions.filter((series) => series.spineMode === 'pcd-crop').map((series) => series.id)),
+    [seriesOptions]
+  );
   const pcdBooks = useMemo(
-    () => books.filter((b) => (b?.SeriesId || '').toString().toUpperCase() === 'PCD'),
-    [books]
+    () => books.filter((book) => cropSeriesIds.has((book?.SeriesId || '').toString())
+      || (!seriesOptions.length && (book?.SeriesId || '').toString().toUpperCase() === 'PCD')),
+    [books, cropSeriesIds, seriesOptions.length]
   );
 
   const [selectedId, setSelectedId] = useState('');
