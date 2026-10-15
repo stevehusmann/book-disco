@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   getQuadOutputSize,
+  getLandscapeCropRotation,
   mapSourcePointToRotated,
   normalizeQuadPoints,
   renderPerspectiveQuadToCanvas
@@ -80,12 +81,36 @@ const SpinePCD = ({ book, pagination, thickness, spineText, showAuthorOnSpine, a
           ));
           const normalized = normalizeQuadPoints(rotatedPoints, rotatedWidth, rotatedHeight);
           const outputSize = getQuadOutputSize(normalized);
-          const canvas = renderPerspectiveQuadToCanvas(
+          const perspectiveCanvas = renderPerspectiveQuadToCanvas(
             rotatedSource,
             normalized,
             outputSize.width,
             outputSize.height
           );
+          const outputRotation = getLandscapeCropRotation(
+            perspectiveCanvas.width,
+            perspectiveCanvas.height,
+            rotation
+          );
+          let canvas = perspectiveCanvas;
+          if (outputRotation) {
+            canvas = document.createElement('canvas');
+            canvas.width = perspectiveCanvas.height;
+            canvas.height = perspectiveCanvas.width;
+            const outputContext = canvas.getContext('2d');
+            if (!outputContext) {
+              if (mounted) setSpineImage(null);
+              return;
+            }
+            if (outputRotation === 90) {
+              outputContext.translate(canvas.width, 0);
+              outputContext.rotate(Math.PI / 2);
+            } else {
+              outputContext.translate(0, canvas.height);
+              outputContext.rotate(-Math.PI / 2);
+            }
+            outputContext.drawImage(perspectiveCanvas, 0, 0);
+          }
           const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
           if (mounted) setSpineImage(dataUrl);
           return;

@@ -2,6 +2,7 @@ import {
   getQuadOutputSize,
   getQuadBounds,
   mapSourcePointToRotated,
+  getLandscapeCropRotation,
   normalizeQuadPoints,
   orderRotatedQuadPointsAsSource,
   quadToPointsString
@@ -107,5 +108,11 @@ describe('spine crop quad helpers', () => {
     );
 
     expect(getQuadOutputSize(rotatedCorners)).toEqual({ width: 80, height: 200 });
+  });
+
+  test('landscape output correction follows the selected rotation direction', () => {
+    expect(getLandscapeCropRotation(200, 80, 90)).toBe(90);
+    expect(getLandscapeCropRotation(200, 80, 270)).toBe(270);
+    expect(getLandscapeCropRotation(80, 200, 90)).toBe(0);
   });
 });

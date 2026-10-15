@@ -28,6 +28,7 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
   const [publicPath, setPublicPath] = useState(DEFAULT_LOCAL_IMAGE_PATH);
   const [directUrl, setDirectUrl] = useState('');
   const [saveStatus, setSaveStatus] = useState('');
+  const [isSavingCrop, setIsSavingCrop] = useState(false);
   const [imgNatural, setImgNatural] = useState({ width: 0, height: 0 });
   const [imgRendered, setImgRendered] = useState({ width: 0, height: 0 });
   const [cropDisplay, setCropDisplay] = useState(null);
@@ -43,6 +44,10 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
   const selectedBook = useMemo(
     () => pcdBooks.find((b) => (b?.ISBN || b?.EAN || b?.Title) === selectedId) || null,
     [pcdBooks, selectedId]
+  );
+  const savedCropCount = useMemo(
+    () => pcdBooks.filter((book) => Boolean(book?.SpineCrop)).length,
+    [pcdBooks]
   );
 
   const publicImageOptions = useMemo(() => {
@@ -399,7 +404,7 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
   };
 
   const applyCropToSelected = async () => {
-    if (!selectedBook || !cropSourceCoords || !imageSrc) return;
+    if (!selectedBook || !cropSourceCoords || !imageSrc || isSavingCrop) return;
     const id = selectedBook.ISBN || selectedBook.EAN || selectedBook.Title;
     const nextSelectedBook = {
       ...selectedBook,
@@ -410,19 +415,21 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
         points: cropSourceCoords.points || undefined
       }
     };
-    if (nextSelectedBook) {
-      try {
-        const savedBook = await saveBookToApi(nextSelectedBook);
-        setBooks((currentBooks) => currentBooks.map((book) =>
-          (book?._uid || book?.ISBN || book?.EAN || book?.Title) === id
-            ? { ...book, ...savedBook }
-            : book
-        ));
-        setSaveStatus('Saved crop to the database.');
-      } catch (err) {
-        setSaveStatus('Database write failed; the crop was not saved.');
-        console.error('Failed to save crop to API:', err);
-      }
+    setIsSavingCrop(true);
+    setSaveStatus(`Saving crop for ${selectedBook.Title || 'selected book'}...`);
+    try {
+      const savedBook = await saveBookToApi(nextSelectedBook);
+      setBooks((currentBooks) => currentBooks.map((book) =>
+        (book?._uid || book?.ISBN || book?.EAN || book?.Title) === id
+          ? { ...book, ...savedBook }
+          : book
+      ));
+      setSaveStatus(`Saved crop for ${savedBook.Title || selectedBook.Title || 'selected book'} to the database.`);
+    } catch (err) {
+      setSaveStatus(`Could not save crop for ${selectedBook.Title || 'selected book'}.`);
+      console.error('Failed to save crop to API:', err);
+    } finally {
+      setIsSavingCrop(false);
     }
   };
 
@@ -430,19 +437,23 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
     <div className="spine-crop-editor">
       <h6 className="mb-2">PCD Spine Crop Editor</h6>
       <div className="small text-muted mb-2">Select a PCD book, choose a source image from the public folder, direct URL, or upload, drag a crop over the target spine, then apply and export.</div>
+      <div className="small mb-2" role="status">Crops saved: {savedCropCount} / {pcdBooks.length}</div>
 
       <label className="form-label mb-1">PCD Book</label>
       <select
         className="form-select form-select-sm mb-2"
         value={selectedId}
-        onChange={(e) => setSelectedId(e.target.value)}
+        onChange={(e) => {
+          setSelectedId(e.target.value);
+          setSaveStatus('');
+        }}
       >
         <option value="">Select a book...</option>
         {pcdBooks.map((b) => {
           const id = b.ISBN || b.EAN || b.Title;
           return (
             <option key={id} value={id}>
-              {(b.Title || 'Untitled').trim()} - {b.Author || b.AlphaAuthor || 'Unknown'}
+              {(b.Title || 'Untitled').trim()} - {b.Author || b.AlphaAuthor || 'Unknown'}{b.SpineCrop ? ' (crop saved)' : ' (no crop)'}
             </option>
           );
         })}
@@ -575,6 +586,11 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
         </button>
       </div>
       <div className="small text-muted mb-2">Current rotation: {rotation}deg</div>
+      {selectedBook && (
+        <div className={`small mb-2 ${selectedBook.SpineCrop ? 'text-success' : 'text-muted'}`} role="status">
+          {selectedBook.SpineCrop ? 'A crop is saved for this book.' : 'No crop is saved for this book yet.'}
+        </div>
+      )}
       {selectedBook?.SpineCrop && !isSavedCropSameSource && (
         <div className="small text-warning mb-2">Saved crop source does not match the currently loaded image, so saved preview is hidden.</div>
       )}
@@ -642,8 +658,8 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
       </div>
 
       <div className="d-flex gap-2 mb-2">
-        <button className="btn btn-sm btn-primary" disabled={!selectedBook || !cropSourceCoords || !imageSrc} onClick={applyCropToSelected}>
-          Save Crop To Selected Book
+        <button className="btn btn-sm btn-primary" disabled={!selectedBook || !cropSourceCoords || !imageSrc || isSavingCrop} onClick={applyCropToSelected}>
+          {isSavingCrop ? 'Saving Crop...' : 'Save Crop To Selected Book'}
         </button>
       </div>
 

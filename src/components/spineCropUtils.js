@@ -102,6 +102,12 @@ export const getQuadOutputSize = (points) => {
   };
 };
 
+export const getLandscapeCropRotation = (width, height, selectedRotation) => {
+  if (Number(width) <= Number(height)) return 0;
+  if (selectedRotation === 90 || selectedRotation === 270) return selectedRotation;
+  return 0;
+};
+
 export const quadToPointsString = (points) =>
   points
     .map((point) => `${Number(point?.x ?? 0)},${Number(point?.y ?? 0)}`)
