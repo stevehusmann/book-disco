@@ -3,6 +3,7 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const Database = require('better-sqlite3');
+const { createImageProxyHandler } = require('./imageProxy');
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -504,6 +505,8 @@ if (allowedOrigins.length > 0) {
 }
 
 app.use(express.json());
+
+app.get('/api/image-proxy', createImageProxyHandler);
 
 app.get('/api/health', (_req, res) => {
   res.json({

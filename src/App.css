@@ -417,11 +417,44 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
 .spine-crop-preview-image {
   display: block;
   width: auto;
-  max-width: min(100%, 260px);
-  max-height: 440px;
+  max-width: min(100%, 180px);
+  max-height: 160px;
   margin: 0 auto;
   object-fit: contain;
   background-color: #f5f5f5;
+}
+
+.spine-crop-dock {
+  position: sticky;
+  bottom: -10px;
+  z-index: 6;
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) minmax(220px, 1.3fr);
+  gap: 12px;
+  align-items: center;
+  min-height: 205px;
+  margin: 0 -10px -10px;
+  padding: 10px;
+  border-top: 1px solid #c8c8c8;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.spine-crop-dock-preview,
+.spine-crop-dock-actions {
+  min-width: 0;
+}
+
+.spine-crop-dock-placeholder {
+  display: grid;
+  place-items: center;
+  min-height: 160px;
+  padding: 12px;
+  border: 1px dashed #c8c8c8;
+  background: #f5f5f5;
+  color: #666;
+  font-size: 13px;
+  text-align: center;
 }
 
 .spine-crop-placeholder {
@@ -445,11 +478,39 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
   pointer-events: none;
 }
 
+.spine-crop-polygon-layer.editable {
+  pointer-events: none;
+  overflow: visible;
+}
+
 .spine-crop-polygon-layer polygon {
   fill: rgba(13, 110, 253, 0.18);
   stroke: #0d6efd;
   stroke-width: 2;
   vector-effect: non-scaling-stroke;
+}
+
+.spine-crop-edge-handle {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 18px;
+  pointer-events: stroke;
+  cursor: move;
+  touch-action: none;
+}
+
+.spine-crop-point-handle {
+  fill: #fff;
+  stroke: #0d6efd;
+  stroke-width: 3px;
+  vector-effect: non-scaling-stroke;
+  pointer-events: all;
+  cursor: grab;
+  touch-action: none;
+}
+
+.spine-crop-point-handle:active {
+  cursor: grabbing;
 }
 
 .spine-crop-polygon-layer.saved polygon {
@@ -603,6 +664,22 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
 
   .author-mobile-row .book-header-row {
     display: none;
+  }
+
+  .spine-crop-dock {
+    grid-template-columns: minmax(100px, 0.8fr) minmax(170px, 1.2fr);
+    gap: 8px;
+    min-height: 190px;
+    padding: 8px;
+  }
+
+  .spine-crop-dock-placeholder {
+    min-height: 145px;
+    font-size: 12px;
+  }
+
+  .spine-crop-preview-image {
+    max-height: 145px;
   }
 }
 .pc-spine .book-spine-title {

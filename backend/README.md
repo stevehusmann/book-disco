@@ -12,6 +12,7 @@ This folder is prepared to become a standalone backend repository.
 - `DELETE /api/series/:id` - remove a series and unassign its books without deleting them
 When both Supabase variables are set, the API reads and writes the `public.books` table with `uid` (text primary key) and `book` (jsonb) columns, and stores series metadata in `public.series`. For an existing deployment, run `supabase_series_migration.sql` in the Supabase SQL Editor; for a fresh setup, run `supabase_books_schema.sql` to install the tables, indexes, and `search_books` RPC. The first series request imports existing series IDs and names from books. Until the series migration is applied, `GET /api/series` falls back to book data; creating, editing, or deleting series requires the migration. When neither Supabase variable is set, the API uses local SQLite and optionally seeds from `SEED_PATH`; existing book series are migrated into the local series catalog automatically.
 - `GET /api/books/spine-crop` - full catalog for the crop editor, loaded only when opened
+- `GET /api/image-proxy?url=` - bounded, public-host-only image proxy used by the crop editor for direct URLs
 - `POST /api/books`
 - `PUT /api/books/:uid`
 
