@@ -454,6 +454,12 @@ app.delete('/api/series/:id', (req, res) => {
   return res.status(204).end();
 });
 
+app.delete('/api/books/:uid', (req, res) => {
+  const deleted = db.prepare('DELETE FROM books WHERE uid = ?').run(req.params.uid);
+  if (!deleted.changes) return res.status(404).json({ error: 'Book not found' });
+  return res.status(204).end();
+});
+
 app.put('/api/books/:uid', (req, res) => {
   const uid = req.params.uid;
   const existing = getBookByUid.get(uid);

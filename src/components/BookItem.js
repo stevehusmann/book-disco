@@ -232,7 +232,14 @@ const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colCla
         </div>)}
         <div className="book-stage-link">
           <div className="book-container" style={containerPaddingStyle}>
-            <div ref={bookRef} className={`book series-${seriesId}`} style={{ aspectRatio: Number(seriesMeta?.heightWidthRatio) > 0 ? `1 / ${seriesMeta.heightWidthRatio}` : undefined, transform: `translateZ(-${thickness || 0}px)` }}>
+            <div
+              ref={bookRef}
+              className={`book series-${seriesId}`}
+              style={{
+                aspectRatio: Number(seriesMeta?.heightWidthRatio) > 0 ? `1 / ${seriesMeta.heightWidthRatio}` : undefined,
+                '--book-depth-offset': `-${thickness || 0}px`
+              }}
+            >
               <div className="book-front" style={{ transform: `translateZ(${(thickness || 0) - 1}px)` }}>
                 <img src={book.Image} alt={book.Title} draggable="false" />
               </div>

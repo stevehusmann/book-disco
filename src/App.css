@@ -121,6 +121,7 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
   aspect-ratio: 2 / 3;   /* Default aspect ratio (fallback) */
   transform-style: preserve-3d;
   transition: transform 0.5s ease;
+  transform: rotateY(30deg) translateZ(30px) translateX(-30px) translateZ(var(--book-depth-offset, 0px));
   box-shadow: 
     -4px 4px 6px rgba(0, 0, 0, 0.1),
     -10px 10px 20px rgba(0, 0, 0, 0.15),
@@ -311,17 +312,22 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
   overflow: hidden;
   text-overflow: ellipsis; /* Adds "..." if a title is too massive */
 }
-/* 6. The Hover Interaction: Rotate to see the length/thickness */
+/* Hover reveals the flat cover after showing the spine by default. */
+.book-container:hover {
+  position: relative;
+  z-index: 5;
+}
+
 .book-container:hover .book {
-  transform: rotateY(30deg) translateZ(30px) translateX(-30px) !important;
+  transform: translateZ(30px) scale(1.15) translateZ(var(--book-depth-offset, 0px)) !important;
   cursor: pointer;
-    box-shadow: 
+  box-shadow:
     -4px 4px 6px rgba(0, 0, 0, 0.1),
     -10px 10px 20px rgba(0, 0, 0, 0.15),
-    -1px 0px 2px rgba(0, 0, 0, 0.25); 
+    -1px 0px 2px rgba(0, 0, 0, 0.25);
 }
 .book-container:hover .book-front {
-  filter:brightness(1.1);
+  filter: brightness(1.05);
 }
 
 
@@ -414,14 +420,78 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
   background: #fff;
 }
 
-.spine-crop-preview-image {
+.spine-crop-preview-scene {
+  display: grid;
+  place-items: center;
+  min-height: 160px;
+  overflow: visible;
+  perspective: 800px;
+}
+
+.spine-crop-preview-book {
+  position: relative;
+  width: 90px;
+  height: 132px;
+  transform: rotateY(30deg) translateZ(-14px);
+  transform-style: preserve-3d;
+  box-shadow:
+    -4px 4px 6px rgba(0, 0, 0, 0.1),
+    -10px 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.spine-crop-preview-front,
+.spine-crop-preview-spine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+}
+
+.spine-crop-preview-front {
+  z-index: 2;
+  width: 100%;
+  transform: translateZ(13px);
+}
+
+.spine-crop-preview-front img,
+.spine-crop-preview-cover-placeholder {
   display: block;
-  width: auto;
-  max-width: min(100%, 180px);
-  max-height: 160px;
-  margin: 0 auto;
-  object-fit: contain;
-  background-color: #f5f5f5;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #f0f0f0;
+}
+
+.spine-crop-preview-cover-placeholder {
+  display: grid;
+  place-items: center;
+  color: #666;
+  font-size: 11px;
+  text-align: center;
+}
+
+.spine-crop-preview-spine {
+  display: grid;
+  place-items: center;
+  width: 14px;
+  overflow: hidden;
+  transform: rotateY(-90deg);
+  transform-origin: left center;
+  background: #e5e2dd;
+}
+
+.spine-crop-preview-spine img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+.spine-crop-preview-spine span {
+  color: #555;
+  font-size: 8px;
+  writing-mode: vertical-rl;
+  white-space: nowrap;
 }
 
 .spine-crop-dock {
@@ -678,8 +748,13 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
     font-size: 12px;
   }
 
-  .spine-crop-preview-image {
-    max-height: 145px;
+  .spine-crop-preview-scene {
+    min-height: 145px;
+  }
+
+  .spine-crop-preview-book {
+    width: 76px;
+    height: 112px;
   }
 }
 .pc-spine .book-spine-title {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import SpineCropEditor from '../SpineCropEditor';
 
 describe('SpineCropEditor save feedback', () => {
@@ -41,5 +41,75 @@ describe('SpineCropEditor save feedback', () => {
 
     expect(screen.getByAltText('Spine crop source loader').src).toContain('/api/image-proxy?url=');
     expect(screen.getByRole('button', { name: 'Generate Preview' })).toBeDisabled();
+  });
+
+  test('shows the selected book cover beside the spine crop preview', () => {
+    const books = [
+      { ISBN: 'preview-book', Title: 'Preview Book', Image: '/preview-cover.jpg', SeriesId: 'PCD' }
+    ];
+
+    render(
+      <SpineCropEditor
+        books={books}
+        setBooks={jest.fn()}
+        seriesOptions={[{ id: 'PCD', spineMode: 'pcd-crop' }]}
+      />
+    );
+
+    fireEvent.change(screen.getByLabelText('PCD Book'), { target: { value: 'preview-book' } });
+
+    expect(screen.getByLabelText('Book preview with spine and cover')).toBeInTheDocument();
+    expect(screen.getByAltText('Preview Book cover')).toHaveAttribute('src', '/preview-cover.jpg');
+    expect(screen.getByText('Select crop')).toBeInTheDocument();
+  });
+
+  test('filters PCD books by title, author, and identifier', () => {
+    const books = [
+      { ISBN: 'first-book', Title: 'First Book', Author: 'Jane Author', SeriesId: 'PCD' },
+      { ISBN: 'second-book', Title: 'Second Book', Author: 'John Writer', SeriesId: 'PCD' }
+    ];
+
+    render(
+      <SpineCropEditor
+        books={books}
+        setBooks={jest.fn()}
+        seriesOptions={[{ id: 'PCD', spineMode: 'pcd-crop' }]}
+      />
+    );
+
+    fireEvent.change(screen.getByLabelText('Search PCD books'), { target: { value: 'jane' } });
+
+    expect(screen.getByRole('option', { name: /First Book.*Jane Author/i })).toBeInTheDocument();
+    expect(screen.queryByRole('option', { name: /Second Book/ })).not.toBeInTheDocument();
+  });
+
+  test('deletes the selected book record after confirmation', async () => {
+    const books = [
+      { _uid: 'orphan-book', ISBN: 'orphan-book', Title: 'Orphan Book', SeriesId: 'PCD' },
+      { _uid: 'kept-book', ISBN: 'kept-book', Title: 'Kept Book', SeriesId: 'PCD' }
+    ];
+    const setBooks = jest.fn();
+    const originalFetch = global.fetch;
+    global.fetch = jest.fn().mockResolvedValue({ ok: true, status: 204 });
+    const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(true);
+
+    render(
+      <SpineCropEditor
+        books={books}
+        setBooks={setBooks}
+        seriesOptions={[{ id: 'PCD', spineMode: 'pcd-crop' }]}
+      />
+    );
+    fireEvent.change(screen.getByLabelText('PCD Book'), { target: { value: 'orphan-book' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Delete Book Record' }));
+
+    await waitFor(() => expect(screen.getByText('Deleted Orphan Book from the library.')).toBeInTheDocument());
+    expect(confirmSpy).toHaveBeenCalledWith('Permanently delete "Orphan Book" from the library?');
+    expect(global.fetch).toHaveBeenCalledWith('/api/books/orphan-book', { method: 'DELETE' });
+    const updateBooks = setBooks.mock.calls[0][0];
+    expect(updateBooks(books)).toEqual([books[1]]);
+
+    confirmSpy.mockRestore();
+    global.fetch = originalFetch;
   });
 });

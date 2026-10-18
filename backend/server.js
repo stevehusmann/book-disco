@@ -768,6 +768,38 @@ app.get('/api/books/spine-crop', async (_req, res) => {
   res.json(rows.map(rowToBook));
 });
 
+app.delete('/api/books/:uid', async (req, res) => {
+  const uid = req.params.uid;
+
+  if (useSupabase) {
+    try {
+      const deletedRows = await supabaseRequest(
+        supabaseBookRoute({ uid: `eq.${uid}` }),
+        {
+          method: 'DELETE',
+          headers: { Prefer: 'return=representation' }
+        }
+      );
+      if (!deletedRows.length) {
+        res.status(404).json({ error: 'Book not found' });
+        return;
+      }
+      res.status(204).end();
+    } catch (error) {
+      console.error(`Failed to delete book ${uid} from Supabase:`, error);
+      res.status(502).json({ error: 'Failed to delete book from Supabase.' });
+    }
+    return;
+  }
+
+  const deleted = db.prepare('DELETE FROM books WHERE uid = ?').run(uid);
+  if (!deleted.changes) {
+    res.status(404).json({ error: 'Book not found' });
+    return;
+  }
+  res.status(204).end();
+});
+
 app.put('/api/books/:uid', async (req, res) => {
   const uid = req.params.uid;
 

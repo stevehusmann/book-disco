@@ -10,6 +10,7 @@ import {
 } from './spineCropUtils';
 
 const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
+const getBookUid = (book) => (book?._uid || book?.ISBN || book?.EAN || book?.Title || '').toString();
 const DEFAULT_LOCAL_IMAGE_PATH = 'PenguinDeluxeClassics.jpg';
 
 const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
@@ -30,8 +31,11 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
   const [directUrl, setDirectUrl] = useState('');
   const [saveStatus, setSaveStatus] = useState('');
   const [isSavingCrop, setIsSavingCrop] = useState(false);
+  const [isDeletingBook, setIsDeletingBook] = useState(false);
+  const [bookSearch, setBookSearch] = useState('');
   const [previewSrc, setPreviewSrc] = useState('');
   const [previewSignature, setPreviewSignature] = useState('');
+  const [previewRevision, setPreviewRevision] = useState(0);
   const [imageLoadError, setImageLoadError] = useState('');
   const [previewRotation, setPreviewRotation] = useState(0);
   const [imgNatural, setImgNatural] = useState({ width: 0, height: 0 });
@@ -48,13 +52,26 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
   const stageRef = useRef(null);
 
   const selectedBook = useMemo(
-    () => pcdBooks.find((b) => (b?.ISBN || b?.EAN || b?.Title) === selectedId) || null,
+    () => pcdBooks.find((book) => getBookUid(book) === selectedId) || null,
     [pcdBooks, selectedId]
   );
   const savedCropCount = useMemo(
     () => pcdBooks.filter((book) => Boolean(book?.SpineCrop)).length,
     [pcdBooks]
   );
+  const filteredPcdBooks = useMemo(() => {
+    const query = bookSearch.trim().toLocaleLowerCase();
+    if (!query) return pcdBooks;
+    return pcdBooks.filter((book) => [
+      book?.Title,
+      book?.FullTitle,
+      book?.Author,
+      book?.AlphaAuthor,
+      book?.ISBN,
+      book?.EAN,
+      book?._uid
+    ].some((value) => (value || '').toString().toLocaleLowerCase().includes(query)));
+  }, [bookSearch, pcdBooks]);
 
   const publicImageOptions = useMemo(() => {
     const local = books
@@ -331,7 +348,11 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
   const previewIsCurrent = Boolean(previewSrc && cropSignature && previewSignature === cropSignature);
 
   useEffect(() => {
-    if (!previewSignature || previewSignature !== cropSignature) return;
+    if (!cropSignature) {
+      setPreviewSrc('');
+      setPreviewSignature('');
+      return;
+    }
     const sourceImage = imgRef.current;
     if (!sourceImage || !cropSourceCoords || !sourceImage.complete) return;
     try {
@@ -340,18 +361,18 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
         outputRotation: previewRotation
       });
       setPreviewSrc(previewCanvas ? previewCanvas.toDataURL('image/jpeg', 0.92) : '');
+      setPreviewSignature(cropSignature);
     } catch (error) {
       setPreviewSrc('');
       setImageLoadError('Could not generate a preview from this image. Check that it is a supported image URL.');
       console.error('Could not render crop preview:', error);
     }
-  }, [cropSignature, cropSourceCoords, imageSrc, imgNatural, previewRotation, previewSignature]);
+  }, [cropSignature, cropSourceCoords, imageSrc, imgNatural, previewRotation, previewRevision]);
 
   const generatePreview = () => {
     if (!cropSignature) return;
     setSaveStatus('');
-    setPreviewSrc('');
-    setPreviewSignature(cropSignature);
+    setPreviewRevision((revision) => revision + 1);
   };
 
   const savedCropDisplay = useMemo(() => {
@@ -470,7 +491,7 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
 
   const applyCropToSelected = async () => {
     if (!selectedBook || !cropSourceCoords || !imageSrc || isSavingCrop) return;
-    const id = selectedBook.ISBN || selectedBook.EAN || selectedBook.Title;
+    const id = getBookUid(selectedBook);
     const nextSelectedBook = {
       ...selectedBook,
       SpineCrop: {
@@ -486,7 +507,7 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
     try {
       const savedBook = await saveBookToApi(nextSelectedBook);
       setBooks((currentBooks) => currentBooks.map((book) =>
-        (book?._uid || book?.ISBN || book?.EAN || book?.Title) === id
+        getBookUid(book) === id
           ? { ...book, ...savedBook }
           : book
       ));
@@ -499,6 +520,40 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
     }
   };
 
+  const deleteSelectedBook = async () => {
+    if (!selectedBook || isDeletingBook || isSavingCrop) return;
+    const uid = getBookUid(selectedBook);
+    if (!uid) {
+      setSaveStatus('Cannot delete this book because it is missing a stable identifier.');
+      return;
+    }
+    if (!window.confirm(`Permanently delete "${selectedBook.Title || 'this book'}" from the library?`)) return;
+
+    setIsDeletingBook(true);
+    setSaveStatus(`Deleting ${selectedBook.Title || 'selected book'}...`);
+    try {
+      const response = await fetch(apiUrl(`/api/books/${encodeURIComponent(uid)}`), { method: 'DELETE' });
+      if (!response.ok) {
+        const message = await response.text();
+        throw new Error(message || `Failed to delete ${uid}`);
+      }
+
+      setBooks((currentBooks) => currentBooks.filter((book) =>
+        getBookUid(book) !== uid
+      ));
+      setSelectedId('');
+      setCropDisplay(null);
+      setPreviewSrc('');
+      setPreviewSignature('');
+      setSaveStatus(`Deleted ${selectedBook.Title || 'book'} from the library.`);
+    } catch (error) {
+      setSaveStatus(error?.message || 'Failed to delete book.');
+      console.error(`Failed to delete book ${uid}:`, error);
+    } finally {
+      setIsDeletingBook(false);
+    }
+  };
+
   return (
     <div className="spine-crop-editor">
       <h6 className="mb-2">PCD Spine Crop Editor</h6>
@@ -506,8 +561,17 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
       <div className="small mb-2" role="status">Crops saved: {savedCropCount} / {pcdBooks.length}</div>
 
       <label className="form-label mb-1">PCD Book</label>
+      <input
+        className="form-control form-control-sm mb-2"
+        type="search"
+        aria-label="Search PCD books"
+        placeholder="Search title, author, or ISBN"
+        value={bookSearch}
+        onChange={(event) => setBookSearch(event.target.value)}
+      />
       <select
         className="form-select form-select-sm mb-2"
+        aria-label="PCD Book"
         value={selectedId}
         onChange={(e) => {
           setSelectedId(e.target.value);
@@ -519,8 +583,8 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
         }}
       >
         <option value="">Select a book...</option>
-        {pcdBooks.map((b) => {
-          const id = b.ISBN || b.EAN || b.Title;
+        {filteredPcdBooks.map((b) => {
+          const id = getBookUid(b);
           return (
             <option key={id} value={id}>
               {(b.Title || 'Untitled').trim()} - {b.Author || b.AlphaAuthor || 'Unknown'}{b.SpineCrop ? ' (crop saved)' : ' (no crop)'}
@@ -528,6 +592,19 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
           );
         })}
       </select>
+      {filteredPcdBooks.length === 0 && bookSearch.trim() && (
+        <div className="small text-muted mb-2">No PCD books match that search.</div>
+      )}
+      {selectedBook && (
+        <button
+          className="btn btn-sm btn-outline-danger mb-3"
+          type="button"
+          onClick={deleteSelectedBook}
+          disabled={isDeletingBook || isSavingCrop}
+        >
+          {isDeletingBook ? 'Deleting Book...' : 'Delete Book Record'}
+        </button>
+      )}
 
       <label className="form-label mb-1">Image Source</label>
       <div className="d-flex gap-3 mb-2">
@@ -740,11 +817,28 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
 
       <section className="spine-crop-dock" aria-label="Crop preview and save">
         <div className="spine-crop-dock-preview">
-          <strong className="small d-block mb-1">Crop preview</strong>
-          {previewIsCurrent ? (
-            <img className="spine-crop-preview-image" src={previewSrc} alt="Generated crop preview; not saved yet" />
+          <strong className="small d-block mb-1">Book preview</strong>
+          {selectedBook ? (
+            <div className="spine-crop-preview-scene" aria-label="Book preview with spine and cover">
+              <div className="spine-crop-preview-book">
+                <div className="spine-crop-preview-front">
+                  {selectedBook.Image ? (
+                    <img src={selectedBook.Image} alt={`${selectedBook.Title || 'Selected book'} cover`} />
+                  ) : (
+                    <div className="spine-crop-preview-cover-placeholder">No cover image</div>
+                  )}
+                </div>
+                <div className="spine-crop-preview-spine">
+                  {previewIsCurrent ? (
+                    <img src={previewSrc} alt="Generated spine crop preview" />
+                  ) : (
+                    <span>{cropSourceCoords ? 'Updating preview...' : 'Select crop'}</span>
+                  )}
+                </div>
+              </div>
+            </div>
           ) : (
-            <div className="spine-crop-dock-placeholder">Generate preview after adjusting the crop.</div>
+            <div className="spine-crop-dock-placeholder">Select a book to preview its cover with the cropped spine.</div>
           )}
         </div>
         <div className="spine-crop-dock-actions">
