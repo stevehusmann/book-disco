@@ -378,14 +378,11 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
 /* (single .book-container rule above) */
 
 .spine-crop-editor {
-  position: sticky;
-  top: 16px;
   background: #ffffff;
   border: 1px solid #dadada;
   border-radius: 8px;
   padding: 10px;
-  max-height: calc(100vh - 32px);
-  overflow: auto;
+  overflow: visible;
 }
 
 .spine-crop-stage {
@@ -395,15 +392,23 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
   background: #f5f5f5;
   border: 1px dashed #c8c8c8;
   border-radius: 6px;
-  overflow: hidden;
+  max-height: 70vh;
+  overflow: auto;
   cursor: crosshair;
   touch-action: none;
   user-select: none;
 }
 
+.spine-crop-zoom-content {
+  position: relative;
+}
+
+.spine-crop-image-layer {
+  position: relative;
+  transform-origin: top left;
+}
+
 .spine-crop-image {
-  width: 100%;
-  height: auto;
   display: block;
   user-select: none;
   -webkit-user-drag: none;
@@ -495,9 +500,7 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
 }
 
 .spine-crop-dock {
-  position: sticky;
-  bottom: -10px;
-  z-index: 6;
+  position: static;
   display: grid;
   grid-template-columns: minmax(120px, 1fr) minmax(220px, 1.3fr);
   gap: 12px;
@@ -602,8 +605,8 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
   border: 1px solid #e0e0e0;
   border-radius: 6px;
   padding: 8px;
-  max-height: 180px;
-  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 @media (max-width: 768px) {
   /* Prevent iOS Safari auto-zoom on focus for small Bootstrap controls */

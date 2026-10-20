@@ -63,6 +63,49 @@ describe('SpineCropEditor save feedback', () => {
     expect(screen.getByText('Select crop')).toBeInTheDocument();
   });
 
+  test('uses pagination to size the generated spine preview', () => {
+    const books = [
+      { ISBN: 'preview-book', Title: 'Preview Book', PAGINATION: 300, SeriesId: 'PCD' }
+    ];
+    const { container, rerender } = render(
+      <SpineCropEditor
+        books={books}
+        setBooks={jest.fn()}
+        seriesOptions={[{ id: 'PCD', spineMode: 'pcd-crop' }]}
+      />
+    );
+
+    fireEvent.change(screen.getByLabelText('PCD Book'), { target: { value: 'preview-book' } });
+    const previewSpine = container.querySelector('.spine-crop-preview-spine');
+    const initialWidth = Number.parseFloat(previewSpine.style.width);
+    expect(initialWidth).toBeGreaterThan(14);
+
+    const updatedBook = { ...books[0], PAGINATION: 600 };
+    rerender(
+      <SpineCropEditor
+        books={[updatedBook]}
+        setBooks={jest.fn()}
+        seriesOptions={[{ id: 'PCD', spineMode: 'pcd-crop' }]}
+      />
+    );
+    expect(Number.parseFloat(container.querySelector('.spine-crop-preview-spine').style.width)).toBeGreaterThan(initialWidth);
+  });
+
+  test('provides source image zoom controls', () => {
+    render(
+      <SpineCropEditor
+        books={[]}
+        setBooks={jest.fn()}
+        seriesOptions={[{ id: 'PCD', spineMode: 'pcd-crop' }]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Zoom source image in' }));
+    expect(screen.getByText('Source image zoom: 125%')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Zoom source image out' }));
+    expect(screen.getByText('Source image zoom: 100%')).toBeInTheDocument();
+  });
+
   test('filters PCD books by title, author, and identifier', () => {
     const books = [
       { ISBN: 'first-book', Title: 'First Book', Author: 'Jane Author', SeriesId: 'PCD' },
