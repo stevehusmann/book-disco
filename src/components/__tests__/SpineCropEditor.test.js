@@ -24,7 +24,8 @@ describe('SpineCropEditor save feedback', () => {
     expect(screen.queryByText('Upload file')).not.toBeInTheDocument();
   });
 
-  test('routes direct image URLs through the same-origin image proxy', () => {
+  test('routes direct image URLs through the proxy and keeps a recent URL option', () => {
+    window.localStorage.removeItem('spineCropRecentDirectUrls');
     render(
       <SpineCropEditor
         books={[]}
@@ -41,6 +42,14 @@ describe('SpineCropEditor save feedback', () => {
 
     expect(screen.getByAltText('Spine crop source loader').src).toContain('/api/image-proxy?url=');
     expect(screen.getByRole('button', { name: 'Generate Preview' })).toBeDisabled();
+    expect(screen.getByRole('option', { name: 'https://images.example.org/spine.jpg' })).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText('Recent direct image URLs'), {
+      target: { value: 'https://images.example.org/spine.jpg' }
+    });
+    expect(screen.getByPlaceholderText('https://example.com/spine.jpg')).toHaveValue('https://images.example.org/spine.jpg');
+    expect(JSON.parse(window.localStorage.getItem('spineCropRecentDirectUrls'))).toEqual([
+      'https://images.example.org/spine.jpg'
+    ]);
   });
 
   test('shows the selected book cover beside the spine crop preview', () => {
@@ -61,6 +70,12 @@ describe('SpineCropEditor save feedback', () => {
     expect(screen.getByLabelText('Book preview with spine and cover')).toBeInTheDocument();
     expect(screen.getByAltText('Preview Book cover')).toHaveAttribute('src', '/preview-cover.jpg');
     expect(screen.getByText('Select crop')).toBeInTheDocument();
+    const previewBook = screen.getByTestId('spine-crop-preview-book');
+    expect(previewBook).toHaveStyle({
+      transform: 'rotateY(30deg) translateZ(30px) translateX(0) translateZ(-19px)',
+      height: '135px'
+    });
+    expect(previewBook.querySelector('.spine-crop-preview-front')).toHaveStyle('transform: translateZ(18px)');
   });
 
   test('uses pagination to size the generated spine preview', () => {

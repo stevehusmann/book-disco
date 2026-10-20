@@ -8,6 +8,7 @@ import SpineBNC from './SpineBNC';
 import SpinePC from './SpinePC';
 import SpinePCD from './SpinePCD';
 import { apiUrl } from '../apiUrl';
+import { getBookSpineThickness } from './bookSpineSizing';
 
 const PHYSICAL_SERIES_SIZES = {
   container: { width: 7.0, height: 9 },
@@ -95,37 +96,16 @@ const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colCla
     ? (PHYSICAL_SERIES_SIZES.container.height - physicalBookSize.height) / PHYSICAL_SERIES_SIZES.container.height
     : 0;
 
-  // Try to compute thickness proportionally from rendered cover width for OWC series.
-  // Physical reference: OWC 5-3/16" (83/16 in) wide, 464pp -> thickness 13/16".
-  // Per-page multiplier relative to cover width = (13/83) / 464 = 13/(83*464).
-  const OWC_PER_PAGE_REL = 0.00049; // 13/(83*464) ~= 0.000337
-  // BNC physical reference: thickness 1.12" for 448 pages, cover width 5.25"
-  // Per-page multiplier relative to cover width = (1.12 / 5.25) / 448 = 1.12/(5.25*448)
-  const BNC_PER_PAGE_REL = 0.00069;
-  // PC physical reference: 16mm thickness, 128mm cover width, 368 pages
-  // Per-page multiplier relative to cover width = (16 / 128) / 368 = 16/(128*368)
-  const PC_PER_PAGE_REL = 0.000497;
-  // PCD physical reference: 1.69" thickness, 5.67" cover width, 672 pages
-  // Per-page multiplier relative to cover width = (1.69 / 5.67) / 672 = 1.69/(5.67*672)
-  const PCD_PER_PAGE_REL = 0.000684;
-  const isPCD = /Penguin Classics Deluxe/i.test(series) || seriesId === 'pcd';
-  const isPC = seriesId === 'pc' || (/Penguin Classics/i.test(series) && !/Deluxe/i.test(series));
-  const thicknessBaseWidth = thicknessWidth;
   const thicknessMultiplier = Number(seriesMeta?.thicknessMultiplier) > 0
     ? Number(seriesMeta.thicknessMultiplier)
     : 1;
-  const thicknessPerPage = /OWC|Oxford/i.test(series)
-    ? OWC_PER_PAGE_REL
-    : /BNC|Barnes/i.test(series)
-      ? BNC_PER_PAGE_REL
-      : isPCD
-        ? PCD_PER_PAGE_REL
-        : isPC
-          ? PC_PER_PAGE_REL
-          : PC_PER_PAGE_REL;
-  const thickness = thicknessBaseWidth
-    ? Math.ceil(thicknessBaseWidth * pagination * thicknessPerPage * thicknessMultiplier)
-    : null;
+  const thickness = getBookSpineThickness({
+    coverWidth: thicknessWidth,
+    pagination,
+    series,
+    seriesId,
+    thicknessMultiplier
+  });
 
   const spineText = (book.SpineTitle || book.Title || '').trim();
   const lastName = (book.AlphaAuthor || '').split(',')[0] || '';

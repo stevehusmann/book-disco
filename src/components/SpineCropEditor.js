@@ -8,12 +8,19 @@ import {
   quadToPointsString,
   renderSpineCropCanvas
 } from './spineCropUtils';
+import { getBookSpineThickness } from './bookSpineSizing';
 
 const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
 const getBookUid = (book) => (book?._uid || book?.ISBN || book?.EAN || book?.Title || '').toString();
 const DEFAULT_LOCAL_IMAGE_PATH = 'PenguinDeluxeClassics.jpg';
 const PREVIEW_BOOK_WIDTH = 90;
-const PCD_THICKNESS_PER_PAGE = 0.000684;
+const RECENT_DIRECT_URLS_KEY = 'spineCropRecentDirectUrls';
+const MAX_RECENT_DIRECT_URLS = 10;
+const SERIES_ASPECT_RATIOS = {
+  OWC: 7.6875 / 5.1875,
+  BNC: 8 / 5.25,
+  CLASSICS: 300 / 190
+};
 
 const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
   const cropSeriesIds = useMemo(
@@ -31,6 +38,15 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
   const [imageSrc, setImageSrc] = useState(encodeURI(`/${DEFAULT_LOCAL_IMAGE_PATH}`));
   const [publicPath, setPublicPath] = useState(DEFAULT_LOCAL_IMAGE_PATH);
   const [directUrl, setDirectUrl] = useState('');
+  const [recentDirectUrls, setRecentDirectUrls] = useState(() => {
+    try {
+      const urls = JSON.parse(window.localStorage.getItem(RECENT_DIRECT_URLS_KEY) || '[]');
+      return Array.isArray(urls) ? urls.filter((url) => typeof url === 'string') : [];
+    } catch (error) {
+      console.error('Could not load recent spine image URLs:', error);
+      return [];
+    }
+  });
   const [saveStatus, setSaveStatus] = useState('');
   const [isSavingCrop, setIsSavingCrop] = useState(false);
   const [isDeletingBook, setIsDeletingBook] = useState(false);
@@ -255,6 +271,7 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
   const loadDirectUrlImage = () => {
     const url = (directUrl || '').trim();
     if (!url) return;
+    setRecentDirectUrls((current) => [url, ...current.filter((recentUrl) => recentUrl !== url)].slice(0, MAX_RECENT_DIRECT_URLS));
     setSourceMode('url');
     setImageSrc(apiUrl(`/api/image-proxy?url=${encodeURIComponent(url)}`));
     setCropDisplay(null);
@@ -264,6 +281,14 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
     setPreviewSignature('');
     setImageLoadError('');
   };
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(RECENT_DIRECT_URLS_KEY, JSON.stringify(recentDirectUrls));
+    } catch (error) {
+      console.error('Could not save recent spine image URLs:', error);
+    }
+  }, [recentDirectUrls]);
 
   const cropSourceCoords = useMemo(() => {
     if (!cropDisplay || !imgRendered.width || !imgRendered.height || !imgNatural.width || !imgNatural.height) {
@@ -460,10 +485,26 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
     return savedSrc === currentSrc;
   }, [selectedBook, imageSrc]);
   const previewSpineWidth = clamp(
-    Math.ceil(PREVIEW_BOOK_WIDTH * (Number(selectedBook?.PAGINATION) || 300) * PCD_THICKNESS_PER_PAGE),
+    getBookSpineThickness({
+      coverWidth: PREVIEW_BOOK_WIDTH,
+      pagination: Number(selectedBook?.PAGINATION) || 300,
+      series: selectedBook?.SeriesId || selectedBook?.Series || '',
+      seriesId: selectedBook?.SeriesId || '',
+      thicknessMultiplier: Number(seriesOptions.find((series) => series.id === selectedBook?.SeriesId)?.thicknessMultiplier) || 1
+    }) || 14,
     6,
     200
   );
+  const previewBookDimensions = useMemo(() => {
+    const selectedSeriesId = String(selectedBook?.SeriesId || selectedBook?.Series || '')
+      .toUpperCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^A-Z0-9-_]/g, '');
+    const seriesRatio = Number(seriesOptions.find((series) => series.id === selectedBook?.SeriesId)?.heightWidthRatio)
+      || SERIES_ASPECT_RATIOS[selectedSeriesId];
+    const heightWidthRatio = seriesRatio || 1.5;
+    return { width: PREVIEW_BOOK_WIDTH, height: PREVIEW_BOOK_WIDTH * heightWidthRatio };
+  }, [selectedBook, seriesOptions]);
   const sourceContentStyle = {
     width: `${imgRendered.width * sourceZoom}px`,
     height: `${imgRendered.height * sourceZoom}px`
@@ -686,6 +727,24 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
             />
             <button className="btn btn-outline-secondary" type="button" onClick={loadDirectUrlImage}>Load</button>
           </div>
+          {recentDirectUrls.length > 0 && (
+            <>
+              <label className="form-label mb-1" htmlFor="recentDirectUrls">Recent direct image URLs</label>
+              <select
+                id="recentDirectUrls"
+                className="form-select form-select-sm mb-2"
+                value=""
+                onChange={(event) => {
+                  if (event.target.value) setDirectUrl(event.target.value);
+                }}
+              >
+                <option value="">Choose a recent URL...</option>
+                {recentDirectUrls.map((url) => (
+                  <option key={url} value={url}>{url}</option>
+                ))}
+              </select>
+            </>
+          )}
         </>
       ) : null}
 
@@ -862,15 +921,26 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
           <strong className="small d-block mb-1">Book preview</strong>
           {selectedBook ? (
             <div className="spine-crop-preview-scene" aria-label="Book preview with spine and cover">
-              <div className="spine-crop-preview-book" data-testid="spine-crop-preview-book">
-                <div className="spine-crop-preview-front">
+              <div
+                className="spine-crop-preview-book"
+                data-testid="spine-crop-preview-book"
+                style={{
+                  width: `${previewBookDimensions.width}px`,
+                  height: `${previewBookDimensions.height}px`,
+                  transform: `rotateY(30deg) translateZ(30px) translateX(0) translateZ(-${previewSpineWidth}px)`
+                }}
+              >
+                <div className="spine-crop-preview-front" style={{ transform: `translateZ(${previewSpineWidth - 1}px)` }}>
                   {selectedBook.Image ? (
                     <img src={selectedBook.Image} alt={`${selectedBook.Title || 'Selected book'} cover`} />
                   ) : (
                     <div className="spine-crop-preview-cover-placeholder">No cover image</div>
                   )}
                 </div>
-                <div className="spine-crop-preview-spine" style={{ width: `${previewSpineWidth}px` }}>
+                <div
+                  className="spine-crop-preview-spine"
+                  style={{ width: `${previewSpineWidth}px`, transform: 'rotateY(-90deg)', transformOrigin: 'left center' }}
+                >
                   {previewIsCurrent ? (
                     <img src={previewSrc} alt="Generated spine crop preview" />
                   ) : (

@@ -430,14 +430,11 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
   place-items: center;
   min-height: 160px;
   overflow: visible;
-  perspective: 800px;
+  perspective: 1000px;
 }
 
 .spine-crop-preview-book {
   position: relative;
-  width: 90px;
-  height: 132px;
-  transform: rotateY(30deg) translateZ(-14px);
   transform-style: preserve-3d;
   box-shadow:
     -4px 4px 6px rgba(0, 0, 0, 0.1),
@@ -455,7 +452,6 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
 .spine-crop-preview-front {
   z-index: 2;
   width: 100%;
-  transform: translateZ(13px);
 }
 
 .spine-crop-preview-front img,
