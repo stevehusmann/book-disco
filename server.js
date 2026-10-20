@@ -401,6 +401,17 @@ app.get('/api/books', (_req, res) => {
   res.json(rows.map(rowToBook));
 });
 
+app.get('/api/books/not-displayed', (_req, res) => {
+  const rows = db.prepare(`
+    SELECT *
+    FROM books
+    WHERE LOWER(TRIM(COALESCE(binding, 'pbk'))) <> 'pbk'
+    ORDER BY title COLLATE NOCASE ASC
+  `).all();
+
+  res.json(rows.map(rowToBook));
+});
+
 app.get('/api/series', (_req, res) => {
   const rows = db.prepare('SELECT id, name, height_width_ratio, thickness_multiplier, spine_mode FROM series ORDER BY name COLLATE NOCASE').all();
   res.json(rows.map((row) => ({ id: row.id, name: row.name, heightWidthRatio: row.height_width_ratio, thicknessMultiplier: row.thickness_multiplier, spineMode: row.spine_mode })));

@@ -71,6 +71,11 @@ const App = () => {
   const [selectedSeries, setSelectedSeries] = useState('');
   const [seriesOptions, setSeriesOptions] = useState([]);
   const [showAddBookModal, setShowAddBookModal] = useState(false);
+  const [showUndisplayedBooksModal, setShowUndisplayedBooksModal] = useState(false);
+  const [undisplayedBooks, setUndisplayedBooks] = useState([]);
+  const [isLoadingUndisplayedBooks, setIsLoadingUndisplayedBooks] = useState(false);
+  const [undisplayedBooksError, setUndisplayedBooksError] = useState('');
+  const [deletingBookUid, setDeletingBookUid] = useState('');
   const [addBookForm, setAddBookForm] = useState(() => createEmptyAddBookForm());
   const [addBookStatus, setAddBookStatus] = useState('');
   const [isSavingNewBook, setIsSavingNewBook] = useState(false);
@@ -157,6 +162,44 @@ const App = () => {
     setAddBookForm(createEmptyAddBookForm());
     setAddBookStatus('');
     setShowAddBookModal(true);
+  };
+
+  const openUndisplayedBooksPanel = async () => {
+    setShowUndisplayedBooksModal(true);
+    setIsLoadingUndisplayedBooks(true);
+    setUndisplayedBooks([]);
+    setUndisplayedBooksError('');
+    try {
+      const response = await fetch(apiUrl('/api/books/not-displayed'));
+      if (!response.ok) throw new Error(`Undisplayed book query failed (${response.status}).`);
+      const result = await response.json();
+      setUndisplayedBooks(Array.isArray(result) ? result : []);
+    } catch (error) {
+      setUndisplayedBooksError(error.message || 'Unable to load undisplayed books.');
+    } finally {
+      setIsLoadingUndisplayedBooks(false);
+    }
+  };
+
+  const deleteUndisplayedBook = async (book) => {
+    const uid = book?._uid || book?.ISBN || book?.EAN || book?.Title;
+    if (!uid || deletingBookUid) return;
+    if (!window.confirm(`Permanently delete "${book.Title || 'this book'}" from the library?`)) return;
+
+    setDeletingBookUid(uid);
+    setUndisplayedBooksError('');
+    try {
+      const response = await fetch(apiUrl(`/api/books/${encodeURIComponent(uid)}`), { method: 'DELETE' });
+      if (!response.ok) throw new Error(`Unable to delete "${book.Title || 'this book'}" (${response.status}).`);
+      setUndisplayedBooks((current) => current.filter((item) =>
+        (item?._uid || item?.ISBN || item?.EAN || item?.Title) !== uid
+      ));
+      setRefreshVersion((version) => version + 1);
+    } catch (error) {
+      setUndisplayedBooksError(error.message || 'Unable to delete book.');
+    } finally {
+      setDeletingBookUid('');
+    }
   };
 
   const updateBookSeries = (setter, seriesId) => {
@@ -313,6 +356,7 @@ const App = () => {
                       <button className="btn btn-outline-primary" onClick={openSpineCropPage} disabled={isLoadingSpineBooks}>{isLoadingSpineBooks ? 'Loading Spine Books...' : 'Open Spine Crop Tool'}</button>
                       {spineBooksError && <div className="small text-danger">{spineBooksError}</div>}
                       <button className="btn btn-outline-secondary" onClick={openSeriesManager}>Manage Series</button>
+                      <button className="btn btn-outline-danger" onClick={openUndisplayedBooksPanel}>Manage Undisplayed Books</button>
                       <button className="btn btn-outline-success" onClick={openAddBookModal}>Add Book</button>
                     </div>
                   </div>
@@ -388,6 +432,43 @@ const App = () => {
               {isSavingNewBook ? 'Saving...' : 'Add Book'}
             </Button>
           </Modal.Footer>
+        </Modal>
+
+        <Modal show={showUndisplayedBooksModal} onHide={() => setShowUndisplayedBooksModal(false)} size="lg" scrollable>
+          <Modal.Header closeButton>
+            <Modal.Title>Books Not Currently Displaying</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p className="small text-muted">These books are excluded from the library display because their binding is not paperback. Deleting a record is permanent.</p>
+            {undisplayedBooksError && <div className="alert alert-danger" role="alert">{undisplayedBooksError}</div>}
+            {isLoadingUndisplayedBooks ? (
+              <div role="status">Loading books...</div>
+            ) : undisplayedBooks.length ? (
+              <div className="list-group">
+                {undisplayedBooks.map((book) => {
+                  const uid = book?._uid || book?.ISBN || book?.EAN || book?.Title;
+                  return (
+                    <div className="list-group-item d-flex align-items-center justify-content-between gap-3" key={uid}>
+                      <div className="min-w-0">
+                        <strong>{book.Title || 'Untitled'}</strong>
+                        <div className="small text-muted">{book.Author || 'Unknown author'} · {book.BINDING || 'Unknown binding'}</div>
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="outline-danger"
+                        onClick={() => deleteUndisplayedBook(book)}
+                        disabled={!uid || Boolean(deletingBookUid)}
+                      >
+                        {deletingBookUid === uid ? 'Deleting...' : 'Delete'}
+                      </Button>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              !undisplayedBooksError && <div className="text-muted">All book records are currently eligible for display.</div>
+            )}
+          </Modal.Body>
         </Modal>
 
         <Modal show={showSeriesModal} onHide={() => setShowSeriesModal(false)} size="lg" scrollable>

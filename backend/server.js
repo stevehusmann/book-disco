@@ -768,6 +768,36 @@ app.get('/api/books/spine-crop', async (_req, res) => {
   res.json(rows.map(rowToBook));
 });
 
+app.get('/api/books/not-displayed', async (_req, res) => {
+  if (useSupabase) {
+    try {
+      const rows = [];
+      for (let offset = 0; ; offset += 1000) {
+        const page = await supabaseRequest(
+          supabaseBookRoute({ order: 'uid.asc', limit: '1000', offset: String(offset) })
+        );
+        rows.push(...page);
+        if (page.length < 1000) break;
+      }
+      res.json(rows
+        .map(supabaseRowToBook)
+        .filter((book) => String(book.BINDING || 'pbk').trim().toLowerCase() !== 'pbk'));
+    } catch (error) {
+      console.error('Failed to load undisplayed books from Supabase:', error);
+      res.status(502).json({ error: 'Failed to load undisplayed books from Supabase.' });
+    }
+    return;
+  }
+
+  const rows = db.prepare(`
+    SELECT *
+    FROM books
+    WHERE LOWER(TRIM(COALESCE(binding, 'pbk'))) <> 'pbk'
+    ORDER BY title COLLATE NOCASE ASC
+  `).all();
+  res.json(rows.map(rowToBook));
+});
+
 app.delete('/api/books/:uid', async (req, res) => {
   const uid = req.params.uid;
 
