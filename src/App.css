@@ -121,7 +121,7 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
   aspect-ratio: 2 / 3;   /* Default aspect ratio (fallback) */
   transform-style: preserve-3d;
   transition: transform 0.5s ease;
-  transform: rotateY(30deg) translateZ(30px) translateX(-30px) translateZ(var(--book-depth-offset, 0px));
+  transform: rotateY(30deg) translateZ(30px) translateX(0) translateZ(var(--book-depth-offset, 0px));
   box-shadow: 
     -4px 4px 6px rgba(0, 0, 0, 0.1),
     -10px 10px 20px rgba(0, 0, 0, 0.15),
