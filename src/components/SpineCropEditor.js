@@ -8,19 +8,56 @@ import {
   quadToPointsString,
   renderSpineCropCanvas
 } from './spineCropUtils';
-import { getBookSpineThickness } from './bookSpineSizing';
+import { getBookSpineThickness, getMainBookRenderDimensions } from './bookSpineSizing';
 
 const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
 const getBookUid = (book) => (book?._uid || book?.ISBN || book?.EAN || book?.Title || '').toString();
 const DEFAULT_LOCAL_IMAGE_PATH = 'PenguinDeluxeClassics.jpg';
-const MIN_PREVIEW_BOOK_WIDTH = 180;
-const MAX_PREVIEW_BOOK_WIDTH = 560;
 const RECENT_DIRECT_URLS_KEY = 'spineCropRecentDirectUrls';
 const MAX_RECENT_DIRECT_URLS = 10;
-const SERIES_ASPECT_RATIOS = {
-  OWC: 5.1875 / 7.6875,
-  BNC: 5.25 / 8,
-  CLASSICS: 190 / 300
+
+const getSavedCropSource = (crop) => {
+  const source = String(crop?.src || crop?.source || '').trim();
+  if (!source) return null;
+  try {
+    const parsed = new URL(source, window.location.origin);
+    const directUrl = parsed.searchParams.get('url');
+    if (parsed.pathname.endsWith('/api/image-proxy') && directUrl) {
+      return { src: source, mode: 'url', directUrl };
+    }
+    if (['http:', 'https:'].includes(parsed.protocol) && parsed.origin !== window.location.origin) {
+      return {
+        src: apiUrl(`/api/image-proxy?url=${encodeURIComponent(source)}`),
+        mode: 'url',
+        directUrl: source
+      };
+    }
+  } catch (error) {
+    console.error('Could not parse saved spine crop source:', error);
+  }
+
+  let publicPath = source;
+  try {
+    publicPath = decodeURI(source);
+  } catch (error) {
+    console.error('Could not decode saved spine crop source:', error);
+  }
+  return {
+    src: source,
+    mode: 'public',
+    publicPath: publicPath.replace(/^\/+/, '')
+  };
+};
+
+const getComparableImageSource = (source) => {
+  try {
+    const parsed = new URL(source, window.location.origin);
+    const directUrl = parsed.searchParams.get('url');
+    if (parsed.pathname.endsWith('/api/image-proxy') && directUrl) return directUrl;
+    return parsed.href;
+  } catch (_error) {
+    return source;
+  }
 };
 
 const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
@@ -58,7 +95,6 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
   const [imageLoadError, setImageLoadError] = useState('');
   const [previewRotation, setPreviewRotation] = useState(0);
   const [sourceZoom, setSourceZoom] = useState(1);
-  const [previewBookWidth, setPreviewBookWidth] = useState(MIN_PREVIEW_BOOK_WIDTH);
   const [imgNatural, setImgNatural] = useState({ width: 0, height: 0 });
   const [imgRendered, setImgRendered] = useState({ width: 0, height: 0 });
   const [cropDisplay, setCropDisplay] = useState(null);
@@ -71,7 +107,6 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
   const imgRef = useRef(null);
   const canvasRef = useRef(null);
   const stageRef = useRef(null);
-  const previewRef = useRef(null);
 
   const selectedBook = useMemo(
     () => pcdBooks.find((book) => getBookUid(book) === selectedId) || null,
@@ -269,6 +304,40 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
     setPreviewSrc('');
     setPreviewSignature('');
     setImageLoadError('');
+  };
+
+  const selectBook = (uid) => {
+    const book = pcdBooks.find((item) => getBookUid(item) === uid);
+    setSelectedId(uid);
+    setCropDisplay(null);
+    setSaveStatus('');
+    setPreviewSrc('');
+    setPreviewSignature('');
+    setImgNatural({ width: 0, height: 0 });
+    setImgRendered({ width: 0, height: 0 });
+    setPreviewRotation(0);
+
+    const savedCrop = book?.SpineCrop;
+    if (!savedCrop) return;
+    setSelectionMode(savedCrop.mode === 'rect' ? 'rect' : 'quad');
+    const savedSource = getSavedCropSource(savedCrop);
+    if (savedSource) {
+      setSourceMode(savedSource.mode);
+      if (savedSource.mode === 'url') {
+        setDirectUrl(savedSource.directUrl);
+        setRecentDirectUrls((current) => [
+          savedSource.directUrl,
+          ...current.filter((url) => url !== savedSource.directUrl)
+        ].slice(0, MAX_RECENT_DIRECT_URLS));
+      } else {
+        setPublicPath(savedSource.publicPath);
+      }
+      setImageSrc(savedSource.src);
+    }
+    setRotation([90, 180, 270].includes(Number(savedCrop.editorRotation))
+      ? Number(savedCrop.editorRotation)
+      : 0);
+    setPreviewRotation(Number(savedCrop.outputRotation) || 0);
   };
 
   const loadDirectUrlImage = () => {
@@ -485,57 +554,37 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
     const savedSrc = (selectedBook?.SpineCrop?.src || selectedBook?.SpineCrop?.source || '').toString().trim();
     const currentSrc = (imageSrc || '').toString().trim();
     if (!savedSrc || !currentSrc) return false;
-    return savedSrc === currentSrc;
+    return getComparableImageSource(savedSrc) === getComparableImageSource(currentSrc);
   }, [selectedBook, imageSrc]);
+  const previewBookDimensions = useMemo(
+    () => getMainBookRenderDimensions(selectedBook, seriesOptions),
+    [selectedBook, seriesOptions]
+  );
+  const selectedSeries = seriesOptions.find((series) => series.id === selectedBook?.SeriesId);
   const previewSpineWidth = clamp(
     getBookSpineThickness({
-      coverWidth: previewBookWidth,
+      coverWidth: previewBookDimensions.width,
       pagination: Number(selectedBook?.PAGINATION) || 300,
       series: selectedBook?.SeriesId || selectedBook?.Series || '',
       seriesId: selectedBook?.SeriesId || '',
-      thicknessMultiplier: Number(seriesOptions.find((series) => series.id === selectedBook?.SeriesId)?.thicknessMultiplier) || 1
+      thicknessMultiplier: Number(selectedSeries?.thicknessMultiplier) || 1
     }) || 14,
     6,
     200
   );
-  const previewBookDimensions = useMemo(() => {
-    const selectedSeriesId = String(selectedBook?.SeriesId || selectedBook?.Series || '')
-      .toLowerCase()
-      .replace(/\s+/g, '-')
-      .replace(/[^a-z0-9-_]/g, '')
-      .toUpperCase();
-    const configuredHeightWidthRatio = Number(
-      seriesOptions.find((series) => series.id === selectedBook?.SeriesId)?.heightWidthRatio
-    );
-    const widthHeightRatio = configuredHeightWidthRatio > 0
-      ? 1 / configuredHeightWidthRatio
-      : SERIES_ASPECT_RATIOS[selectedSeriesId] || 2 / 3;
-    return { width: previewBookWidth, height: previewBookWidth / widthHeightRatio };
-  }, [selectedBook, seriesOptions, previewBookWidth]);
 
   useEffect(() => {
-    const element = previewRef.current;
-    if (!element) return undefined;
+    if (!selectedBook?.SpineCrop || !savedCropDisplay || !isSavedCropSameSource) return;
+    setCropDisplay((current) => current || savedCropDisplay);
+    setPreviewRotation(Number(selectedBook.SpineCrop.outputRotation) || 0);
+  }, [selectedBook, savedCropDisplay, isSavedCropSameSource]);
 
-    const updatePreviewWidth = () => {
-      const availableWidth = element.clientWidth;
-      if (!availableWidth) return;
-      setPreviewBookWidth(clamp(
-        Math.round(availableWidth * 0.9),
-        MIN_PREVIEW_BOOK_WIDTH,
-        MAX_PREVIEW_BOOK_WIDTH
-      ));
-    };
-
-    updatePreviewWidth();
-    if (window.ResizeObserver) {
-      const observer = new ResizeObserver(updatePreviewWidth);
-      observer.observe(element);
-      return () => observer.disconnect();
-    }
-    window.addEventListener('resize', updatePreviewWidth);
-    return () => window.removeEventListener('resize', updatePreviewWidth);
-  }, [selectedId]);
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      if (imgRef.current?.complete) onImageLoad();
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [selectedId, imageSrc, onImageLoad]);
   const sourceContentStyle = {
     width: `${imgRendered.width * sourceZoom}px`,
     height: `${imgRendered.height * sourceZoom}px`
@@ -662,14 +711,7 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
         className="form-select form-select-sm mb-2"
         aria-label="PCD Book"
         value={selectedId}
-        onChange={(e) => {
-          setSelectedId(e.target.value);
-          setCropDisplay(null);
-          setSaveStatus('');
-          setPreviewSrc('');
-          setPreviewSignature('');
-          setPreviewRotation(0);
-        }}
+        onChange={(event) => selectBook(event.target.value)}
       >
         <option value="">Select a book...</option>
         {filteredPcdBooks.map((b) => {
@@ -913,7 +955,7 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
                   }}
                 />
               )}
-              {savedCropDisplay && isSavedCropSameSource && (
+              {savedCropDisplay && !cropDisplay && isSavedCropSameSource && (
                 savedCropDisplay.mode === 'quad' ? (
                   <svg className="spine-crop-polygon-layer saved" viewBox={`0 0 ${imgRendered.width || 1} ${imgRendered.height || 1}`} preserveAspectRatio="none">
                     <polygon points={quadToPointsString(savedCropDisplay.points)} />
@@ -954,7 +996,11 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
         <div className="spine-crop-dock-preview">
           <strong className="small d-block mb-1">Book preview</strong>
           {selectedBook ? (
-            <div ref={previewRef} className="spine-crop-preview-scene" aria-label="Book preview with spine and cover">
+            <div
+              className="spine-crop-preview-scene"
+              aria-label="Book preview with spine and cover"
+              style={{ height: `${previewBookDimensions.height + 48}px` }}
+            >
               <div
                 className="spine-crop-preview-book"
                 data-testid="spine-crop-preview-book"

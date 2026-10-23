@@ -71,24 +71,24 @@ describe('SpineCropEditor save feedback', () => {
     expect(screen.getByAltText('Preview Book cover')).toHaveAttribute('src', '/preview-cover.jpg');
     expect(screen.getByText('Select crop')).toBeInTheDocument();
     const previewBook = screen.getByTestId('spine-crop-preview-book');
-    expect(previewBook).toHaveStyle('width: 180px');
+    expect(previewBook).toHaveStyle('width: 226px');
     expect(previewBook).toHaveStyle({
-      transform: 'rotateY(30deg) translateZ(30px) translateX(0) translateZ(-37px)',
-      height: '270px'
+      transform: 'rotateY(30deg) translateZ(30px) translateX(0) translateZ(-47px)',
+      height: '339px'
     });
-    expect(previewBook.querySelector('.spine-crop-preview-front')).toHaveStyle('transform: translateZ(36px)');
+    expect(previewBook.querySelector('.spine-crop-preview-front')).toHaveStyle('transform: translateZ(46px)');
   });
 
   test('matches the main book aspect ratio for built-in and configured series', () => {
     const cases = [
-      { seriesId: 'OWC', options: [{ id: 'OWC', spineMode: 'pcd-crop' }], expectedHeight: 180 * (7.6875 / 5.1875) },
-      { seriesId: 'BNC', options: [{ id: 'BNC', spineMode: 'pcd-crop' }], expectedHeight: 180 * (8 / 5.25) },
-      { seriesId: 'PCD', options: [{ id: 'PCD', spineMode: 'pcd-crop' }], expectedHeight: 270 },
-      { seriesId: 'CUSTOM', options: [{ id: 'CUSTOM', spineMode: 'pcd-crop', heightWidthRatio: 1.8 }], expectedHeight: 324 }
+      { seriesId: 'OWC', options: [{ id: 'OWC', spineMode: 'pcd-crop' }], expectedWidth: 208, expectedHeight: 208 * (7.6875 / 5.1875) },
+      { seriesId: 'BNC', options: [{ id: 'BNC', spineMode: 'pcd-crop' }], expectedWidth: 210, expectedHeight: 210 * (8 / 5.25) },
+      { seriesId: 'PCD', options: [{ id: 'PCD', spineMode: 'pcd-crop' }], expectedWidth: 226, expectedHeight: 339 },
+      { seriesId: 'CUSTOM', options: [{ id: 'CUSTOM', spineMode: 'pcd-crop', heightWidthRatio: 1.8 }], expectedWidth: 210, expectedHeight: 378 }
     ];
     const { container, rerender } = render(null);
 
-    cases.forEach(({ seriesId, options, expectedHeight }) => {
+    cases.forEach(({ seriesId, options, expectedWidth, expectedHeight }) => {
       rerender(
         <SpineCropEditor
           books={[{ ISBN: 'preview-book', Title: 'Preview Book', SeriesId: seriesId }]}
@@ -97,8 +97,69 @@ describe('SpineCropEditor save feedback', () => {
         />
       );
       fireEvent.change(screen.getByLabelText('PCD Book'), { target: { value: 'preview-book' } });
-      expect(Number.parseFloat(container.querySelector('.spine-crop-preview-book').style.height)).toBeCloseTo(expectedHeight);
+      const previewBook = container.querySelector('.spine-crop-preview-book');
+      expect(Number.parseFloat(previewBook.style.width)).toBe(expectedWidth);
+      expect(Number.parseFloat(previewBook.style.height)).toBeCloseTo(expectedHeight);
     });
+
+  });
+
+  test('loads the saved direct source and restores its crop as an editable selection', async () => {
+    const originalGetContext = HTMLCanvasElement.prototype.getContext;
+    const originalToDataURL = HTMLCanvasElement.prototype.toDataURL;
+    HTMLCanvasElement.prototype.getContext = jest.fn(() => ({
+      clearRect: jest.fn(),
+      save: jest.fn(),
+      restore: jest.fn(),
+      translate: jest.fn(),
+      rotate: jest.fn(),
+      drawImage: jest.fn()
+    }));
+    HTMLCanvasElement.prototype.toDataURL = jest.fn(() => 'data:image/jpeg;base64,preview');
+    const savedCrop = {
+      src: '/api/image-proxy?url=https%3A%2F%2Fimages.example.org%2Fsaved-spine.jpg',
+      mode: 'rect',
+      x: 40,
+      y: 100,
+      width: 80,
+      height: 600,
+      editorRotation: 0,
+      outputRotation: 90
+    };
+
+    try {
+      render(
+        <SpineCropEditor
+          books={[{ ISBN: 'saved-direct-book', Title: 'Saved Direct Book', SeriesId: 'PCD', SpineCrop: savedCrop }]}
+          setBooks={jest.fn()}
+          seriesOptions={[{ id: 'PCD', spineMode: 'pcd-crop' }]}
+        />
+      );
+
+      fireEvent.change(screen.getByLabelText('PCD Book'), { target: { value: 'saved-direct-book' } });
+      const sourceImage = screen.getByAltText('Spine crop source loader');
+      expect(sourceImage.src).toContain('/api/image-proxy?url=');
+      expect(screen.getByPlaceholderText('https://example.com/spine.jpg')).toHaveValue('https://images.example.org/saved-spine.jpg');
+
+      Object.defineProperties(sourceImage, {
+        naturalWidth: { configurable: true, value: 400 },
+        naturalHeight: { configurable: true, value: 800 },
+        complete: { configurable: true, value: true }
+      });
+      Object.defineProperty(document.querySelector('.spine-crop-stage'), 'clientWidth', {
+        configurable: true,
+        value: 300
+      });
+      fireEvent.load(sourceImage);
+
+      expect(await screen.findByText('x: 40, y: 100, w: 80, h: 600')).toBeInTheDocument();
+      expect(document.querySelector('.spine-crop-rect')).toBeInTheDocument();
+      expect(screen.getByText('Rotate preview: 90 degrees')).toBeInTheDocument();
+      expect(await screen.findByAltText('Generated spine crop preview')).toBeInTheDocument();
+    } finally {
+      HTMLCanvasElement.prototype.getContext = originalGetContext;
+      HTMLCanvasElement.prototype.toDataURL = originalToDataURL;
+    }
   });
 
   test('uses pagination to size the generated spine preview', () => {

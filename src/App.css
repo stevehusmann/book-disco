@@ -428,8 +428,11 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
 .spine-crop-preview-scene {
   display: grid;
   place-items: center;
-  min-height: 320px;
-  overflow: visible;
+  width: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+  padding: 24px 12px;
+  overflow: hidden;
   perspective: 1000px;
 }
 
@@ -757,7 +760,7 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
   }
 
   .spine-crop-preview-scene {
-    min-height: 240px;
+    padding: 20px 8px;
   }
 }
 
@@ -778,9 +781,6 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
     border-top: 0;
   }
 
-  .spine-crop-preview-scene {
-    min-height: 360px;
-  }
 }
 .pc-spine .book-spine-title {
   font-family: "Jost", sans-serif !important;

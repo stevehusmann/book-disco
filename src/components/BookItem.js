@@ -8,15 +8,7 @@ import SpineBNC from './SpineBNC';
 import SpinePC from './SpinePC';
 import SpinePCD from './SpinePCD';
 import { apiUrl } from '../apiUrl';
-import { getBookSpineThickness } from './bookSpineSizing';
-
-const PHYSICAL_SERIES_SIZES = {
-  container: { width: 7.0, height: 9 },
-  owc: { width: 5.1875, height: 7.6875 },
-  bnc: { width: 5.25, height: 8.0 },
-  pc: { width: 5.0, height: 7.75 },
-  pcd: { width: 5.67, height: 8.35 }
-};
+import { getBookSpineThickness, PHYSICAL_SERIES_SIZES } from './bookSpineSizing';
 
 const EDIT_FIELDS = [
   { key: 'Title', label: 'Title' },
