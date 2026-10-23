@@ -52,6 +52,22 @@ describe('SpineCropEditor save feedback', () => {
     ]);
   });
 
+  test('keeps the recent URL dropdown visible when there are no saved URLs', () => {
+    window.localStorage.removeItem('spineCropRecentDirectUrls');
+    render(
+      <SpineCropEditor
+        books={[]}
+        setBooks={jest.fn()}
+        seriesOptions={[{ id: 'PCD', spineMode: 'pcd-crop' }]}
+      />
+    );
+
+    fireEvent.click(screen.getByLabelText('Direct image URL'));
+
+    expect(screen.getByLabelText('Recent direct image URLs')).toBeDisabled();
+    expect(screen.getByRole('option', { name: 'No recent URLs yet' })).toBeInTheDocument();
+  });
+
   test('shows the selected book cover beside the spine crop preview', () => {
     const books = [
       { ISBN: 'preview-book', Title: 'Preview Book', Image: '/preview-cover.jpg', SeriesId: 'PCD' }
@@ -71,6 +87,7 @@ describe('SpineCropEditor save feedback', () => {
     expect(screen.getByAltText('Preview Book cover')).toHaveAttribute('src', '/preview-cover.jpg');
     expect(screen.getByText('Select crop')).toBeInTheDocument();
     const previewBook = screen.getByTestId('spine-crop-preview-book');
+    expect(previewBook).toHaveClass('book', 'series-pcd');
     expect(previewBook).toHaveStyle('width: 226px');
     expect(previewBook).toHaveStyle({
       transform: 'rotateY(30deg) translateZ(30px) translateX(0) translateZ(-47px)',
@@ -155,7 +172,8 @@ describe('SpineCropEditor save feedback', () => {
       expect(await screen.findByText('x: 40, y: 100, w: 80, h: 600')).toBeInTheDocument();
       expect(document.querySelector('.spine-crop-rect')).toBeInTheDocument();
       expect(screen.getByText('Rotate preview: 90 degrees')).toBeInTheDocument();
-      expect(await screen.findByAltText('Generated spine crop preview')).toBeInTheDocument();
+      await waitFor(() => expect(document.querySelector('.spine-crop-preview-spine').style.backgroundImage)
+        .toContain('data:image/jpeg;base64,preview'));
     } finally {
       HTMLCanvasElement.prototype.getContext = originalGetContext;
       HTMLCanvasElement.prototype.toDataURL = originalToDataURL;

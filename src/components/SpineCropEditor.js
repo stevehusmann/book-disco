@@ -95,6 +95,7 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
   const [imageLoadError, setImageLoadError] = useState('');
   const [previewRotation, setPreviewRotation] = useState(0);
   const [sourceZoom, setSourceZoom] = useState(1);
+  const [mainBookStageWidth, setMainBookStageWidth] = useState(280);
   const [imgNatural, setImgNatural] = useState({ width: 0, height: 0 });
   const [imgRendered, setImgRendered] = useState({ width: 0, height: 0 });
   const [cropDisplay, setCropDisplay] = useState(null);
@@ -107,6 +108,7 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
   const imgRef = useRef(null);
   const canvasRef = useRef(null);
   const stageRef = useRef(null);
+  const mainBookStageRef = useRef(null);
 
   const selectedBook = useMemo(
     () => pcdBooks.find((book) => getBookUid(book) === selectedId) || null,
@@ -557,13 +559,13 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
     return getComparableImageSource(savedSrc) === getComparableImageSource(currentSrc);
   }, [selectedBook, imageSrc]);
   const previewBookDimensions = useMemo(
-    () => getMainBookRenderDimensions(selectedBook, seriesOptions),
-    [selectedBook, seriesOptions]
+    () => getMainBookRenderDimensions(selectedBook, seriesOptions, mainBookStageWidth),
+    [selectedBook, seriesOptions, mainBookStageWidth]
   );
   const selectedSeries = seriesOptions.find((series) => series.id === selectedBook?.SeriesId);
   const previewSpineWidth = clamp(
     getBookSpineThickness({
-      coverWidth: previewBookDimensions.width,
+      coverWidth: previewBookDimensions.thicknessWidth,
       pagination: Number(selectedBook?.PAGINATION) || 300,
       series: selectedBook?.SeriesId || selectedBook?.Series || '',
       seriesId: selectedBook?.SeriesId || '',
@@ -572,6 +574,23 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
     6,
     200
   );
+
+  useEffect(() => {
+    const element = mainBookStageRef.current;
+    if (!element) return undefined;
+    const updateMainBookStageWidth = () => {
+      const width = element.getBoundingClientRect().width;
+      if (width > 0) setMainBookStageWidth(width);
+    };
+    updateMainBookStageWidth();
+    if (window.ResizeObserver) {
+      const observer = new ResizeObserver(updateMainBookStageWidth);
+      observer.observe(element);
+      return () => observer.disconnect();
+    }
+    window.addEventListener('resize', updateMainBookStageWidth);
+    return () => window.removeEventListener('resize', updateMainBookStageWidth);
+  }, []);
 
   useEffect(() => {
     if (!selectedBook?.SpineCrop || !savedCropDisplay || !isSavedCropSameSource) return;
@@ -694,6 +713,20 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
 
   return (
     <div className="spine-crop-editor">
+      <div className="spine-crop-main-layout-measure" aria-hidden="true">
+        <div className="container">
+          <div className="row">
+            <div className="col-12 col-lg-2" />
+            <div className="col-12 col-lg-10">
+              <div className="row">
+                <div className="col-12 col-lg-3">
+                  <div ref={mainBookStageRef} className="book-stage-link" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <h6 className="mb-2">PCD Spine Crop Editor</h6>
       <div className="small text-muted mb-2">Select a book and image, define the crop, generate a preview, then confirm it to save.</div>
       <div className="small mb-2" role="status">Crops saved: {savedCropCount} / {pcdBooks.length}</div>
@@ -800,24 +833,23 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
             />
             <button className="btn btn-outline-secondary" type="button" onClick={loadDirectUrlImage}>Load</button>
           </div>
-          {recentDirectUrls.length > 0 && (
-            <>
-              <label className="form-label mb-1" htmlFor="recentDirectUrls">Recent direct image URLs</label>
-              <select
-                id="recentDirectUrls"
-                className="form-select form-select-sm mb-2"
-                value=""
-                onChange={(event) => {
-                  if (event.target.value) setDirectUrl(event.target.value);
-                }}
-              >
-                <option value="">Choose a recent URL...</option>
-                {recentDirectUrls.map((url) => (
-                  <option key={url} value={url}>{url}</option>
-                ))}
-              </select>
-            </>
-          )}
+          <label className="form-label mb-1" htmlFor="recentDirectUrls">Recent direct image URLs</label>
+          <select
+            id="recentDirectUrls"
+            className="form-select form-select-sm mb-2"
+            value=""
+            disabled={!recentDirectUrls.length}
+            onChange={(event) => {
+              if (event.target.value) setDirectUrl(event.target.value);
+            }}
+          >
+            <option value="">
+              {recentDirectUrls.length ? 'Choose a recent URL...' : 'No recent URLs yet'}
+            </option>
+            {recentDirectUrls.map((url) => (
+              <option key={url} value={url}>{url}</option>
+            ))}
+          </select>
         </>
       ) : null}
 
@@ -1002,15 +1034,20 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
               style={{ height: `${previewBookDimensions.height + 48}px` }}
             >
               <div
-                className="spine-crop-preview-book"
+                className={`book spine-crop-preview-book series-${String(selectedBook.SeriesId || selectedBook.Series || 'GEN')
+                  .toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-_]/g, '')}`}
                 data-testid="spine-crop-preview-book"
                 style={{
                   width: `${previewBookDimensions.width}px`,
                   height: `${previewBookDimensions.height}px`,
+                  aspectRatio: selectedSeries?.heightWidthRatio
+                    ? `1 / ${selectedSeries.heightWidthRatio}`
+                    : undefined,
+                  '--book-depth-offset': `-${previewSpineWidth}px`,
                   transform: `rotateY(30deg) translateZ(30px) translateX(0) translateZ(-${previewSpineWidth}px)`
                 }}
               >
-                <div className="spine-crop-preview-front" style={{ transform: `translateZ(${previewSpineWidth - 1}px)` }}>
+                <div className="book-front spine-crop-preview-front" style={{ transform: `translateZ(${previewSpineWidth - 1}px)` }}>
                   {selectedBook.Image ? (
                     <img src={selectedBook.Image} alt={`${selectedBook.Title || 'Selected book'} cover`} />
                   ) : (
@@ -1018,12 +1055,19 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
                   )}
                 </div>
                 <div
-                  className="spine-crop-preview-spine"
-                  style={{ width: `${previewSpineWidth}px`, transform: 'rotateY(-90deg)', transformOrigin: 'left center' }}
+                  className={`book-spine spine-crop-preview-spine pcd-spine series-${String(selectedBook.SeriesId || selectedBook.Series || 'GEN')
+                    .toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-_]/g, '')}`}
+                  style={{
+                    width: `${previewSpineWidth}px`,
+                    transform: 'rotateY(-90deg)',
+                    transformOrigin: 'left center',
+                    backgroundImage: previewIsCurrent ? `url(${previewSrc})` : undefined,
+                    backgroundSize: '100% 100%',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center'
+                  }}
                 >
-                  {previewIsCurrent ? (
-                    <img src={previewSrc} alt="Generated spine crop preview" />
-                  ) : (
+                  {!previewIsCurrent && (
                     <span>{cropSourceCoords ? 'Updating preview...' : 'Select crop'}</span>
                   )}
                 </div>

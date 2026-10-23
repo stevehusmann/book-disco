@@ -36,7 +36,7 @@ export const getBookSpineThickness = ({
   return Math.ceil(coverWidth * pagination * thicknessPerPage * thicknessMultiplier);
 };
 
-export const getMainBookRenderDimensions = (book, seriesOptions = [], maxBookWidth = 280) => {
+export const getMainBookRenderDimensions = (book, seriesOptions = [], stageWidth = 280) => {
   const series = String(book?.SeriesId || book?.Series || '');
   const seriesId = series.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-_]/g, '');
   const seriesMeta = seriesOptions.find((option) => option.id === (book?.SeriesId || ''));
@@ -55,9 +55,13 @@ export const getMainBookRenderDimensions = (book, seriesOptions = [], maxBookWid
     ? (PHYSICAL_SERIES_SIZES.container.width - physicalBookSize.width)
       / PHYSICAL_SERIES_SIZES.container.width / 2
     : 0;
+  const thicknessWidth = Math.max(
+    0,
+    stageWidth - 2 * Math.round(stageWidth * horizontalPaddingRatio)
+  );
   const bookWidth = seriesId === 'classics'
     ? 190
-    : maxBookWidth - 2 * Math.round(maxBookWidth * horizontalPaddingRatio);
+    : Math.min(280, thicknessWidth);
   const heightWidthRatio = configuredHeightWidthRatio > 0
     ? configuredHeightWidthRatio
     : seriesId === 'owc'
@@ -68,5 +72,5 @@ export const getMainBookRenderDimensions = (book, seriesOptions = [], maxBookWid
           ? 300 / 190
           : 3 / 2;
 
-  return { width: bookWidth, height: bookWidth * heightWidthRatio };
+  return { width: bookWidth, height: bookWidth * heightWidthRatio, thicknessWidth };
 };
