@@ -71,11 +71,34 @@ describe('SpineCropEditor save feedback', () => {
     expect(screen.getByAltText('Preview Book cover')).toHaveAttribute('src', '/preview-cover.jpg');
     expect(screen.getByText('Select crop')).toBeInTheDocument();
     const previewBook = screen.getByTestId('spine-crop-preview-book');
+    expect(previewBook).toHaveStyle('width: 180px');
     expect(previewBook).toHaveStyle({
-      transform: 'rotateY(30deg) translateZ(30px) translateX(0) translateZ(-19px)',
-      height: '135px'
+      transform: 'rotateY(30deg) translateZ(30px) translateX(0) translateZ(-37px)',
+      height: '270px'
     });
-    expect(previewBook.querySelector('.spine-crop-preview-front')).toHaveStyle('transform: translateZ(18px)');
+    expect(previewBook.querySelector('.spine-crop-preview-front')).toHaveStyle('transform: translateZ(36px)');
+  });
+
+  test('matches the main book aspect ratio for built-in and configured series', () => {
+    const cases = [
+      { seriesId: 'OWC', options: [{ id: 'OWC', spineMode: 'pcd-crop' }], expectedHeight: 180 * (7.6875 / 5.1875) },
+      { seriesId: 'BNC', options: [{ id: 'BNC', spineMode: 'pcd-crop' }], expectedHeight: 180 * (8 / 5.25) },
+      { seriesId: 'PCD', options: [{ id: 'PCD', spineMode: 'pcd-crop' }], expectedHeight: 270 },
+      { seriesId: 'CUSTOM', options: [{ id: 'CUSTOM', spineMode: 'pcd-crop', heightWidthRatio: 1.8 }], expectedHeight: 324 }
+    ];
+    const { container, rerender } = render(null);
+
+    cases.forEach(({ seriesId, options, expectedHeight }) => {
+      rerender(
+        <SpineCropEditor
+          books={[{ ISBN: 'preview-book', Title: 'Preview Book', SeriesId: seriesId }]}
+          setBooks={jest.fn()}
+          seriesOptions={options}
+        />
+      );
+      fireEvent.change(screen.getByLabelText('PCD Book'), { target: { value: 'preview-book' } });
+      expect(Number.parseFloat(container.querySelector('.spine-crop-preview-book').style.height)).toBeCloseTo(expectedHeight);
+    });
   });
 
   test('uses pagination to size the generated spine preview', () => {

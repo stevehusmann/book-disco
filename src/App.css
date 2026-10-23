@@ -428,7 +428,7 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
 .spine-crop-preview-scene {
   display: grid;
   place-items: center;
-  min-height: 160px;
+  min-height: 320px;
   overflow: visible;
   perspective: 1000px;
 }
@@ -497,21 +497,28 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
 
 .spine-crop-dock {
   position: static;
-  display: grid;
-  grid-template-columns: minmax(120px, 1fr) minmax(220px, 1.3fr);
-  gap: 12px;
-  align-items: center;
-  min-height: 205px;
-  margin: 0 -10px -10px;
-  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: stretch;
+  min-width: 0;
+  padding: 0;
   border-top: 1px solid #c8c8c8;
-  background: rgba(255, 255, 255, 0.98);
-  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
+  background: transparent;
+  box-shadow: none;
 }
 
 .spine-crop-dock-preview,
 .spine-crop-dock-actions {
   min-width: 0;
+}
+
+.spine-crop-dock-actions {
+  padding: 0 8px 12px;
+}
+
+.spine-crop-dock-preview > .small {
+  font-size: 1rem;
 }
 
 .spine-crop-dock-placeholder {
@@ -684,8 +691,13 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
     right: 4px;
   }
 
+  .mobile-chevron-item .book {
+    transform: rotateY(0deg) translateZ(0) translateX(0) !important;
+    transition: transform 0.5s ease;
+  }
+
   .mobile-chevron-item.is-centered .book {
-    transform: rotateY(30deg) translateZ(30px) translateX(-30px) !important;
+    transform: rotateY(30deg) translateZ(30px) translateX(-30px) translateZ(var(--book-depth-offset, 0px)) !important;
     box-shadow:
       -8px 8px 16px rgba(0, 0, 0, 0.15),
       -20px 20px 35px rgba(0, 0, 0, 0.2);
@@ -736,10 +748,7 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
   }
 
   .spine-crop-dock {
-    grid-template-columns: minmax(100px, 0.8fr) minmax(170px, 1.2fr);
     gap: 8px;
-    min-height: 190px;
-    padding: 8px;
   }
 
   .spine-crop-dock-placeholder {
@@ -748,12 +757,29 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
   }
 
   .spine-crop-preview-scene {
-    min-height: 145px;
+    min-height: 240px;
+  }
+}
+
+@media (min-width: 992px) {
+  .spine-crop-workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: 20px;
+    align-items: start;
   }
 
-  .spine-crop-preview-book {
-    width: 76px;
-    height: 112px;
+  .spine-crop-source-column,
+  .spine-crop-dock {
+    min-width: 0;
+  }
+
+  .spine-crop-dock {
+    border-top: 0;
+  }
+
+  .spine-crop-preview-scene {
+    min-height: 360px;
   }
 }
 .pc-spine .book-spine-title {

@@ -13,13 +13,14 @@ import { getBookSpineThickness } from './bookSpineSizing';
 const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
 const getBookUid = (book) => (book?._uid || book?.ISBN || book?.EAN || book?.Title || '').toString();
 const DEFAULT_LOCAL_IMAGE_PATH = 'PenguinDeluxeClassics.jpg';
-const PREVIEW_BOOK_WIDTH = 90;
+const MIN_PREVIEW_BOOK_WIDTH = 180;
+const MAX_PREVIEW_BOOK_WIDTH = 560;
 const RECENT_DIRECT_URLS_KEY = 'spineCropRecentDirectUrls';
 const MAX_RECENT_DIRECT_URLS = 10;
 const SERIES_ASPECT_RATIOS = {
-  OWC: 7.6875 / 5.1875,
-  BNC: 8 / 5.25,
-  CLASSICS: 300 / 190
+  OWC: 5.1875 / 7.6875,
+  BNC: 5.25 / 8,
+  CLASSICS: 190 / 300
 };
 
 const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
@@ -57,6 +58,7 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
   const [imageLoadError, setImageLoadError] = useState('');
   const [previewRotation, setPreviewRotation] = useState(0);
   const [sourceZoom, setSourceZoom] = useState(1);
+  const [previewBookWidth, setPreviewBookWidth] = useState(MIN_PREVIEW_BOOK_WIDTH);
   const [imgNatural, setImgNatural] = useState({ width: 0, height: 0 });
   const [imgRendered, setImgRendered] = useState({ width: 0, height: 0 });
   const [cropDisplay, setCropDisplay] = useState(null);
@@ -69,6 +71,7 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
   const imgRef = useRef(null);
   const canvasRef = useRef(null);
   const stageRef = useRef(null);
+  const previewRef = useRef(null);
 
   const selectedBook = useMemo(
     () => pcdBooks.find((book) => getBookUid(book) === selectedId) || null,
@@ -486,7 +489,7 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
   }, [selectedBook, imageSrc]);
   const previewSpineWidth = clamp(
     getBookSpineThickness({
-      coverWidth: PREVIEW_BOOK_WIDTH,
+      coverWidth: previewBookWidth,
       pagination: Number(selectedBook?.PAGINATION) || 300,
       series: selectedBook?.SeriesId || selectedBook?.Series || '',
       seriesId: selectedBook?.SeriesId || '',
@@ -497,14 +500,42 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
   );
   const previewBookDimensions = useMemo(() => {
     const selectedSeriesId = String(selectedBook?.SeriesId || selectedBook?.Series || '')
-      .toUpperCase()
+      .toLowerCase()
       .replace(/\s+/g, '-')
-      .replace(/[^A-Z0-9-_]/g, '');
-    const seriesRatio = Number(seriesOptions.find((series) => series.id === selectedBook?.SeriesId)?.heightWidthRatio)
-      || SERIES_ASPECT_RATIOS[selectedSeriesId];
-    const heightWidthRatio = seriesRatio || 1.5;
-    return { width: PREVIEW_BOOK_WIDTH, height: PREVIEW_BOOK_WIDTH * heightWidthRatio };
-  }, [selectedBook, seriesOptions]);
+      .replace(/[^a-z0-9-_]/g, '')
+      .toUpperCase();
+    const configuredHeightWidthRatio = Number(
+      seriesOptions.find((series) => series.id === selectedBook?.SeriesId)?.heightWidthRatio
+    );
+    const widthHeightRatio = configuredHeightWidthRatio > 0
+      ? 1 / configuredHeightWidthRatio
+      : SERIES_ASPECT_RATIOS[selectedSeriesId] || 2 / 3;
+    return { width: previewBookWidth, height: previewBookWidth / widthHeightRatio };
+  }, [selectedBook, seriesOptions, previewBookWidth]);
+
+  useEffect(() => {
+    const element = previewRef.current;
+    if (!element) return undefined;
+
+    const updatePreviewWidth = () => {
+      const availableWidth = element.clientWidth;
+      if (!availableWidth) return;
+      setPreviewBookWidth(clamp(
+        Math.round(availableWidth * 0.9),
+        MIN_PREVIEW_BOOK_WIDTH,
+        MAX_PREVIEW_BOOK_WIDTH
+      ));
+    };
+
+    updatePreviewWidth();
+    if (window.ResizeObserver) {
+      const observer = new ResizeObserver(updatePreviewWidth);
+      observer.observe(element);
+      return () => observer.disconnect();
+    }
+    window.addEventListener('resize', updatePreviewWidth);
+    return () => window.removeEventListener('resize', updatePreviewWidth);
+  }, [selectedId]);
   const sourceContentStyle = {
     width: `${imgRendered.width * sourceZoom}px`,
     height: `${imgRendered.height * sourceZoom}px`
@@ -825,6 +856,8 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
           <div className="small text-warning mb-2">Saved crop source does not match the currently loaded image, so saved preview is hidden.</div>
       )}
 
+      <div className="spine-crop-workspace">
+        <div className="spine-crop-source-column">
       <div
         ref={stageRef}
         className="spine-crop-stage mb-2"
@@ -915,12 +948,13 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
           Generate Preview
         </button>
       </div>
+        </div>
 
       <section className="spine-crop-dock" aria-label="Crop preview and save">
         <div className="spine-crop-dock-preview">
           <strong className="small d-block mb-1">Book preview</strong>
           {selectedBook ? (
-            <div className="spine-crop-preview-scene" aria-label="Book preview with spine and cover">
+            <div ref={previewRef} className="spine-crop-preview-scene" aria-label="Book preview with spine and cover">
               <div
                 className="spine-crop-preview-book"
                 data-testid="spine-crop-preview-book"
@@ -965,6 +999,7 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
           </button>
         </div>
       </section>
+      </div>
 
       {saveStatus && <div className="small mb-2">{saveStatus}</div>}
 
