@@ -284,3 +284,38 @@ test('shows an author’s linked Works in ascending publication order', async ()
     global.fetch = originalFetch;
   }
 });
+
+test('shows Wikipedia Work review candidates in chronological order with undated Works last', async () => {
+  const originalFetch = global.fetch;
+  const authorWithPage = { ...author, wikipediaPageTitle: 'Herman Melville' };
+  const candidates = [
+    { sourceId: 'late', title: 'Later Work', date: { value: '1920', precision: 9 } },
+    { sourceId: 'undated', title: 'Undated Work', date: null },
+    { sourceId: 'early', title: 'Earlier Work', date: { value: '1851', precision: 9 } }
+  ];
+  global.fetch = jest.fn(async (url) => ({
+    ok: true,
+    json: async () => {
+      if (url === '/api/catalog/authors') return [authorWithPage];
+      if (url === '/api/catalog/works') return [];
+      if (url === '/api/catalog/wikipedia/authors/works?pageTitle=Herman%20Melville') return candidates;
+      throw new Error(`Unexpected request: ${url}`);
+    }
+  }));
+
+  try {
+    render(<WorkCatalog onBack={jest.fn()} />);
+    fireEvent.change(await screen.findByLabelText('Catalog author'), { target: { value: 'author-1' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Load works from Wikipedia' }));
+
+    const reviewButtons = await screen.findAllByRole('button', { name: 'Review' });
+    await waitFor(() => expect(reviewButtons).toHaveLength(3));
+    expect(reviewButtons.map((button) => button.parentElement.textContent)).toEqual([
+      expect.stringContaining('Earlier Work'),
+      expect.stringContaining('Later Work'),
+      expect.stringContaining('Undated Work')
+    ]);
+  } finally {
+    global.fetch = originalFetch;
+  }
+});

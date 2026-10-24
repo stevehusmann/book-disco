@@ -15,6 +15,15 @@ const comparePublicationOrder = (left, right) => {
   return leftYear - rightYear || left.title.localeCompare(right.title);
 };
 
+const compareCandidatePublicationOrder = (left, right) => {
+  const leftYear = getPublicationYear(left.publicationDates[0]?.value);
+  const rightYear = getPublicationYear(right.publicationDates[0]?.value);
+  if (leftYear == null && rightYear == null) return left.title.localeCompare(right.title);
+  if (leftYear == null) return 1;
+  if (rightYear == null) return -1;
+  return leftYear - rightYear || left.title.localeCompare(right.title);
+};
+
 const fetchJson = async (path, options) => {
   const response = await fetch(apiUrl(path), options);
   const payload = response.status === 204 ? null : await response.json();
@@ -122,7 +131,7 @@ const WorkCatalog = ({ onBack }) => {
       setWorkCandidates(results.map((candidate) => ({
         ...candidate,
         publicationDates: candidate.date ? [candidate.date] : []
-      })));
+      })).sort(compareCandidatePublicationOrder));
       setSelectedWork(null);
       if (!results.length) setStatus('No clearly labeled works or bibliography sections were found on that author page.');
     } catch (loadError) {
