@@ -55,11 +55,14 @@ test('shows the author biography, chronological Works, first edition covers, and
     render(<AuthorWorksView author={author} />);
 
     expect(await screen.findByText('Author biography.')).toBeInTheDocument();
+    expect(screen.getByText('Author biography.')).toHaveClass('is-collapsed');
+    fireEvent.click(screen.getByRole('button', { name: 'Read more' }));
+    expect(screen.getByText('Author biography.')).toHaveClass('is-expanded');
     const authorSection = screen.getByLabelText('Works by Charles Dickens');
     const workButtons = within(authorSection).getAllByRole('button', { name: /Open/ });
     expect(workButtons[0]).toHaveAccessibleName('Open Earlier Work, 1843');
     expect(workButtons[1]).toHaveAccessibleName('Open Later Work, 1859');
-    expect(within(workButtons[0]).getByAltText('Cover of Earlier Work')).toHaveAttribute('src', 'first-cover.jpg');
+    expect(within(workButtons[0]).getByAltText('Earlier Work')).toHaveAttribute('src', 'first-cover.jpg');
 
     fireEvent.click(workButtons[0]);
     expect(await screen.findByText('Work summary.')).toBeInTheDocument();

@@ -800,19 +800,29 @@ app.get('/api/catalog/authors', async (_req, res) => {
     if (useSupabase) {
       await ensureSupabaseAuthorCatalog();
       const authors = await supabaseRequest('authors?select=id,name,sort_name,wikipedia_page_title,wikipedia_url&order=sort_name.asc,name.asc');
+      const [authorWorks, bookWorks] = await Promise.all([
+        supabaseRequest('author_works?select=author_id,work_id'),
+        supabaseRequest('book_works?select=work_id')
+      ]);
+      const editionLinkedWorkIds = new Set(bookWorks.map((relation) => relation.work_id));
+      const authorsWithEditions = new Set(authorWorks
+        .filter((relation) => editionLinkedWorkIds.has(relation.work_id))
+        .map((relation) => relation.author_id));
       return res.json(authors.map((author) => ({
         id: author.id,
         name: author.name,
         sortName: author.sort_name,
         wikipediaPageTitle: author.wikipedia_page_title,
-        wikipediaUrl: author.wikipedia_url
+        wikipediaUrl: author.wikipedia_url,
+        hasLinkedEditions: authorsWithEditions.has(author.id)
       })));
     }
     const authors = db.prepare(`
       SELECT authors.id, authors.name, authors.sort_name, authors.wikidata_qid,
-        COUNT(DISTINCT author_works.work_id) AS work_count
+        COUNT(DISTINCT book_works.book_uid) AS edition_count
       FROM authors
       LEFT JOIN author_works ON author_works.author_id = authors.id
+      LEFT JOIN book_works ON book_works.work_id = author_works.work_id
       GROUP BY authors.id
       ORDER BY authors.sort_name COLLATE NOCASE, authors.name COLLATE NOCASE
     `).all();
@@ -822,7 +832,7 @@ app.get('/api/catalog/authors', async (_req, res) => {
       sortName: author.sort_name,
       wikipediaPageTitle: author.wikipedia_page_title,
       wikipediaUrl: author.wikipedia_url,
-      workCount: author.work_count
+      hasLinkedEditions: author.edition_count > 0
     })));
   } catch (error) {
     if (useSupabase && /authors/i.test(error.message)) {
@@ -951,7 +961,10 @@ app.get('/api/catalog/works', async (_req, res) => {
           title: entry.book?.book?.Title || '',
           isbn: entry.book?.book?.ISBN || '',
           image: entry.book?.book?.Image || '',
-          publicationDate: entry.book?.book?.PublicationDate || entry.book?.book?.['PUB DATE'] || ''
+          publicationDate: entry.book?.book?.PublicationDate || entry.book?.book?.['PUB DATE'] || '',
+          book: entry.book?.book
+            ? { ...entry.book.book, _uid: entry.book.uid }
+            : null
         })).filter((book) => book.uid)
       })));
     }
@@ -962,7 +975,7 @@ app.get('/api/catalog/works', async (_req, res) => {
       WHERE author_works.work_id = ? ORDER BY authors.sort_name COLLATE NOCASE
     `);
     const getBooks = db.prepare(`
-      SELECT books.uid, books.title, books.isbn, books.image, books.publication_date FROM books
+      SELECT books.*, books.title, books.isbn, books.image, books.publication_date FROM books
       JOIN book_works ON book_works.book_uid = books.uid
       WHERE book_works.work_id = ? ORDER BY books.title COLLATE NOCASE
     `);
@@ -981,7 +994,8 @@ app.get('/api/catalog/works', async (_req, res) => {
         title: book.title,
         isbn: book.isbn,
         image: book.image,
-        publicationDate: book.publication_date
+        publicationDate: book.publication_date,
+        book: rowToBook(book)
       }))
     })));
   } catch (error) {

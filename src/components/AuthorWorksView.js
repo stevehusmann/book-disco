@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import BookItem from './BookItem';
+import MobileChevronRow from './MobileChevronRow';
 import { apiUrl } from '../apiUrl';
 
 const getYear = (value) => {
@@ -43,7 +44,7 @@ const fetchJson = async (path) => {
   return result;
 };
 
-const AuthorWorksView = ({ author }) => {
+const AuthorWorksView = ({ author, setBooks, seriesOptions = [] }) => {
   const [works, setWorks] = useState([]);
   const [authorSummary, setAuthorSummary] = useState(null);
   const [selectedWork, setSelectedWork] = useState(null);
@@ -53,6 +54,7 @@ const AuthorWorksView = ({ author }) => {
   const [error, setError] = useState('');
   const [summaryError, setSummaryError] = useState('');
   const [authorSummaryError, setAuthorSummaryError] = useState('');
+  const [authorSummaryExpanded, setAuthorSummaryExpanded] = useState(false);
 
   useEffect(() => {
     if (!author) return undefined;
@@ -62,6 +64,7 @@ const AuthorWorksView = ({ author }) => {
     setWorks([]);
     setAuthorSummary(null);
     setAuthorSummaryError('');
+    setAuthorSummaryExpanded(false);
 
     const worksRequest = fetch(apiUrl('/api/catalog/works'), { signal: controller.signal })
       .then(async (response) => {
@@ -105,6 +108,36 @@ const AuthorWorksView = ({ author }) => {
   const orderedEditions = useMemo(() => [...(selectedWork?.books || [])].sort((left, right) => (
     compareByYear(left, right, 'publicationDate')
   )), [selectedWork]);
+  const renderWorkBook = (work, index, keySuffix) => {
+    const firstEdition = [...(work.books || [])].sort((left, right) => compareByYear(left, right, 'publicationDate'))[0];
+    const editionBook = firstEdition?.book || {
+      _uid: firstEdition?.uid,
+      Title: firstEdition?.title || work.title,
+      Author: author.name,
+      ISBN: firstEdition?.isbn || '',
+      Image: firstEdition?.image || ''
+    };
+    const displayBook = {
+      ...editionBook,
+      _uid: firstEdition?.uid || editionBook._uid,
+      Title: work.title,
+      Author: editionBook.Author || author.name,
+      Image: editionBook.Image || firstEdition?.image || ''
+    };
+    return (
+      <BookItem
+        key={`${work.id}-${keySuffix}`}
+        book={displayBook}
+        index={index}
+        pageIndex={0}
+        setBooks={setBooks}
+        seriesOptions={seriesOptions}
+        onBookClick={() => openWork(work)}
+        bookAriaLabel={`Open ${work.title}, ${getYear(work.releaseDate) || 'publication year unknown'}`}
+        footer={<div className="text-muted">{getYear(work.releaseDate) || 'Year unknown'}</div>}
+      />
+    );
+  };
 
   const openWork = async (work) => {
     setSelectedWork(work);
@@ -126,17 +159,32 @@ const AuthorWorksView = ({ author }) => {
   return (
     <section aria-label={`Works by ${author.name}`}>
       <div className="d-flex align-items-start gap-3 mb-4">
-        {authorSummary?.thumbnail && (
+        <div className="author-profile-image">
+          {authorSummary?.thumbnail && (
           <img
             src={authorSummary.thumbnail}
             alt={author.name}
-            className="rounded"
-            style={{ width: 120, height: 150, objectFit: 'cover' }}
+            className="rounded w-100"
           />
-        )}
-        <div>
+          )}
+        </div>
+        <div className="author-profile-summary">
           <h2>{author.name}</h2>
-          {authorSummary?.extract && <p className="mb-1">{authorSummary.extract}</p>}
+          {authorSummary?.extract && (
+            <>
+              <p className={`mb-1 author-summary-text${authorSummaryExpanded ? ' is-expanded' : ' is-collapsed'}`}>
+                {authorSummary.extract}
+              </p>
+              <button
+                className="btn btn-link btn-sm p-0"
+                type="button"
+                onClick={() => setAuthorSummaryExpanded((expanded) => !expanded)}
+                aria-expanded={authorSummaryExpanded}
+              >
+                {authorSummaryExpanded ? 'Read less' : 'Read more'}
+              </button>
+            </>
+          )}
           {authorSummary?.url && <a href={authorSummary.url} target="_blank" rel="noreferrer">Wikipedia biography</a>}
         </div>
       </div>
@@ -144,29 +192,16 @@ const AuthorWorksView = ({ author }) => {
       {authorSummaryError && <div className="alert alert-warning" role="alert">{authorSummaryError}</div>}
       {error && <div className="alert alert-danger" role="alert">{error}</div>}
       {loadingWorks ? <p>Loading Works…</p> : orderedWorks.length ? (
-        <div className="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-xl-5 g-3">
-          {orderedWorks.map((work) => {
-            const firstEdition = [...(work.books || [])].sort((left, right) => compareByYear(left, right, 'publicationDate'))[0];
-            return (
-              <div className="col" key={work.id}>
-                <Button
-                  variant="light"
-                  className="w-100 h-100 text-start border p-2"
-                  onClick={() => openWork(work)}
-                  aria-label={`Open ${work.title}, ${getYear(work.releaseDate) || 'publication year unknown'}`}
-                >
-                  {firstEdition?.image ? (
-                    <img src={firstEdition.image} alt={`Cover of ${work.title}`} className="w-100 rounded mb-2" style={{ height: 240, objectFit: 'contain' }} />
-                  ) : (
-                    <div className="d-flex align-items-center justify-content-center bg-light rounded mb-2 text-muted" style={{ height: 240 }}>No cover available</div>
-                  )}
-                  <div className="fw-semibold">{work.title}</div>
-                  <div className="text-muted">{getYear(work.releaseDate) || 'Year unknown'}</div>
-                </Button>
-              </div>
-            );
-          })}
-        </div>
+        <>
+          <div className="row d-none d-md-flex title-row-desktop">
+            {orderedWorks.map((work, index) => renderWorkBook(work, index, 'desktop'))}
+          </div>
+          <div className="d-md-none">
+            <MobileChevronRow rowClassName="title-row" ariaLabel={`Scrollable works by ${author.name}`} resetKey={author.id}>
+              {orderedWorks.map((work, index) => renderWorkBook(work, index, 'mobile'))}
+            </MobileChevronRow>
+          </div>
+        </>
       ) : !error ? <p className="text-muted">No reviewed Works are linked to this author yet.</p> : null}
 
       <Modal show={Boolean(selectedWork)} onHide={() => setSelectedWork(null)} size="lg" scrollable>

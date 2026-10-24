@@ -363,6 +363,38 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
   display: block;
 }
 
+.book-stage-link-interactive {
+  cursor: pointer;
+}
+
+.book-stage-link-interactive:focus-visible {
+  outline: 2px solid #0d6efd;
+  outline-offset: 4px;
+}
+
+.author-summary-text.is-collapsed {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 6;
+  overflow: hidden;
+}
+
+.author-profile-image {
+  flex: 0 0 30%;
+  max-width: 30%;
+}
+
+.author-profile-image img {
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
+.author-profile-summary {
+  flex: 0 0 70%;
+  max-width: 70%;
+  padding-left: 1rem;
+}
+
 .author-view-grid .book-container {
   width: 100%;
   aspect-ratio: 7 / 9;

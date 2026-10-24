@@ -432,9 +432,10 @@ app.get('/api/series', (_req, res) => {
 app.get('/api/catalog/authors', (_req, res) => {
   const authors = db.prepare(`
     SELECT authors.id, authors.name, authors.sort_name, authors.wikidata_qid,
-      COUNT(DISTINCT author_works.work_id) AS work_count
+      COUNT(DISTINCT book_works.book_uid) AS edition_count
     FROM authors
     LEFT JOIN author_works ON author_works.author_id = authors.id
+    LEFT JOIN book_works ON book_works.work_id = author_works.work_id
     GROUP BY authors.id
     ORDER BY authors.sort_name COLLATE NOCASE, authors.name COLLATE NOCASE
   `).all();
@@ -444,7 +445,7 @@ app.get('/api/catalog/authors', (_req, res) => {
     sortName: author.sort_name,
     wikipediaPageTitle: author.wikipedia_page_title,
     wikipediaUrl: author.wikipedia_url,
-    workCount: author.work_count
+    hasLinkedEditions: author.edition_count > 0
   })));
 });
 
@@ -525,7 +526,7 @@ app.get('/api/catalog/works', (_req, res) => {
     WHERE author_works.work_id = ? ORDER BY authors.sort_name COLLATE NOCASE
   `);
   const getBooks = db.prepare(`
-    SELECT books.uid, books.title, books.isbn, books.image, books.publication_date FROM books
+    SELECT books.*, books.title, books.isbn, books.image, books.publication_date FROM books
     JOIN book_works ON book_works.book_uid = books.uid
     WHERE book_works.work_id = ? ORDER BY books.title COLLATE NOCASE
   `);
@@ -544,7 +545,24 @@ app.get('/api/catalog/works', (_req, res) => {
       title: book.title,
       isbn: book.isbn,
       image: book.image,
-      publicationDate: book.publication_date
+      publicationDate: book.publication_date,
+      book: {
+        ...JSON.parse(book.raw_json || '{}'),
+        _uid: book.uid,
+        Title: book.title,
+        Author: book.author,
+        ISBN: book.isbn,
+        EAN: book.ean,
+        Image: book.image,
+        Series: book.series,
+        SeriesId: book.series_id,
+        PAGINATION: book.pagination,
+        BINDING: book.binding,
+        SpineTitle: book.spine_title,
+        PublicationDate: book.publication_date,
+        BookWidth: book.book_width,
+        BookHeight: book.book_height
+      }
     }))
   })));
 });

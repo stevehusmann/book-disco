@@ -51,8 +51,9 @@ test('lists and deletes books that are not displayed', async () => {
 
 test('lists authors alphabetically by surname and shows the selected author works', async () => {
   const authors = [
-    { id: 'melville', name: 'Herman Melville', sortName: 'Melville, Herman', wikipediaPageTitle: 'Herman Melville' },
-    { id: 'dickens', name: 'Charles Dickens', sortName: 'Dickens, Charles', wikipediaPageTitle: 'Charles Dickens' }
+    { id: 'melville', name: 'Herman Melville', sortName: 'Melville, Herman', wikipediaPageTitle: 'Herman Melville', hasLinkedEditions: true },
+    { id: 'dickens', name: 'Charles Dickens', sortName: 'Dickens, Charles', wikipediaPageTitle: 'Charles Dickens', hasLinkedEditions: true },
+    { id: 'unlinked', name: 'Unlinked Author', sortName: 'Author, Unlinked', hasLinkedEditions: false }
   ];
   const works = [{
     id: 'work-1',
@@ -83,7 +84,7 @@ test('lists authors alphabetically by surname and shows the selected author work
     expect(options).toEqual(['Select an author', 'Charles Dickens', 'Herman Melville']);
 
     fireEvent.change(authorSelect, { target: { value: 'dickens' } });
-    expect(await screen.findByText('Great Expectations')).toBeInTheDocument();
+    expect(await screen.findAllByText('Great Expectations')).not.toHaveLength(0);
     expect(await screen.findByAltText('Charles Dickens')).toHaveAttribute('src', 'dickens.jpg');
   } finally {
     global.fetch = originalFetch;

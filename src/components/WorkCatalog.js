@@ -24,6 +24,21 @@ const compareCandidatePublicationOrder = (left, right) => {
   return leftYear - rightYear || left.title.localeCompare(right.title);
 };
 
+const normalizeTitle = (title) => String(title || '')
+  .normalize('NFKD')
+  .replace(/[\u0300-\u036f]/g, '')
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, ' ')
+  .trim();
+
+const isLikelyEditionMatch = (workTitle, editionTitle) => {
+  const work = normalizeTitle(workTitle);
+  const edition = normalizeTitle(editionTitle);
+  if (!work || !edition) return false;
+  if (work === edition) return true;
+  return edition.includes(work) && work.length / edition.length >= 0.65;
+};
+
 const fetchJson = async (path, options) => {
   const response = await fetch(apiUrl(path), options);
   const payload = response.status === 204 ? null : await response.json();
@@ -83,14 +98,15 @@ const WorkCatalog = ({ onBack }) => {
     loadCatalog().catch((loadError) => setError(loadError.message || 'Unable to load the work catalog.'));
   }, []);
 
-  const searchWikipediaAuthors = async () => {
-    if (!selectedAuthor) return;
+  const searchWikipediaAuthors = async (author = selectedAuthor) => {
+    if (!author) return;
     setLoading(true);
     setError('');
     setStatus('');
     try {
-      const results = await fetchJson(`/api/catalog/wikipedia/search?q=${encodeURIComponent(selectedAuthor.name)}`);
+      const results = await fetchJson(`/api/catalog/wikipedia/search?q=${encodeURIComponent(author.name)}`);
       setWikipediaCandidates(results);
+      if (!results.length) setStatus(`No Wikipedia author pages were found for ${author.name}.`);
     } catch (searchError) {
       setError(searchError.message || 'Wikipedia search failed.');
     } finally {
@@ -113,7 +129,8 @@ const WorkCatalog = ({ onBack }) => {
           : author
       )));
       setWikipediaCandidates([]);
-      setStatus(`Linked ${selectedAuthor.name} to Wikipedia page “${candidate.pageTitle}”.`);
+      setStatus(`Linked ${selectedAuthor.name} to Wikipedia page “${candidate.pageTitle}”. Finding Works and edition matches...`);
+      await loadWikipediaWorks(candidate.pageTitle);
     } catch (linkError) {
       setError(linkError.message || 'Unable to link the Wikipedia author.');
     } finally {
@@ -121,19 +138,52 @@ const WorkCatalog = ({ onBack }) => {
     }
   };
 
-  const loadWikipediaWorks = async () => {
-    if (!selectedAuthor?.wikipediaPageTitle) return;
+  const loadWikipediaWorks = async (pageTitle = selectedAuthor?.wikipediaPageTitle) => {
+    if (!pageTitle) return;
     setLoading(true);
     setError('');
     setStatus('');
     try {
-      const results = await fetchJson(`/api/catalog/wikipedia/authors/works?pageTitle=${encodeURIComponent(selectedAuthor.wikipediaPageTitle)}`);
-      setWorkCandidates(results.map((candidate) => ({
+      const results = await fetchJson(`/api/catalog/wikipedia/authors/works?pageTitle=${encodeURIComponent(pageTitle)}`);
+      const candidates = results.map((candidate) => ({
         ...candidate,
         publicationDates: candidate.date ? [candidate.date] : []
-      })).sort(compareCandidatePublicationOrder));
+      })).sort(compareCandidatePublicationOrder);
+      const matchedCandidates = [];
+      const failedSearches = [];
+      for (let offset = 0; offset < candidates.length; offset += 5) {
+        const batch = candidates.slice(offset, offset + 5);
+        const batchResults = await Promise.allSettled(batch.map((candidate) => (
+          fetchJson(`/api/catalog/books?q=${encodeURIComponent(candidate.title)}`)
+        )));
+        batchResults.forEach((result, index) => {
+          let candidate;
+          if (result.status === 'fulfilled') {
+            const editionMatches = result.value;
+            candidate = {
+              ...batch[index],
+              editionMatches,
+              suggestedBookUids: editionMatches
+                .filter((book) => isLikelyEditionMatch(batch[index].title, book.title))
+                .map((book) => book.uid)
+            };
+          } else {
+            candidate = {
+              ...batch[index],
+              editionMatches: [],
+              suggestedBookUids: [],
+              editionSearchError: result.reason?.message || 'Edition search failed.'
+            };
+            failedSearches.push(batch[index].title);
+          }
+          matchedCandidates[offset + index] = candidate;
+        });
+      }
+      setWorkCandidates(matchedCandidates);
       setSelectedWork(null);
       if (!results.length) setStatus('No clearly labeled works or bibliography sections were found on that author page.');
+      else if (failedSearches.length) setError(`Could not search book editions for: ${failedSearches.join(', ')}.`);
+      else setStatus(`Found ${results.length} Works and suggested matching editions. Review each title, year, and selected edition before saving.`);
     } catch (loadError) {
       setError(loadError.message || 'Unable to load Wikipedia works.');
     } finally {
@@ -163,15 +213,14 @@ const WorkCatalog = ({ onBack }) => {
   const beginWorkReview = (candidate) => {
     setSelectedWork(candidate);
     setSelectedAuthorIds([selectedAuthorId]);
-    setSelectedBookUids([]);
+    setSelectedBookUids(candidate.suggestedBookUids || []);
     setReviewedDate(candidate.date?.value || '');
     setReviewedPrecision(candidate.date?.precision ? String(candidate.date.precision) : '');
     setConfirmedOriginalDate(false);
     setBookSearch(candidate.title);
-    setBookResults([]);
+    setBookResults(candidate.editionMatches || []);
     setError('');
     setStatus('');
-    loadBookMatches(candidate.title, true);
   };
 
   const searchBooks = async (event) => {
@@ -297,7 +346,7 @@ const WorkCatalog = ({ onBack }) => {
         <button className="btn btn-secondary" type="button" onClick={onBack}>Back To Library</button>
       </div>
       <p className="small text-muted">
-        Wikipedia’s author bibliography pages vary in coverage and formatting. Review each author page, Work title, and original publication year before saving. Only publication-list sections are collected, and existing edition records are never auto-matched.
+        Wikipedia’s author bibliography pages vary in coverage and formatting. The catalog searches for likely author pages, Works, and matching editions automatically. Confirm the author identity, Work title, publication year, and suggested editions before saving.
       </p>
       {error && <div className="alert alert-danger" role="alert">{error}</div>}
       {status && <div className="alert alert-info" role="status">{status}</div>}
@@ -305,7 +354,7 @@ const WorkCatalog = ({ onBack }) => {
       <div className="row g-3">
         <div className="col-12 col-xl-5">
           <div className="border rounded bg-white p-3 mb-3">
-            <h5>1. Review author identity</h5>
+            <h5>1. Confirm author identity and review matches</h5>
             <label className="form-label" htmlFor="author-filter">Find an author</label>
             <input
               id="author-filter"
@@ -319,10 +368,16 @@ const WorkCatalog = ({ onBack }) => {
               aria-label="Catalog author"
               value={selectedAuthorId}
               onChange={(event) => {
-                setSelectedAuthorId(event.target.value);
+                const nextAuthorId = event.target.value;
+                const nextAuthor = authors.find((author) => author.id === nextAuthorId);
+                setSelectedAuthorId(nextAuthorId);
                 setWikipediaCandidates([]);
                 setWorkCandidates([]);
                 setSelectedWork(null);
+                setError('');
+                setStatus('');
+                if (nextAuthor?.wikipediaPageTitle) loadWikipediaWorks(nextAuthor.wikipediaPageTitle);
+                else if (nextAuthor) searchWikipediaAuthors(nextAuthor);
               }}
             >
               <option value="">Select an author...</option>
@@ -340,7 +395,7 @@ const WorkCatalog = ({ onBack }) => {
                     : 'Not linked to a Wikipedia author page yet.'}
                 </div>
                 <button className="btn btn-outline-primary btn-sm" type="button" onClick={searchWikipediaAuthors} disabled={loading}>
-                  Search Wikipedia for this author
+                  Search Wikipedia again
                 </button>
                 {selectedAuthor.wikipediaPageTitle && (
                   <button className="btn btn-primary btn-sm ms-2" type="button" onClick={loadWikipediaWorks} disabled={loading}>
@@ -398,6 +453,7 @@ const WorkCatalog = ({ onBack }) => {
           {workCandidates.length > 0 && (
             <div className="border rounded bg-white p-3">
               <h5>2. Review Works found on Wikipedia ({workCandidates.length})</h5>
+              <p className="small text-muted">Book-title matches are searched automatically. Likely edition matches are preselected; confirm the suggested matches and publication year before saving.</p>
               <div className="list-group">
                 {workCandidates.map((candidate) => (
                   <div className="list-group-item d-flex align-items-start justify-content-between gap-2" key={candidate.sourceId}>
@@ -407,6 +463,11 @@ const WorkCatalog = ({ onBack }) => {
                         {candidate.publicationDates.length
                           ? `Publication year found: ${candidate.publicationDates[0].value}`
                           : 'No publication year found'}
+                      </div>
+                      <div className="small text-muted">
+                        {candidate.editionSearchError
+                          ? `Edition search failed: ${candidate.editionSearchError}`
+                          : `${candidate.suggestedBookUids?.length || 0} likely edition match(es) suggested`}
                       </div>
                     </div>
                     <button className="btn btn-sm btn-outline-primary" type="button" onClick={() => beginWorkReview(candidate)}>

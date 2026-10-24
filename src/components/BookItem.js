@@ -52,7 +52,20 @@ const normalizeEditableBook = (book) => {
   return normalized;
 };
 
-const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colClass = '', layout = 'title', setBooks, seriesOptions = [] }) => {
+const BookItem = ({
+  book,
+  index,
+  pageIndex,
+  header = null,
+  colStyle = {},
+  colClass = '',
+  layout = 'title',
+  setBooks,
+  seriesOptions = [],
+  footer = null,
+  onBookClick,
+  bookAriaLabel
+}) => {
 
   const pagination = Number(book?.PAGINATION || 300);
   const series = (book?.SeriesId || book?.Series || '').toString();
@@ -202,7 +215,19 @@ const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colCla
         <div className="book-header-row" style={{ minHeight: 26, marginBottom: 8, fontWeight: 700 }}>
           {header ? header : <span style={{ visibility: 'hidden' }}>placeholder</span>}
         </div>)}
-        <div className="book-stage-link">
+        <div
+          className={`book-stage-link${onBookClick ? ' book-stage-link-interactive' : ''}`}
+          onClick={onBookClick}
+          onKeyDown={onBookClick ? (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              onBookClick();
+            }
+          } : undefined}
+          role={onBookClick ? 'button' : undefined}
+          tabIndex={onBookClick ? 0 : undefined}
+          aria-label={onBookClick ? bookAriaLabel : undefined}
+        >
           <div className="book-container" style={containerPaddingStyle}>
             <div
               ref={bookRef}
@@ -213,7 +238,7 @@ const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colCla
               }}
             >
               <div className="book-front" style={{ transform: `translateZ(${(thickness || 0) - 1}px)` }}>
-                <img src={book.Image} alt={book.Title} draggable="false" />
+                {book.Image && <img src={book.Image} alt={book.Title} draggable="false" />}
               </div>
 
               {(() => {
@@ -255,6 +280,7 @@ const BookItem = ({ book, index, pageIndex, header = null, colStyle = {}, colCla
               <div>Book Size: {physicalBookSize.width} x {physicalBookSize.height}</div>
           )}
         </div>
+        {footer}
         <div>
           <Button
             size="sm"

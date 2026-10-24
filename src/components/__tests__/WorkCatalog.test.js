@@ -20,7 +20,7 @@ const candidateWork = {
   date: { value: '1851', precision: 9 }
 };
 
-test('requires review of the Wikipedia author and publication year before importing a Work', async () => {
+test('automatically searches Wikipedia and edition matches, then requires review before importing a Work', async () => {
   const originalFetch = global.fetch;
   const calls = [];
   const matchingEdition = {
@@ -49,9 +49,7 @@ test('requires review of the Wikipedia author and publication year before import
     render(<WorkCatalog onBack={jest.fn()} />);
     await screen.findByRole('option', { name: 'Herman Melville' });
     fireEvent.change(screen.getByLabelText('Catalog author'), { target: { value: 'author-1' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Search Wikipedia for this author' }));
     fireEvent.click(await screen.findByRole('button', { name: 'Confirm identity' }));
-    fireEvent.click(await screen.findByRole('button', { name: 'Load works from Wikipedia' }));
     fireEvent.click(await screen.findByRole('button', { name: 'Review' }));
 
     expect(screen.getByLabelText('Search book editions')).toHaveValue('Moby-Dick');
@@ -78,6 +76,8 @@ test('requires review of the Wikipedia author and publication year before import
       authorIds: ['author-1'],
       bookUids: ['edition-moby-dick']
     }));
+    expect(calls.some((call) => call.url.startsWith('/api/catalog/wikipedia/search?q=Herman%20Melville'))).toBe(true);
+    expect(calls.some((call) => call.url === '/api/catalog/wikipedia/authors/works?pageTitle=Herman%20Melville')).toBe(true);
   } finally {
     global.fetch = originalFetch;
   }
@@ -316,7 +316,6 @@ test('shows Wikipedia Work review candidates in chronological order with undated
   try {
     render(<WorkCatalog onBack={jest.fn()} />);
     fireEvent.change(await screen.findByLabelText('Catalog author'), { target: { value: 'author-1' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Load works from Wikipedia' }));
 
     const reviewButtons = await screen.findAllByRole('button', { name: 'Review' });
     await waitFor(() => expect(reviewButtons).toHaveLength(3));
