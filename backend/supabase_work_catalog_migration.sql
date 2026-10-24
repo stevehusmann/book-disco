@@ -3,19 +3,38 @@ create table if not exists public.authors (
   name text not null,
   sort_name text not null default '',
   wikidata_qid text unique,
+  wikipedia_page_title text,
+  wikipedia_url text,
   updated_at timestamptz not null default now()
 );
 
+alter table public.authors add column if not exists wikipedia_page_title text;
+alter table public.authors add column if not exists wikipedia_url text;
+
+create unique index if not exists authors_wikipedia_page_title_idx
+  on public.authors (wikipedia_page_title)
+  where wikipedia_page_title is not null;
+
 create table if not exists public.works (
   id uuid primary key default gen_random_uuid(),
-  wikidata_qid text not null unique,
+  wikidata_qid text unique,
   title text not null,
   release_date text not null,
   date_precision integer not null check (date_precision between 6 and 11),
   source_url text,
+  source_type text not null default 'wikidata',
+  source_id text not null,
   source_statement text,
   updated_at timestamptz not null default now()
 );
+
+alter table public.works alter column wikidata_qid drop not null;
+alter table public.works add column if not exists source_type text not null default 'wikidata';
+alter table public.works add column if not exists source_id text;
+update public.works set source_id = wikidata_qid where source_id is null and wikidata_qid is not null;
+alter table public.works alter column source_id set not null;
+create unique index if not exists works_source_id_idx
+  on public.works (source_type, source_id);
 
 create table if not exists public.author_works (
   author_id text not null references public.authors(id) on delete cascade,
@@ -62,21 +81,26 @@ begin
     release_date,
     date_precision,
     source_url,
+    source_type,
+    source_id,
     source_statement
   ) values (
-    p_work ->> 'wikidataQid',
+    nullif(p_work ->> 'wikidataQid', ''),
     p_work ->> 'title',
     p_work ->> 'releaseDate',
     nullif(p_work ->> 'datePrecision', '')::integer,
     p_work ->> 'sourceUrl',
-    case when coalesce(p_work ->> 'releaseDate', '') <> '' then 'P577' else null end
+    coalesce(p_work ->> 'sourceType', 'wikidata'),
+    p_work ->> 'sourceId',
+    p_work ->> 'sourceStatement'
   )
-  on conflict (wikidata_qid) do nothing;
+  on conflict (source_type, source_id) do nothing;
 
   select id, release_date, date_precision
   into new_id, existing_release_date, existing_precision
   from public.works
-  where wikidata_qid = p_work ->> 'wikidataQid';
+  where source_type = coalesce(p_work ->> 'sourceType', 'wikidata')
+    and source_id = p_work ->> 'sourceId';
 
   if existing_release_date <> (p_work ->> 'releaseDate')
     or existing_precision <> nullif(p_work ->> 'datePrecision', '')::integer then

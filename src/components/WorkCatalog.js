@@ -1,17 +1,18 @@
 import { useEffect, useMemo, useState } from 'react';
 import { apiUrl } from '../apiUrl';
 
-const formatWikidataDate = (date, precision) => {
-  const match = /^([+-])(\d+)-(\d{2})-(\d{2})/.exec(date || '');
-  if (!match) return date || 'Unknown';
-  const [, sign, rawYear, month, day] = match;
-  const year = Number(rawYear);
-  const eraYear = sign === '-' ? `${year} BCE` : String(year);
-  if (precision === 11) return `${eraYear}-${month}-${day}`;
-  if (precision === 10) return `${eraYear}-${month}`;
-  if (precision === 9) return eraYear;
-  const precisionName = { 8: 'decade', 7: 'century', 6: 'millennium' }[precision] || 'approximate';
-  return `${eraYear} (${precisionName})`;
+const getPublicationYear = (date) => {
+  const year = Number.parseInt(String(date || ''), 10);
+  return Number.isFinite(year) ? year : null;
+};
+
+const comparePublicationOrder = (left, right) => {
+  const leftYear = getPublicationYear(left.releaseDate);
+  const rightYear = getPublicationYear(right.releaseDate);
+  if (leftYear == null && rightYear == null) return left.title.localeCompare(right.title);
+  if (leftYear == null) return 1;
+  if (rightYear == null) return -1;
+  return leftYear - rightYear || left.title.localeCompare(right.title);
 };
 
 const fetchJson = async (path, options) => {
@@ -26,7 +27,7 @@ const WorkCatalog = ({ onBack }) => {
   const [works, setWorks] = useState([]);
   const [selectedAuthorId, setSelectedAuthorId] = useState('');
   const [authorFilter, setAuthorFilter] = useState('');
-  const [wikidataCandidates, setWikidataCandidates] = useState([]);
+  const [wikipediaCandidates, setWikipediaCandidates] = useState([]);
   const [workCandidates, setWorkCandidates] = useState([]);
   const [selectedWork, setSelectedWork] = useState(null);
   const [selectedAuthorIds, setSelectedAuthorIds] = useState([]);
@@ -56,6 +57,9 @@ const WorkCatalog = ({ onBack }) => {
     if (!query) return authors.filter((author) => selectedAuthorIds.includes(author.id));
     return authors.filter((author) => `${author.name} ${author.sortName}`.toLowerCase().includes(query)).slice(0, 100);
   }, [authors, coauthorFilter, selectedAuthorIds]);
+  const selectedAuthorWorks = useMemo(() => works
+    .filter((work) => (work.authors || []).some((author) => author.id === selectedAuthorId))
+    .sort(comparePublicationOrder), [works, selectedAuthorId]);
 
   const loadCatalog = async () => {
     const [authorRows, workRows] = await Promise.all([
@@ -70,53 +74,59 @@ const WorkCatalog = ({ onBack }) => {
     loadCatalog().catch((loadError) => setError(loadError.message || 'Unable to load the work catalog.'));
   }, []);
 
-  const searchWikidataAuthors = async () => {
+  const searchWikipediaAuthors = async () => {
     if (!selectedAuthor) return;
     setLoading(true);
     setError('');
     setStatus('');
     try {
-      const results = await fetchJson(`/api/catalog/wikidata/search?q=${encodeURIComponent(selectedAuthor.name)}`);
-      setWikidataCandidates(results);
+      const results = await fetchJson(`/api/catalog/wikipedia/search?q=${encodeURIComponent(selectedAuthor.name)}`);
+      setWikipediaCandidates(results);
     } catch (searchError) {
-      setError(searchError.message || 'Wikidata search failed.');
+      setError(searchError.message || 'Wikipedia search failed.');
     } finally {
       setLoading(false);
     }
   };
 
-  const confirmWikidataAuthor = async (candidate) => {
+  const confirmWikipediaAuthor = async (candidate) => {
     setLoading(true);
     setError('');
     try {
-      await fetchJson(`/api/catalog/authors/${encodeURIComponent(selectedAuthorId)}/wikidata`, {
+      await fetchJson(`/api/catalog/authors/${encodeURIComponent(selectedAuthorId)}/wikipedia`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ wikidataQid: candidate.qid })
+        body: JSON.stringify({ wikipediaPageTitle: candidate.pageTitle })
       });
       setAuthors((current) => current.map((author) => (
-        author.id === selectedAuthorId ? { ...author, wikidataQid: candidate.qid } : author
+        author.id === selectedAuthorId
+          ? { ...author, wikipediaPageTitle: candidate.pageTitle, wikipediaUrl: candidate.url }
+          : author
       )));
-      setWikidataCandidates([]);
-      setStatus(`Linked ${selectedAuthor.name} to ${candidate.qid}.`);
+      setWikipediaCandidates([]);
+      setStatus(`Linked ${selectedAuthor.name} to Wikipedia page “${candidate.pageTitle}”.`);
     } catch (linkError) {
-      setError(linkError.message || 'Unable to link the Wikidata author.');
+      setError(linkError.message || 'Unable to link the Wikipedia author.');
     } finally {
       setLoading(false);
     }
   };
 
-  const loadWikidataWorks = async () => {
-    if (!selectedAuthor?.wikidataQid) return;
+  const loadWikipediaWorks = async () => {
+    if (!selectedAuthor?.wikipediaPageTitle) return;
     setLoading(true);
     setError('');
     setStatus('');
     try {
-      const results = await fetchJson(`/api/catalog/wikidata/authors/${selectedAuthor.wikidataQid}/works`);
-      setWorkCandidates(results);
+      const results = await fetchJson(`/api/catalog/wikipedia/authors/works?pageTitle=${encodeURIComponent(selectedAuthor.wikipediaPageTitle)}`);
+      setWorkCandidates(results.map((candidate) => ({
+        ...candidate,
+        publicationDates: candidate.date ? [candidate.date] : []
+      })));
       setSelectedWork(null);
+      if (!results.length) setStatus('No clearly labeled works or bibliography sections were found on that author page.');
     } catch (loadError) {
-      setError(loadError.message || 'Unable to load Wikidata works.');
+      setError(loadError.message || 'Unable to load Wikipedia works.');
     } finally {
       setLoading(false);
     }
@@ -126,8 +136,8 @@ const WorkCatalog = ({ onBack }) => {
     setSelectedWork(candidate);
     setSelectedAuthorIds([selectedAuthorId]);
     setSelectedBookUids([]);
-    setReviewedDate('');
-    setReviewedPrecision('');
+    setReviewedDate(candidate.date?.value || '');
+    setReviewedPrecision(candidate.date?.precision ? String(candidate.date.precision) : '');
     setConfirmedOriginalDate(false);
     setBookSearch('');
     setBookResults([]);
@@ -201,18 +211,20 @@ const WorkCatalog = ({ onBack }) => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          wikidataQid: selectedWork.qid,
+          sourceType: 'wikipedia',
+          sourceId: selectedWork.sourceId,
           title: selectedWork.title,
           releaseDate: reviewedDate,
           datePrecision: Number(reviewedPrecision),
           sourceUrl: selectedWork.sourceUrl,
+          sourceStatement: selectedWork.sourceStatement,
           authorIds: selectedAuthorIds,
           bookUids: selectedBookUids
         })
       });
       setStatus(`Added "${selectedWork.title}" to the reviewed Work catalog.`);
       setSelectedWork(null);
-      setWorkCandidates((current) => current.filter((candidate) => candidate.qid !== selectedWork.qid));
+      setWorkCandidates((current) => current.filter((candidate) => candidate.sourceId !== selectedWork.sourceId));
       await loadCatalog();
     } catch (saveError) {
       setError(saveError.message || 'Unable to save the reviewed Work.');
@@ -248,7 +260,7 @@ const WorkCatalog = ({ onBack }) => {
         <button className="btn btn-secondary" type="button" onClick={onBack}>Back To Library</button>
       </div>
       <p className="small text-muted">
-        Wikidata is an incomplete community catalog, and its response is capped at 10,000 results per author. Review each author identity, Work title, and original first-publication date before saving. Dates retain the source precision; no missing month or day is invented.
+        Wikipedia’s author bibliography pages vary in coverage and formatting. Review each author page, Work title, and original publication year before saving. Only publication-list sections are collected, and existing edition records are never auto-matched.
       </p>
       {error && <div className="alert alert-danger" role="alert">{error}</div>}
       {status && <div className="alert alert-info" role="status">{status}</div>}
@@ -271,7 +283,7 @@ const WorkCatalog = ({ onBack }) => {
               value={selectedAuthorId}
               onChange={(event) => {
                 setSelectedAuthorId(event.target.value);
-                setWikidataCandidates([]);
+                setWikipediaCandidates([]);
                 setWorkCandidates([]);
                 setSelectedWork(null);
               }}
@@ -279,40 +291,62 @@ const WorkCatalog = ({ onBack }) => {
               <option value="">Select an author...</option>
               {filteredAuthors.map((author) => (
                 <option key={author.id} value={author.id}>
-                  {author.name}{author.wikidataQid ? ` (${author.wikidataQid})` : ''}
+                  {author.name}{author.wikipediaPageTitle ? ` (${author.wikipediaPageTitle})` : ''}
                 </option>
               ))}
             </select>
             {selectedAuthor && (
               <>
                 <div className="small mb-2">
-                  {selectedAuthor.wikidataQid
-                    ? <>Linked to <a href={`https://www.wikidata.org/wiki/${selectedAuthor.wikidataQid}`} target="_blank" rel="noreferrer">{selectedAuthor.wikidataQid}</a>.</>
-                    : 'Not linked to a Wikidata entity yet.'}
+                  {selectedAuthor.wikipediaPageTitle
+                    ? <>Linked to <a href={selectedAuthor.wikipediaUrl} target="_blank" rel="noreferrer">{selectedAuthor.wikipediaPageTitle}</a>.</>
+                    : 'Not linked to a Wikipedia author page yet.'}
                 </div>
-                <button className="btn btn-outline-primary btn-sm" type="button" onClick={searchWikidataAuthors} disabled={loading}>
-                  Search Wikidata for this author
+                <button className="btn btn-outline-primary btn-sm" type="button" onClick={searchWikipediaAuthors} disabled={loading}>
+                  Search Wikipedia for this author
                 </button>
-                {selectedAuthor.wikidataQid && (
-                  <button className="btn btn-primary btn-sm ms-2" type="button" onClick={loadWikidataWorks} disabled={loading}>
-                    {loading ? 'Loading...' : 'Load candidate Works'}
+                {selectedAuthor.wikipediaPageTitle && (
+                  <button className="btn btn-primary btn-sm ms-2" type="button" onClick={loadWikipediaWorks} disabled={loading}>
+                    {loading ? 'Loading...' : 'Load works from Wikipedia'}
                   </button>
                 )}
               </>
             )}
-            {wikidataCandidates.length > 0 && (
-              <div className="list-group mt-3" aria-label="Wikidata author candidates">
-                {wikidataCandidates.map((candidate) => (
-                  <div className="list-group-item" key={candidate.qid}>
+            {selectedAuthor && (
+              <div className="mt-3 border-top pt-3" aria-label="Author view">
+                <h6>Author view: Works in publication order</h6>
+                {selectedAuthorWorks.length ? (
+                  <ol className="mb-0 ps-3">
+                    {selectedAuthorWorks.map((work) => (
+                      <li key={work.id} className="mb-2">
+                        <strong>{work.title}</strong>
+                        <span className="text-muted"> · {work.releaseDate}</span>
+                        {work.books.length > 0 && (
+                          <div className="small text-muted">
+                            Editions: {work.books.map((book) => `${book.title}${book.isbn ? ` (${book.isbn})` : ''}`).join('; ')}
+                          </div>
+                        )}
+                      </li>
+                    ))}
+                  </ol>
+                ) : (
+                  <p className="small text-muted mb-0">No reviewed Works linked to this author yet.</p>
+                )}
+              </div>
+            )}
+            {wikipediaCandidates.length > 0 && (
+              <div className="list-group mt-3" aria-label="Wikipedia author candidates">
+                {wikipediaCandidates.map((candidate) => (
+                  <div className="list-group-item" key={candidate.pageTitle}>
                     <div className="d-flex justify-content-between gap-2">
                       <div>
-                        <strong>{candidate.label}</strong>
-                        <div className="small text-muted">{candidate.description || 'No description'} · {candidate.qid}</div>
+                        <strong>{candidate.pageTitle}</strong>
+                        <div className="small text-muted">{candidate.description || 'Wikipedia article'} · <a href={candidate.url} target="_blank" rel="noreferrer">Open page</a></div>
                       </div>
                       <button
                         className="btn btn-sm btn-outline-success align-self-start"
                         type="button"
-                        onClick={() => confirmWikidataAuthor(candidate)}
+                        onClick={() => confirmWikipediaAuthor(candidate)}
                         disabled={loading}
                       >
                         Confirm identity
@@ -326,19 +360,16 @@ const WorkCatalog = ({ onBack }) => {
 
           {workCandidates.length > 0 && (
             <div className="border rounded bg-white p-3">
-              <h5>2. Review Wikidata Work candidates ({workCandidates.length})</h5>
-              {workCandidates.length >= 10000 && (
-                <div className="small text-warning mb-2">Wikidata returned the 10,000-result limit; additional Works may be omitted.</div>
-              )}
+              <h5>2. Review Works found on Wikipedia ({workCandidates.length})</h5>
               <div className="list-group">
                 {workCandidates.map((candidate) => (
-                  <div className="list-group-item d-flex align-items-start justify-content-between gap-2" key={candidate.qid}>
+                  <div className="list-group-item d-flex align-items-start justify-content-between gap-2" key={candidate.sourceId}>
                     <div>
                       <strong>{candidate.title}</strong>
                       <div className="small text-muted">
-                        {candidate.qid} · {candidate.publicationDates.length
-                          ? `${candidate.publicationDates.length} publication date claim${candidate.publicationDates.length === 1 ? '' : 's'}`
-                          : 'No publication date claim'}
+                        {candidate.publicationDates.length
+                          ? `Publication year found: ${candidate.publicationDates[0].value}`
+                          : 'No publication year found'}
                       </div>
                     </div>
                     <button className="btn btn-sm btn-outline-primary" type="button" onClick={() => beginWorkReview(candidate)}>
@@ -356,7 +387,7 @@ const WorkCatalog = ({ onBack }) => {
             <div className="border rounded bg-white p-3 mb-3">
               <h5>3. Confirm Work details</h5>
               <p className="small mb-1">
-                <a href={selectedWork.sourceUrl} target="_blank" rel="noreferrer">{selectedWork.qid}</a> · Verify this is a distinct literary Work and not another author’s similarly titled item.
+                <a href={selectedWork.sourceUrl} target="_blank" rel="noreferrer">Source on Wikipedia</a> · Verify this entry describes a distinct literary Work.
               </p>
               <label className="form-label" htmlFor="review-work-title">Work title</label>
               <input
@@ -366,14 +397,14 @@ const WorkCatalog = ({ onBack }) => {
                 onChange={(event) => setSelectedWork((current) => ({ ...current, title: event.target.value }))}
               />
               <fieldset className="mb-3">
-                <legend className="form-label">Original / first publication date</legend>
+                <legend className="form-label">Publication year</legend>
                 {selectedWork.publicationDates.length ? selectedWork.publicationDates.map((date) => (
                   <div className="form-check" key={`${date.value}-${date.precision}`}>
                     <input
                       className="form-check-input"
                       type="radio"
                       name="review-release-date"
-                      id={`release-${selectedWork.qid}-${date.precision}-${date.value}`}
+                      id={`release-${encodeURIComponent(selectedWork.sourceId)}-${date.precision}-${date.value}`}
                       checked={reviewedDate === date.value && Number(reviewedPrecision) === date.precision}
                       onChange={() => {
                         setReviewedDate(date.value);
@@ -381,46 +412,31 @@ const WorkCatalog = ({ onBack }) => {
                         setConfirmedOriginalDate(false);
                       }}
                     />
-                    <label className="form-check-label" htmlFor={`release-${selectedWork.qid}-${date.precision}-${date.value}`}>
-                      {formatWikidataDate(date.value, date.precision)} <span className="text-muted">(precision {date.precision})</span>
+                    <label className="form-check-label" htmlFor={`release-${encodeURIComponent(selectedWork.sourceId)}-${date.precision}-${date.value}`}>
+                      {date.value}
                     </label>
                   </div>
                 )) : (
-                  <div className="small text-muted">Wikidata has no publication date claim for this Work. Enter a researched date and confirm it below.</div>
+                  <div className="small text-muted">No year was found in this bibliography entry. Enter a year only if you can verify it.</div>
                 )}
                 <div className="row g-2 mt-1">
-                  <div className="col-md-8">
-                    <label className="form-label small" htmlFor="reviewed-date-value">Reviewed Wikidata time value</label>
+                  <div className="col-12">
+                    <label className="form-label small" htmlFor="reviewed-date-value">Reviewed publication year</label>
                     <input
                       id="reviewed-date-value"
                       className="form-control form-control-sm"
+                      type="number"
+                      min="-999999"
+                      max="9999"
+                      step="1"
                       value={reviewedDate}
                       onChange={(event) => {
                         setReviewedDate(event.target.value);
+                        setReviewedPrecision(event.target.value ? '9' : '');
                         setConfirmedOriginalDate(false);
                       }}
-                      placeholder="+1851-00-00T00:00:00Z"
+                      placeholder="1851"
                     />
-                  </div>
-                  <div className="col-md-4">
-                    <label className="form-label small" htmlFor="reviewed-date-precision">Date precision</label>
-                    <select
-                      id="reviewed-date-precision"
-                      className="form-select form-select-sm"
-                      value={reviewedPrecision}
-                      onChange={(event) => {
-                        setReviewedPrecision(event.target.value);
-                        setConfirmedOriginalDate(false);
-                      }}
-                    >
-                      <option value="">Select precision...</option>
-                      <option value="6">Millennium</option>
-                      <option value="7">Century</option>
-                      <option value="8">Decade</option>
-                      <option value="9">Year</option>
-                      <option value="10">Month</option>
-                      <option value="11">Day</option>
-                    </select>
                   </div>
                 </div>
               </fieldset>
@@ -434,7 +450,7 @@ const WorkCatalog = ({ onBack }) => {
                   disabled={!reviewedDate}
                 />
                 <label className="form-check-label" htmlFor="confirm-original-release-date">
-                  I verified this is the Work’s original / first publication date, not a later edition’s date.
+                  I verified this publication year for the Work, not just for an edition.
                 </label>
               </div>
 
@@ -517,7 +533,7 @@ const WorkCatalog = ({ onBack }) => {
                       <div className="min-w-0">
                         <strong>{work.title}</strong>
                         <div className="small text-muted">
-                          {formatWikidataDate(work.releaseDate, work.datePrecision)} · {work.authors.map((author) => author.name).join(', ')}
+                          {work.releaseDate} · {work.authors.map((author) => author.name).join(', ')}
                         </div>
                         <div className="small text-muted">
                           {work.books.length

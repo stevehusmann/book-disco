@@ -7,8 +7,8 @@ const { createImageProxyHandler } = require('./imageProxy');
 const {
   createWorkRecord,
   addWorkRelationships,
-  getWikidataEntityCandidates,
-  getWikidataWorks,
+  getWikipediaAuthorCandidates,
+  getWikipediaWorks,
   stableAuthorId
 } = require('./workCatalog');
 
@@ -456,11 +456,11 @@ const isMissingSupabaseSeriesTable = (error) => {
 };
 
 const supabaseSeriesMigrationMessage = 'The Supabase series table is missing. Run backend/supabase_series_migration.sql in the Supabase SQL Editor, then retry.';
-const supabaseWorkCatalogMigrationMessage = 'The Supabase work catalog tables are missing. Run backend/supabase_work_catalog_migration.sql in the Supabase SQL Editor, then retry.';
+const supabaseWorkCatalogMigrationMessage = 'The Supabase work catalog tables are missing or outdated. Run backend/supabase_work_catalog_migration.sql in the Supabase SQL Editor, then retry.';
+let supabaseAuthorsSeeded = false;
 
 const ensureSupabaseAuthorCatalog = async () => {
-  const existing = await supabaseRequest('authors?select=id&limit=1');
-  if (existing.length) return;
+  if (supabaseAuthorsSeeded) return;
   const authorSeedPath = process.env.AUTHOR_SEED_PATH || path.resolve(__dirname, '../public/AuthorList.json');
   let authors;
   try {
@@ -469,14 +469,19 @@ const ensureSupabaseAuthorCatalog = async () => {
     if (error.code === 'ENOENT') return;
     throw error;
   }
-  if (!Array.isArray(authors) || !authors.length) return;
+  if (!Array.isArray(authors)) throw new Error('Author seed file must contain an array.');
+  if (!authors.length) {
+    supabaseAuthorsSeeded = true;
+    return;
+  }
   const rows = authors
     .filter((author) => author?.id && author?.canonicalName)
     .map((author) => ({
       id: stableAuthorId(author),
       name: String(author.canonicalName),
       sort_name: String(author.sortName || ''),
-      wikidata_qid: /^Q\d+$/.test(String(author.wikidataQid || '')) ? String(author.wikidataQid) : null
+      wikipedia_page_title: null,
+      wikipedia_url: null
     }));
   for (let offset = 0; offset < rows.length; offset += 500) {
     await supabaseRequest('authors?on_conflict=id', {
@@ -485,6 +490,7 @@ const ensureSupabaseAuthorCatalog = async () => {
       body: JSON.stringify(rows.slice(offset, offset + 500))
     });
   }
+  supabaseAuthorsSeeded = true;
 };
 
 const loadSupabaseSeriesFromBooks = async () => {
@@ -792,8 +798,14 @@ app.get('/api/catalog/authors', async (_req, res) => {
   try {
     if (useSupabase) {
       await ensureSupabaseAuthorCatalog();
-      const authors = await supabaseRequest('authors?select=id,name,sort_name,wikidata_qid&order=sort_name.asc,name.asc');
-      return res.json(authors.map((author) => ({ ...author, sortName: author.sort_name, wikidataQid: author.wikidata_qid })));
+      const authors = await supabaseRequest('authors?select=id,name,sort_name,wikipedia_page_title,wikipedia_url&order=sort_name.asc,name.asc');
+      return res.json(authors.map((author) => ({
+        id: author.id,
+        name: author.name,
+        sortName: author.sort_name,
+        wikipediaPageTitle: author.wikipedia_page_title,
+        wikipediaUrl: author.wikipedia_url
+      })));
     }
     const authors = db.prepare(`
       SELECT authors.id, authors.name, authors.sort_name, authors.wikidata_qid,
@@ -807,7 +819,8 @@ app.get('/api/catalog/authors', async (_req, res) => {
       id: author.id,
       name: author.name,
       sortName: author.sort_name,
-      wikidataQid: author.wikidata_qid,
+      wikipediaPageTitle: author.wikipedia_page_title,
+      wikipediaUrl: author.wikipedia_url,
       workCount: author.work_count
     })));
   } catch (error) {
@@ -819,52 +832,57 @@ app.get('/api/catalog/authors', async (_req, res) => {
   }
 });
 
-app.put('/api/catalog/authors/:id/wikidata', async (req, res) => {
-  const qid = String(req.body?.wikidataQid || '').trim();
-  if (!/^Q\d+$/.test(qid)) return res.status(400).json({ error: 'A valid Wikidata QID is required.' });
+app.put('/api/catalog/authors/:id/wikipedia', async (req, res) => {
+  const pageTitle = String(req.body?.wikipediaPageTitle || '').trim();
+  if (!pageTitle || pageTitle.length > 300) return res.status(400).json({ error: 'A Wikipedia page title is required.' });
   try {
     if (useSupabase) {
       const authors = await supabaseRequest(`authors?id=eq.${encodeURIComponent(req.params.id)}&select=id`, {
         method: 'PATCH',
         headers: { Prefer: 'return=representation' },
-        body: JSON.stringify({ wikidata_qid: qid, updated_at: new Date().toISOString() })
+        body: JSON.stringify({
+          wikipedia_page_title: pageTitle,
+          wikipedia_url: `https://en.wikipedia.org/wiki/${encodeURIComponent(pageTitle.replace(/ /g, '_'))}`,
+          updated_at: new Date().toISOString()
+        })
       });
       if (!authors.length) return res.status(404).json({ error: 'Author not found.' });
-      return res.json({ id: req.params.id, wikidataQid: qid });
+      return res.json({ id: req.params.id, wikipediaPageTitle: pageTitle });
     }
     const result = db.prepare(`
-      UPDATE authors SET wikidata_qid = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?
-    `).run(qid, req.params.id);
+      UPDATE authors SET wikipedia_page_title = ?, wikipedia_url = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?
+    `).run(pageTitle, `https://en.wikipedia.org/wiki/${encodeURIComponent(pageTitle.replace(/ /g, '_'))}`, req.params.id);
     if (!result.changes) return res.status(404).json({ error: 'Author not found.' });
-    return res.json({ id: req.params.id, wikidataQid: qid });
+    return res.json({ id: req.params.id, wikipediaPageTitle: pageTitle });
   } catch (error) {
-    if (/authors/i.test(error.message)) return res.status(503).json({ error: supabaseWorkCatalogMigrationMessage });
     if (/duplicate key|unique constraint|SQLITE_CONSTRAINT_UNIQUE/i.test(error.message)) {
-      return res.status(409).json({ error: 'That Wikidata entity is already linked to another author.' });
+      return res.status(409).json({ error: 'That Wikipedia page is already linked to another author.' });
     }
-    console.error('Failed to link author to Wikidata:', error);
-    return res.status(502).json({ error: 'Failed to link author to Wikidata.' });
+    if (/authors|wikipedia_page_title/i.test(error.message)) return res.status(503).json({ error: supabaseWorkCatalogMigrationMessage });
+    console.error('Failed to link author to Wikipedia:', error);
+    return res.status(502).json({ error: 'Failed to link author to Wikipedia.' });
   }
 });
 
-app.get('/api/catalog/wikidata/search', async (req, res) => {
+app.get('/api/catalog/wikipedia/search', async (req, res) => {
   const search = String(req.query.q || '').trim().slice(0, 120);
   if (!search) return res.status(400).json({ error: 'Search text is required.' });
   try {
-    return res.json(await getWikidataEntityCandidates(search));
+    return res.json(await getWikipediaAuthorCandidates(search));
   } catch (error) {
-    console.error('Failed to search Wikidata authors:', error);
-    return res.status(502).json({ error: 'Wikidata search is temporarily unavailable.' });
+    console.error('Failed to search Wikipedia authors:', error);
+    return res.status(502).json({ error: 'Wikipedia search is temporarily unavailable.' });
   }
 });
 
-app.get('/api/catalog/wikidata/authors/:qid/works', async (req, res) => {
-  if (!/^Q\d+$/.test(req.params.qid)) return res.status(400).json({ error: 'A valid Wikidata QID is required.' });
+app.get('/api/catalog/wikipedia/authors/works', async (req, res) => {
+  const pageTitle = String(req.query.pageTitle || '').trim();
+  if (!pageTitle || pageTitle.length > 300) return res.status(400).json({ error: 'A valid Wikipedia page title is required.' });
   try {
-    return res.json(await getWikidataWorks(req.params.qid));
+    return res.json(await getWikipediaWorks(pageTitle));
   } catch (error) {
-    console.error(`Failed to load Wikidata works for ${req.params.qid}:`, error);
-    return res.status(502).json({ error: 'Wikidata works are temporarily unavailable.' });
+    console.error(`Failed to load Wikipedia works for ${pageTitle}:`, error);
+    return res.status(502).json({ error: 'Wikipedia works are temporarily unavailable.' });
   }
 });
 
@@ -903,10 +921,12 @@ app.get('/api/catalog/books', async (req, res) => {
 app.get('/api/catalog/works', async (_req, res) => {
   try {
     if (useSupabase) {
-      const rows = await supabaseRequest('works?select=id,wikidata_qid,title,release_date,date_precision,source_url,authors:author_works(author:authors(id,name)),books:book_works(book:books(uid,book))&order=title.asc');
+      const rows = await supabaseRequest('works?select=id,wikidata_qid,source_type,source_id,title,release_date,date_precision,source_url,authors:author_works(author:authors(id,name)),books:book_works(book:books(uid,book))&order=title.asc');
       return res.json(rows.map((work) => ({
         id: work.id,
         wikidataQid: work.wikidata_qid,
+        sourceType: work.source_type,
+        sourceId: work.source_id,
         title: work.title,
         releaseDate: work.release_date,
         datePrecision: work.date_precision,
@@ -933,6 +953,8 @@ app.get('/api/catalog/works', async (_req, res) => {
     return res.json(works.map((work) => ({
       id: work.id,
       wikidataQid: work.wikidata_qid,
+      sourceType: work.source_type,
+      sourceId: work.source_id,
       title: work.title,
       releaseDate: work.release_date,
       datePrecision: work.date_precision,
@@ -951,19 +973,24 @@ app.get('/api/catalog/works', async (_req, res) => {
 
 app.post('/api/catalog/works', async (req, res) => {
   const title = String(req.body?.title || '').trim();
+  const sourceType = req.body?.sourceType === 'wikipedia' ? 'wikipedia' : 'wikidata';
+  const sourceId = String(req.body?.sourceId || req.body?.wikidataQid || '').trim();
   const qid = String(req.body?.wikidataQid || '').trim();
   const authorIds = Array.isArray(req.body?.authorIds) ? [...new Set(req.body.authorIds.map(String))] : [];
   const bookUids = Array.isArray(req.body?.bookUids) ? [...new Set(req.body.bookUids.map(String))] : [];
   const releaseDate = req.body?.releaseDate == null ? null : String(req.body.releaseDate);
   const datePrecision = req.body?.datePrecision == null ? null : Number(req.body.datePrecision);
-  if (!title || !/^Q\d+$/.test(qid) || !authorIds.length) {
-    return res.status(400).json({ error: 'A title, Wikidata work ID, and at least one author are required.' });
+  if (!title || !sourceId || (sourceType === 'wikidata' && !/^Q\d+$/.test(qid)) || !authorIds.length) {
+    return res.status(400).json({ error: 'A title, source ID, and at least one author are required.' });
   }
   if (!releaseDate || !Number.isInteger(datePrecision) || datePrecision < 6 || datePrecision > 11) {
-    return res.status(400).json({ error: 'The release date must include valid Wikidata precision between 6 and 11.' });
+    return res.status(400).json({ error: 'The release year must include valid source precision between 6 and 11.' });
   }
-  if (!/^[+-]\d{4,}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(releaseDate)) {
+  if (sourceType === 'wikidata' && !/^[+-]\d{4,}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(releaseDate)) {
     return res.status(400).json({ error: 'Release dates must use the Wikidata time format.' });
+  }
+  if (sourceType === 'wikipedia' && !/^-?\d{1,6}$/.test(releaseDate)) {
+    return res.status(400).json({ error: 'Wikipedia release dates must be a year.' });
   }
   try {
     if (useSupabase) {
@@ -972,10 +999,13 @@ app.post('/api/catalog/works', async (req, res) => {
         body: JSON.stringify({
           p_work: {
             wikidataQid: qid,
+            sourceType,
+            sourceId,
             title,
             releaseDate,
             datePrecision,
-            sourceUrl: req.body?.sourceUrl || `https://www.wikidata.org/wiki/${qid}`
+            sourceUrl: req.body?.sourceUrl,
+            sourceStatement: req.body?.sourceStatement
           },
           p_author_ids: authorIds,
           p_book_uids: bookUids
@@ -984,17 +1014,21 @@ app.post('/api/catalog/works', async (req, res) => {
       return res.status(201).json({
         id: work.id,
         wikidataQid: work.wikidata_qid,
+        sourceType: work.source_type,
+        sourceId: work.source_id,
         title: work.title,
         releaseDate: work.release_date,
         datePrecision: work.date_precision,
         sourceUrl: work.source_url
       });
     }
-    const existing = db.prepare('SELECT id FROM works WHERE wikidata_qid = ?').get(qid);
+    const existing = db.prepare('SELECT id FROM works WHERE source_type = ? AND source_id = ?').get(sourceType, sourceId);
     const id = createWorkRecord(db, {
       ...req.body,
       title,
       wikidataQid: qid,
+      sourceType,
+      sourceId,
       authorIds,
       bookUids,
       releaseDate,
@@ -1004,6 +1038,8 @@ app.post('/api/catalog/works', async (req, res) => {
     return res.status(existing ? 200 : 201).json({
       id: work.id,
       wikidataQid: work.wikidata_qid,
+      sourceType: work.source_type,
+      sourceId: work.source_id,
       title: work.title,
       releaseDate: work.release_date,
       datePrecision: work.date_precision,
@@ -1014,7 +1050,7 @@ app.post('/api/catalog/works', async (req, res) => {
       return res.status(503).json({ error: supabaseWorkCatalogMigrationMessage });
     }
     if (/duplicate key|unique constraint|SQLITE_CONSTRAINT_UNIQUE/i.test(error.message)) {
-      return res.status(409).json({ error: 'This Wikidata Work has already been imported.' });
+      return res.status(409).json({ error: 'This source Work has already been imported.' });
     }
     console.error('Failed to save reviewed Work:', error);
     return res.status(400).json({ error: error.message || 'Failed to save reviewed Work.' });

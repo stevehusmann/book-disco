@@ -7,8 +7,8 @@ const { createImageProxyHandler } = require('./backend/imageProxy');
 const {
   createWorkRecord,
   addWorkRelationships,
-  getWikidataEntityCandidates,
-  getWikidataWorks,
+  getWikipediaAuthorCandidates,
+  getWikipediaWorks,
   initializeWorkCatalog,
   seedAuthorsFromList
 } = require('./backend/workCatalog');
@@ -441,46 +441,48 @@ app.get('/api/catalog/authors', (_req, res) => {
     id: author.id,
     name: author.name,
     sortName: author.sort_name,
-    wikidataQid: author.wikidata_qid,
+    wikipediaPageTitle: author.wikipedia_page_title,
+    wikipediaUrl: author.wikipedia_url,
     workCount: author.work_count
   })));
 });
 
-app.put('/api/catalog/authors/:id/wikidata', (req, res) => {
-  const qid = String(req.body?.wikidataQid || '').trim();
-  if (!/^Q\d+$/.test(qid)) return res.status(400).json({ error: 'A valid Wikidata QID is required.' });
+app.put('/api/catalog/authors/:id/wikipedia', (req, res) => {
+  const pageTitle = String(req.body?.wikipediaPageTitle || '').trim();
+  if (!pageTitle) return res.status(400).json({ error: 'A Wikipedia page title is required.' });
   try {
     const result = db.prepare(`
-      UPDATE authors SET wikidata_qid = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?
-    `).run(qid, req.params.id);
+      UPDATE authors SET wikipedia_page_title = ?, wikipedia_url = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?
+    `).run(pageTitle, `https://en.wikipedia.org/wiki/${encodeURIComponent(pageTitle.replace(/ /g, '_'))}`, req.params.id);
     if (!result.changes) return res.status(404).json({ error: 'Author not found.' });
-    return res.json({ id: req.params.id, wikidataQid: qid });
+    return res.json({ id: req.params.id, wikipediaPageTitle: pageTitle });
   } catch (error) {
     if (error.code === 'SQLITE_CONSTRAINT_UNIQUE') {
-      return res.status(409).json({ error: 'That Wikidata entity is already linked to another author.' });
+      return res.status(409).json({ error: 'That Wikipedia page is already linked to another author.' });
     }
     throw error;
   }
 });
 
-app.get('/api/catalog/wikidata/search', async (req, res) => {
+app.get('/api/catalog/wikipedia/search', async (req, res) => {
   const search = String(req.query.q || '').trim().slice(0, 120);
   if (!search) return res.status(400).json({ error: 'Search text is required.' });
   try {
-    return res.json(await getWikidataEntityCandidates(search));
+    return res.json(await getWikipediaAuthorCandidates(search));
   } catch (error) {
-    console.error('Failed to search Wikidata authors:', error);
-    return res.status(502).json({ error: 'Wikidata search is temporarily unavailable.' });
+    console.error('Failed to search Wikipedia authors:', error);
+    return res.status(502).json({ error: 'Wikipedia search is temporarily unavailable.' });
   }
 });
 
-app.get('/api/catalog/wikidata/authors/:qid/works', async (req, res) => {
-  if (!/^Q\d+$/.test(req.params.qid)) return res.status(400).json({ error: 'A valid Wikidata QID is required.' });
+app.get('/api/catalog/wikipedia/authors/works', async (req, res) => {
+  const pageTitle = String(req.query.pageTitle || '').trim();
+  if (!pageTitle || pageTitle.length > 300) return res.status(400).json({ error: 'A valid Wikipedia page title is required.' });
   try {
-    return res.json(await getWikidataWorks(req.params.qid));
+    return res.json(await getWikipediaWorks(pageTitle));
   } catch (error) {
-    console.error(`Failed to load Wikidata works for ${req.params.qid}:`, error);
-    return res.status(502).json({ error: 'Wikidata works are temporarily unavailable.' });
+    console.error(`Failed to load Wikipedia works for ${pageTitle}:`, error);
+    return res.status(502).json({ error: 'Wikipedia works are temporarily unavailable.' });
   }
 });
 
@@ -516,6 +518,8 @@ app.get('/api/catalog/works', (_req, res) => {
   res.json(works.map((work) => ({
     id: work.id,
     wikidataQid: work.wikidata_qid,
+    sourceType: work.source_type,
+    sourceId: work.source_id,
     title: work.title,
     releaseDate: work.release_date,
     datePrecision: work.date_precision,
@@ -527,12 +531,16 @@ app.get('/api/catalog/works', (_req, res) => {
 
 app.post('/api/catalog/works', (req, res) => {
   try {
-    const existing = db.prepare('SELECT id FROM works WHERE wikidata_qid = ?').get(String(req.body?.wikidataQid || '').trim());
+    const sourceId = String(req.body?.sourceId || '').trim();
+    const sourceType = req.body?.sourceType === 'wikipedia' ? 'wikipedia' : 'wikidata';
+    const existing = db.prepare('SELECT id FROM works WHERE source_type = ? AND source_id = ?').get(sourceType, sourceId);
     const id = createWorkRecord(db, req.body);
     const work = db.prepare('SELECT * FROM works WHERE id = ?').get(id);
     return res.status(existing ? 200 : 201).json({
       id: work.id,
       wikidataQid: work.wikidata_qid,
+      sourceType: work.source_type,
+      sourceId: work.source_id,
       title: work.title,
       releaseDate: work.release_date,
       datePrecision: work.date_precision,
@@ -540,7 +548,7 @@ app.post('/api/catalog/works', (req, res) => {
     });
   } catch (error) {
     const isConflict = error.code === 'SQLITE_CONSTRAINT_UNIQUE';
-    return res.status(isConflict ? 409 : 400).json({ error: isConflict ? 'This Wikidata Work has already been imported.' : error.message });
+    return res.status(isConflict ? 409 : 400).json({ error: isConflict ? 'This source Work has already been imported.' : error.message });
   }
 });
 
