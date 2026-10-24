@@ -882,7 +882,8 @@ app.get('/api/catalog/wikipedia/authors/works', async (req, res) => {
     return res.json(await getWikipediaWorks(pageTitle));
   } catch (error) {
     console.error(`Failed to load Wikipedia works for ${pageTitle}:`, error);
-    return res.status(502).json({ error: 'Wikipedia works are temporarily unavailable.' });
+    const detail = error instanceof Error ? error.message : String(error);
+    return res.status(502).json({ error: `Wikipedia works could not be loaded: ${detail}` });
   }
 });
 
