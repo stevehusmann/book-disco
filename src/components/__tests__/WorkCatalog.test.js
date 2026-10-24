@@ -172,11 +172,13 @@ test('adds book edition links to an already reviewed Work', async () => {
   try {
     render(<WorkCatalog onBack={jest.fn()} />);
     fireEvent.click(await screen.findByRole('button', { name: 'Link editions' }));
-    fireEvent.change(screen.getByLabelText('Search editions for Moby-Dick'), { target: { value: 'Moby-Dick' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Search' }));
+    expect(screen.getByLabelText('Search editions for Moby-Dick')).toHaveValue('Moby-Dick');
     fireEvent.click(await screen.findByLabelText(/ISBN 9780000000000/));
     fireEvent.click(screen.getByRole('button', { name: 'Save edition links' }));
 
+    await waitFor(() => expect(calls).toContainEqual(expect.objectContaining({
+      url: '/api/catalog/books?q=Moby-Dick'
+    })));
     await waitFor(() => expect(calls).toContainEqual(expect.objectContaining({
       url: '/api/catalog/works/work-1/relationships',
       options: expect.objectContaining({ method: 'POST' })

@@ -162,21 +162,41 @@ const WorkCatalog = ({ onBack }) => {
     }
   };
 
-  const searchEditionsToLink = async (event) => {
-    event.preventDefault();
-    if (!linkBookSearch.trim()) {
+  const loadEditionsToLink = async (search) => {
+    const query = search.trim();
+    if (!query) {
       setLinkBookResults([]);
       return;
     }
     setLoading(true);
     setError('');
     try {
-      setLinkBookResults(await fetchJson(`/api/catalog/books?q=${encodeURIComponent(linkBookSearch.trim())}`));
+      setLinkBookResults(await fetchJson(`/api/catalog/books?q=${encodeURIComponent(query)}`));
     } catch (searchError) {
       setError(searchError.message || 'Unable to search book editions.');
     } finally {
       setLoading(false);
     }
+  };
+
+  const searchEditionsToLink = (event) => {
+    event.preventDefault();
+    loadEditionsToLink(linkBookSearch);
+  };
+
+  const toggleEditionLinker = (work) => {
+    if (linkingWorkId === work.id) {
+      setLinkingWorkId('');
+      setLinkBookSearch('');
+      setLinkBookResults([]);
+      setLinkBookUids([]);
+      return;
+    }
+    setLinkingWorkId(work.id);
+    setLinkBookSearch(work.title);
+    setLinkBookResults([]);
+    setLinkBookUids([]);
+    loadEditionsToLink(work.title);
   };
 
   const saveEditionLinks = async (work) => {
@@ -545,12 +565,7 @@ const WorkCatalog = ({ onBack }) => {
                         <button
                           className="btn btn-sm btn-outline-primary"
                           type="button"
-                          onClick={() => {
-                            setLinkingWorkId((current) => current === work.id ? '' : work.id);
-                            setLinkBookSearch('');
-                            setLinkBookResults([]);
-                            setLinkBookUids([]);
-                          }}
+                          onClick={() => toggleEditionLinker(work)}
                           disabled={loading}
                         >
                           Link editions
