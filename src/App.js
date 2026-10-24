@@ -10,6 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import TitleView from './components/TitleView';
 import AuthorView from './components/AuthorView';
+import AuthorWorksView, { getSurname } from './components/AuthorWorksView';
 import SpineCropEditor from './components/SpineCropEditor';
 import WorkCatalog from './components/WorkCatalog';
 import { apiUrl } from './apiUrl';
@@ -71,6 +72,9 @@ const App = () => {
   const [submittedSearch, setSubmittedSearch] = useState('');
   const [selectedSeries, setSelectedSeries] = useState('');
   const [seriesOptions, setSeriesOptions] = useState([]);
+  const [catalogAuthors, setCatalogAuthors] = useState([]);
+  const [selectedCatalogAuthorId, setSelectedCatalogAuthorId] = useState('');
+  const [catalogAuthorsError, setCatalogAuthorsError] = useState('');
   const [showAddBookModal, setShowAddBookModal] = useState(false);
   const [showUndisplayedBooksModal, setShowUndisplayedBooksModal] = useState(false);
   const [undisplayedBooks, setUndisplayedBooks] = useState([]);
@@ -126,6 +130,23 @@ const App = () => {
       .catch((error) => console.error('Error loading series:', error));
   }, []);
 
+  useEffect(() => {
+    if (view !== 'library') return undefined;
+    const controller = new AbortController();
+    setCatalogAuthorsError('');
+    fetch(apiUrl('/api/catalog/authors'), { signal: controller.signal })
+      .then(async (response) => {
+        const result = await response.json();
+        if (!response.ok) throw new Error(result?.error || `Author query failed (${response.status}).`);
+        return result;
+      })
+      .then((result) => setCatalogAuthors(Array.isArray(result) ? result : []))
+      .catch((error) => {
+        if (error.name !== 'AbortError') setCatalogAuthorsError(error.message || 'Unable to load authors.');
+      });
+    return () => controller.abort();
+  }, [view]);
+
   const refreshSeriesOptions = async () => {
     const response = await fetch(apiUrl('/api/series'));
     if (!response.ok) throw new Error(`Series query failed (${response.status}).`);
@@ -134,6 +155,10 @@ const App = () => {
   };
 
   const currentPageBooks = books;
+  const selectedCatalogAuthor = catalogAuthors.find((author) => author.id === selectedCatalogAuthorId);
+  const orderedCatalogAuthors = [...catalogAuthors].sort((left, right) => (
+    getSurname(left).localeCompare(getSurname(right)) || left.name.localeCompare(right.name)
+  ));
   const effectiveSortOption = sortOption;
   const mobileResetKey = `${submittedSearch}|${sortOption}|${selectedSeries}|${page}`;
 
@@ -353,6 +378,21 @@ const App = () => {
                         ))}
                       </select>
                     </div>
+                    <div className="mb-3">
+                      <label htmlFor="catalogAuthorSelect" className="form-label">Authors:</label>
+                      <select
+                        id="catalogAuthorSelect"
+                        className="form-select form-select-sm"
+                        value={selectedCatalogAuthorId}
+                        onChange={(event) => setSelectedCatalogAuthorId(event.target.value)}
+                      >
+                        <option value="">Select an author</option>
+                        {orderedCatalogAuthors.map((author) => (
+                          <option key={author.id} value={author.id}>{author.name}</option>
+                        ))}
+                      </select>
+                      {catalogAuthorsError && <div className="small text-danger mt-1">{catalogAuthorsError}</div>}
+                    </div>
                   </div>
                   <div>
                     <div className="d-grid gap-2 mb-3">
@@ -366,6 +406,10 @@ const App = () => {
                   </div>
                 </Col>
                 <Col xs={12} lg={10}>
+                  {selectedCatalogAuthor ? (
+                    <AuthorWorksView author={selectedCatalogAuthor} />
+                  ) : (
+                  <>
                   <Row className="d-flex justify-content-between align-items-center mb-3">
                     <Col xs={12} lg={6} className="d-flex align-items-center">
                       <h4 className="mb-0">{isLoadingBooks ? 'Loading books...' : `${totalBooks} Books`}</h4>
@@ -385,16 +429,18 @@ const App = () => {
                         <TitleView books={currentPageBooks} pageIndex={page * pageSize} mobileResetKey={mobileResetKey} setBooks={setBooks} seriesOptions={seriesOptions} />
                     ) : null}
                   </Row>
+                  </>
+                  )}
                 </Col>
               </Row>
             )}
         </Container>
         <hr></hr>
-        <div>
+        {!selectedCatalogAuthor && view === 'library' && <div>
           <button className="btn btn-secondary me-2" onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0 || isLoadingBooks}>Back</button>
           <span className="me-2">Page {page + 1} / {pageCount}</span>
           <button className="btn btn-secondary" onClick={() => setPage(p => Math.min(pageCount - 1, p + 1))} disabled={page >= pageCount - 1 || isLoadingBooks}>Next</button>
-        </div>
+        </div>}
 
         <Modal show={showAddBookModal} onHide={() => setShowAddBookModal(false)} size="xl" scrollable>
           <Modal.Header closeButton>

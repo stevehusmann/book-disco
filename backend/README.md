@@ -18,6 +18,7 @@ When both Supabase variables are set, the API reads and writes the `public.books
 - `PUT /api/catalog/authors/:id/wikipedia` - explicitly link an author to a reviewed Wikipedia page
 - `GET /api/catalog/wikipedia/search?q=` - search Wikipedia for an author-page candidate
 - `GET /api/catalog/wikipedia/authors/works?pageTitle=` - retrieve bibliography candidates and years from an author page
+- `GET /api/catalog/wikipedia/summary?pageTitle=` - retrieve an introductory summary and thumbnail for a Wikipedia page
 - `GET /api/catalog/books?q=` - search edition records for Work association
 - `GET /api/catalog/works` - list reviewed Works, authors, and linked editions
 - `POST /api/catalog/works` - save a reviewed Work with release-date precision and many-to-many author/edition links

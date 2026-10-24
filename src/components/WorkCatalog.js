@@ -141,6 +141,25 @@ const WorkCatalog = ({ onBack }) => {
     }
   };
 
+  const loadBookMatches = async (search, preselectMatches = false) => {
+    const query = search.trim();
+    if (!query) {
+      setBookResults([]);
+      return;
+    }
+    setLoading(true);
+    setError('');
+    try {
+      const results = await fetchJson(`/api/catalog/books?q=${encodeURIComponent(query)}`);
+      setBookResults(results);
+      if (preselectMatches) setSelectedBookUids(results.map((book) => book.uid));
+    } catch (searchError) {
+      setError(searchError.message || 'Unable to search book editions.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const beginWorkReview = (candidate) => {
     setSelectedWork(candidate);
     setSelectedAuthorIds([selectedAuthorId]);
@@ -148,27 +167,16 @@ const WorkCatalog = ({ onBack }) => {
     setReviewedDate(candidate.date?.value || '');
     setReviewedPrecision(candidate.date?.precision ? String(candidate.date.precision) : '');
     setConfirmedOriginalDate(false);
-    setBookSearch('');
+    setBookSearch(candidate.title);
     setBookResults([]);
     setError('');
     setStatus('');
+    loadBookMatches(candidate.title, true);
   };
 
   const searchBooks = async (event) => {
     event.preventDefault();
-    if (!bookSearch.trim()) {
-      setBookResults([]);
-      return;
-    }
-    setLoading(true);
-    setError('');
-    try {
-      setBookResults(await fetchJson(`/api/catalog/books?q=${encodeURIComponent(bookSearch.trim())}`));
-    } catch (searchError) {
-      setError(searchError.message || 'Unable to search book editions.');
-    } finally {
-      setLoading(false);
-    }
+    await loadBookMatches(bookSearch);
   };
 
   const loadEditionsToLink = async (search) => {

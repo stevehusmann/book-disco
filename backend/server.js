@@ -8,6 +8,7 @@ const {
   createWorkRecord,
   addWorkRelationships,
   getWikipediaAuthorCandidates,
+  getWikipediaPageSummary,
   getWikipediaWorks,
   stableAuthorId
 } = require('./workCatalog');
@@ -887,6 +888,18 @@ app.get('/api/catalog/wikipedia/authors/works', async (req, res) => {
   }
 });
 
+app.get('/api/catalog/wikipedia/summary', async (req, res) => {
+  const pageTitle = String(req.query.pageTitle || '').trim();
+  if (!pageTitle || pageTitle.length > 300) return res.status(400).json({ error: 'A valid Wikipedia page title is required.' });
+  try {
+    return res.json(await getWikipediaPageSummary(pageTitle));
+  } catch (error) {
+    console.error(`Failed to load Wikipedia summary for ${pageTitle}:`, error);
+    const detail = error instanceof Error ? error.message : String(error);
+    return res.status(502).json({ error: `Wikipedia summary could not be loaded: ${detail}` });
+  }
+});
+
 app.get('/api/catalog/books', async (req, res) => {
   const search = String(req.query.q || '').trim().slice(0, 120);
   if (!search) return res.json([]);
@@ -936,7 +949,9 @@ app.get('/api/catalog/works', async (_req, res) => {
         books: (work.books || []).map((entry) => ({
           uid: entry.book?.uid,
           title: entry.book?.book?.Title || '',
-          isbn: entry.book?.book?.ISBN || ''
+          isbn: entry.book?.book?.ISBN || '',
+          image: entry.book?.book?.Image || '',
+          publicationDate: entry.book?.book?.PublicationDate || entry.book?.book?.['PUB DATE'] || ''
         })).filter((book) => book.uid)
       })));
     }
@@ -947,7 +962,7 @@ app.get('/api/catalog/works', async (_req, res) => {
       WHERE author_works.work_id = ? ORDER BY authors.sort_name COLLATE NOCASE
     `);
     const getBooks = db.prepare(`
-      SELECT books.uid, books.title, books.isbn FROM books
+      SELECT books.uid, books.title, books.isbn, books.image, books.publication_date FROM books
       JOIN book_works ON book_works.book_uid = books.uid
       WHERE book_works.work_id = ? ORDER BY books.title COLLATE NOCASE
     `);
@@ -961,7 +976,13 @@ app.get('/api/catalog/works', async (_req, res) => {
       datePrecision: work.date_precision,
       sourceUrl: work.source_url,
       authors: getAuthors.all(work.id),
-      books: getBooks.all(work.id)
+      books: getBooks.all(work.id).map((book) => ({
+        uid: book.uid,
+        title: book.title,
+        isbn: book.isbn,
+        image: book.image,
+        publicationDate: book.publication_date
+      }))
     })));
   } catch (error) {
     if (useSupabase && /work|author_works|book_works/i.test(error.message)) {

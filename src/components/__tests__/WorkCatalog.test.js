@@ -23,11 +23,18 @@ const candidateWork = {
 test('requires review of the Wikipedia author and publication year before importing a Work', async () => {
   const originalFetch = global.fetch;
   const calls = [];
+  const matchingEdition = {
+    uid: 'edition-moby-dick',
+    title: 'Moby-Dick',
+    author: 'Herman Melville',
+    isbn: '9780000000000'
+  };
   global.fetch = jest.fn(async (url, options = {}) => {
     calls.push({ url, options });
     if (url === '/api/catalog/authors') return { ok: true, json: async () => [author] };
     if (url === '/api/catalog/works' && options.method === 'POST') return { ok: true, json: async () => ({ id: 'work-1' }) };
     if (url === '/api/catalog/works') return { ok: true, json: async () => [] };
+    if (url === '/api/catalog/books?q=Moby-Dick') return { ok: true, json: async () => [matchingEdition] };
     if (url.startsWith('/api/catalog/wikipedia/search')) {
       return { ok: true, json: async () => [{ pageTitle: 'Herman Melville', url: 'https://en.wikipedia.org/wiki/Herman_Melville', description: 'American novelist' }] };
     }
@@ -47,6 +54,9 @@ test('requires review of the Wikipedia author and publication year before import
     fireEvent.click(await screen.findByRole('button', { name: 'Load works from Wikipedia' }));
     fireEvent.click(await screen.findByRole('button', { name: 'Review' }));
 
+    expect(screen.getByLabelText('Search book editions')).toHaveValue('Moby-Dick');
+    const editionCheckbox = await screen.findByLabelText(/ISBN 9780000000000/);
+    expect(editionCheckbox).toBeChecked();
     expect(screen.getByLabelText('Reviewed publication year')).toHaveValue(1851);
     fireEvent.click(screen.getByLabelText(/I verified this publication year/));
     fireEvent.click(screen.getByRole('button', { name: 'Confirm and add Work' }));
@@ -66,7 +76,7 @@ test('requires review of the Wikipedia author and publication year before import
       datePrecision: 9,
       sourceStatement: 'Novels',
       authorIds: ['author-1'],
-      bookUids: []
+      bookUids: ['edition-moby-dick']
     }));
   } finally {
     global.fetch = originalFetch;

@@ -201,6 +201,34 @@ const getWikipediaWorks = async (pageTitle) => {
   return [...candidates.values()].sort((left, right) => left.title.localeCompare(right.title));
 };
 
+const getWikipediaPageSummary = async (pageTitle) => {
+  const url = new URL('https://en.wikipedia.org/w/api.php');
+  url.search = new URLSearchParams({
+    action: 'query',
+    prop: 'extracts|pageimages',
+    exintro: '1',
+    explaintext: '1',
+    pithumbsize: '640',
+    titles: pageTitle,
+    format: 'json'
+  }).toString();
+  const response = await fetch(url, {
+    headers: { 'User-Agent': 'MyBookshelf/1.0 (author-work catalog)' },
+    signal: AbortSignal.timeout(20000)
+  });
+  if (!response.ok) throw new Error(`Wikipedia summary lookup failed (${response.status}).`);
+  const result = await response.json();
+  if (result.error) throw new Error(result.error.info || 'Wikipedia summary lookup failed.');
+  const page = Object.values(result.query?.pages || {})[0];
+  if (!page || page.missing !== undefined) throw new Error('Wikipedia page was not found.');
+  return {
+    pageTitle: page.title,
+    extract: page.extract || '',
+    thumbnail: page.thumbnail?.source || '',
+    url: `https://en.wikipedia.org/wiki/${encodeURIComponent(page.title.replace(/ /g, '_'))}`
+  };
+};
+
 const insertWorkRelationships = (db, workId, authorIds, bookUids) => {
   const authorLookup = db.prepare('SELECT id FROM authors WHERE id = ?');
   const bookLookup = db.prepare('SELECT uid FROM books WHERE uid = ?');
@@ -286,6 +314,7 @@ const createWorkRecord = (db, input) => {
 module.exports = {
   createWorkRecord,
   getWikipediaAuthorCandidates,
+  getWikipediaPageSummary,
   getWikipediaWorks,
   initializeWorkCatalog,
   seedAuthorsFromList,
