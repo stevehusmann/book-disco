@@ -99,7 +99,10 @@ const WorkCatalog = ({ onBack }) => {
   }, []);
 
   const searchWikipediaAuthors = async (author = selectedAuthor) => {
-    if (!author) return;
+    if (!author?.name?.trim()) {
+      setError('Select an author with a name before searching Wikipedia.');
+      return;
+    }
     setLoading(true);
     setError('');
     setStatus('');
@@ -394,7 +397,7 @@ const WorkCatalog = ({ onBack }) => {
                     ? <>Linked to <a href={selectedAuthor.wikipediaUrl} target="_blank" rel="noreferrer">{selectedAuthor.wikipediaPageTitle}</a>.</>
                     : 'Not linked to a Wikipedia author page yet.'}
                 </div>
-                <button className="btn btn-outline-primary btn-sm" type="button" onClick={searchWikipediaAuthors} disabled={loading}>
+                <button className="btn btn-outline-primary btn-sm" type="button" onClick={() => searchWikipediaAuthors()} disabled={loading}>
                   Search Wikipedia again
                 </button>
                 {selectedAuthor.wikipediaPageTitle && (

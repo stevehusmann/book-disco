@@ -67,8 +67,12 @@ test('shows the author biography, chronological Works, first edition covers, and
     fireEvent.click(workButtons[0]);
     expect(await screen.findByText('Work summary.')).toBeInTheDocument();
     expect(screen.getByText('Linked editions (2)')).toBeInTheDocument();
-    expect(screen.getByText('Earlier Work First Edition')).toBeInTheDocument();
-    expect(screen.getByText('Earlier Work Reprint')).toBeInTheDocument();
+    const dialog = screen.getByRole('dialog');
+    expect(dialog.querySelectorAll('.book')).toHaveLength(2);
+    expect(within(dialog).getByText('Earlier Work First Edition')).toBeInTheDocument();
+    expect(within(dialog).getByText('Earlier Work Reprint')).toBeInTheDocument();
+    expect(within(dialog).queryByRole('button', { name: 'Edit' })).not.toBeInTheDocument();
+    expect(within(dialog).getByText('ISBN 111')).toBeInTheDocument();
     await waitFor(() => expect(global.fetch).toHaveBeenCalledWith('/api/catalog/wikipedia/summary?pageTitle=A%20Christmas%20Carol'));
   } finally {
     global.fetch = originalFetch;

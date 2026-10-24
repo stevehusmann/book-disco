@@ -64,7 +64,9 @@ const BookItem = ({
   seriesOptions = [],
   footer = null,
   onBookClick,
-  bookAriaLabel
+  bookAriaLabel,
+  readOnly = false,
+  compactMetadata = false
 }) => {
 
   const pagination = Number(book?.PAGINATION || 300);
@@ -261,27 +263,27 @@ const BookItem = ({
           <strong>{book.Title || 'Untitled Book'}</strong>
           <div>{book?.Author || 'Unknown Author'}</div>
 
-          {book.GOODREADS && (
+          {!compactMetadata && book.GOODREADS && (
             <a target="_blank" href={book?.GOODREADS} rel="noopener noreferrer">GoodReads</a>
           )}
-          {book.Website && (
+          {!compactMetadata && book.Website && (
             <a target="_blank" href={book?.Website} rel="noopener noreferrer">Website</a>
           )}
-          {book.PAGINATION && (
+          {!compactMetadata && book.PAGINATION && (
             <div>{book.PAGINATION}p</div>
           )}
-          {book.PCversion && (
+          {!compactMetadata && book.PCversion && (
             <div>{book.PCversion}</div>
           )}
-          {thickness && (
+          {!compactMetadata && thickness && (
             <div>Thickness: {thickness}px</div>
           )}
-          {hasBookDimensionOverride && (
+          {!compactMetadata && hasBookDimensionOverride && (
               <div>Book Size: {physicalBookSize.width} x {physicalBookSize.height}</div>
           )}
         </div>
         {footer}
-        <div>
+        {!readOnly && !compactMetadata && <div>
           <Button
             size="sm"
             variant="outline-primary"
@@ -290,10 +292,10 @@ const BookItem = ({
           >
             Edit
           </Button>
-        </div>
+        </div>}
       </div>
 
-      <Modal show={showEditModal} onHide={() => setShowEditModal(false)} size="lg" scrollable>
+      {!readOnly && <Modal show={showEditModal} onHide={() => setShowEditModal(false)} size="lg" scrollable>
         <Modal.Header closeButton>
           <Modal.Title>Edit Book</Modal.Title>
         </Modal.Header>
@@ -348,6 +350,7 @@ const BookItem = ({
           </Button>
         </Modal.Footer>
       </Modal>
+      }
     </Col>
   );
 };

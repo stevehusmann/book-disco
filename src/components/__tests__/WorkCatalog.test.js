@@ -83,6 +83,35 @@ test('automatically searches Wikipedia and edition matches, then requires review
   }
 });
 
+test('searches Wikipedia using the selected author name when Search Wikipedia again is clicked', async () => {
+  const originalFetch = global.fetch;
+  const requests = [];
+  global.fetch = jest.fn(async (url) => {
+    requests.push(url);
+    if (url === '/api/catalog/authors') return { ok: true, json: async () => [author] };
+    if (url === '/api/catalog/works') return { ok: true, json: async () => [] };
+    if (url === '/api/catalog/wikipedia/search?q=Herman%20Melville') {
+      return {
+        ok: true,
+        json: async () => [{ pageTitle: 'Herman Melville', url: 'https://en.wikipedia.org/wiki/Herman_Melville', description: '' }]
+      };
+    }
+    throw new Error(`Unexpected request: ${url}`);
+  });
+
+  try {
+    render(<WorkCatalog onBack={jest.fn()} />);
+    fireEvent.change(await screen.findByLabelText('Catalog author'), { target: { value: 'author-1' } });
+    fireEvent.click(await screen.findByRole('button', { name: 'Search Wikipedia again' }));
+
+    expect(await screen.findByText('Herman Melville', { selector: 'strong' })).toBeInTheDocument();
+    expect(requests).toContain('/api/catalog/wikipedia/search?q=Herman%20Melville');
+    expect(requests).not.toContain('/api/catalog/wikipedia/search?q=undefined');
+  } finally {
+    global.fetch = originalFetch;
+  }
+});
+
 test('stores reviewed Works with many authors and many edition links without changing editions', () => {
   const db = new Database(':memory:');
   db.exec(`

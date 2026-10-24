@@ -134,6 +134,8 @@ const AuthorWorksView = ({ author, setBooks, seriesOptions = [] }) => {
         seriesOptions={seriesOptions}
         onBookClick={() => openWork(work)}
         bookAriaLabel={`Open ${work.title}, ${getYear(work.releaseDate) || 'publication year unknown'}`}
+        readOnly
+        compactMetadata
         footer={<div className="text-muted">{getYear(work.releaseDate) || 'Year unknown'}</div>}
       />
     );
@@ -215,16 +217,30 @@ const AuthorWorksView = ({ author, setBooks, seriesOptions = [] }) => {
           {workSummary?.url && <p><a href={workSummary.url} target="_blank" rel="noreferrer">Read more on Wikipedia</a></p>}
           <h5>Linked editions ({orderedEditions.length})</h5>
           {orderedEditions.length ? (
-            <div className="list-group">
-              {orderedEditions.map((edition) => (
-                <div className="list-group-item d-flex gap-3" key={edition.uid}>
-                  {edition.image && <img src={edition.image} alt={`Cover of ${edition.title || selectedWork.title}`} style={{ width: 90, height: 130, objectFit: 'contain' }} />}
-                  <div>
-                    <strong>{edition.title || selectedWork.title}</strong>
-                    <div>{edition.publicationDate || 'Publication date unknown'}</div>
-                    {edition.isbn && <div>ISBN {edition.isbn}</div>}
-                  </div>
-                </div>
+            <div className="row row-cols-1 row-cols-md-2 g-3">
+              {orderedEditions.map((edition, index) => (
+                <BookItem
+                  key={edition.uid}
+                  book={{
+                    ...(edition.book || {}),
+                    _uid: edition.uid,
+                    Title: edition.title || edition.book?.Title || selectedWork.title,
+                    Author: edition.book?.Author || author.name,
+                    ISBN: edition.isbn || edition.book?.ISBN || '',
+                    Image: edition.image || edition.book?.Image || ''
+                  }}
+                  index={index}
+                  pageIndex={0}
+                  readOnly
+                  compactMetadata
+                  seriesOptions={seriesOptions}
+                  footer={(
+                    <div className="text-muted">
+                      <div>{edition.publicationDate || 'Publication date unknown'}</div>
+                      {edition.isbn && <div>ISBN {edition.isbn}</div>}
+                    </div>
+                  )}
+                />
               ))}
             </div>
           ) : <p className="text-muted">No book editions have been linked to this Work yet.</p>}
