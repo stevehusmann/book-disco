@@ -4,6 +4,14 @@ const fs = require('fs');
 const path = require('path');
 const Database = require('better-sqlite3');
 const { createImageProxyHandler } = require('./backend/imageProxy');
+const {
+  createWorkRecord,
+  addWorkRelationships,
+  getWikidataEntityCandidates,
+  getWikidataWorks,
+  initializeWorkCatalog,
+  seedAuthorsFromList
+} = require('./backend/workCatalog');
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -14,6 +22,7 @@ fs.mkdirSync(path.dirname(dbPath), { recursive: true });
 
 const db = new Database(dbPath);
 db.pragma('journal_mode = WAL');
+db.pragma('foreign_keys = ON');
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS books (
@@ -98,6 +107,7 @@ const ensureBookColumns = () => {
 };
 
 ensureBookColumns();
+initializeWorkCatalog(db);
 
 const updateBook = db.prepare(`
   UPDATE books
@@ -363,6 +373,7 @@ function seedDatabaseFromJson() {
 }
 
 seedDatabaseFromJson();
+seedAuthorsFromList(db, path.join(__dirname, 'public', 'AuthorList.json'));
 
 const knownSeriesRatios = { OWC: 7.6875 / 5.1875, BNC: 8 / 5.25, PC: 7.75 / 5, PCD: 8.35 / 5.67 };
 const existingSeries = db.prepare(`
@@ -415,6 +426,137 @@ app.get('/api/books/not-displayed', (_req, res) => {
 app.get('/api/series', (_req, res) => {
   const rows = db.prepare('SELECT id, name, height_width_ratio, thickness_multiplier, spine_mode FROM series ORDER BY name COLLATE NOCASE').all();
   res.json(rows.map((row) => ({ id: row.id, name: row.name, heightWidthRatio: row.height_width_ratio, thicknessMultiplier: row.thickness_multiplier, spineMode: row.spine_mode })));
+});
+
+app.get('/api/catalog/authors', (_req, res) => {
+  const authors = db.prepare(`
+    SELECT authors.id, authors.name, authors.sort_name, authors.wikidata_qid,
+      COUNT(DISTINCT author_works.work_id) AS work_count
+    FROM authors
+    LEFT JOIN author_works ON author_works.author_id = authors.id
+    GROUP BY authors.id
+    ORDER BY authors.sort_name COLLATE NOCASE, authors.name COLLATE NOCASE
+  `).all();
+  res.json(authors.map((author) => ({
+    id: author.id,
+    name: author.name,
+    sortName: author.sort_name,
+    wikidataQid: author.wikidata_qid,
+    workCount: author.work_count
+  })));
+});
+
+app.put('/api/catalog/authors/:id/wikidata', (req, res) => {
+  const qid = String(req.body?.wikidataQid || '').trim();
+  if (!/^Q\d+$/.test(qid)) return res.status(400).json({ error: 'A valid Wikidata QID is required.' });
+  try {
+    const result = db.prepare(`
+      UPDATE authors SET wikidata_qid = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?
+    `).run(qid, req.params.id);
+    if (!result.changes) return res.status(404).json({ error: 'Author not found.' });
+    return res.json({ id: req.params.id, wikidataQid: qid });
+  } catch (error) {
+    if (error.code === 'SQLITE_CONSTRAINT_UNIQUE') {
+      return res.status(409).json({ error: 'That Wikidata entity is already linked to another author.' });
+    }
+    throw error;
+  }
+});
+
+app.get('/api/catalog/wikidata/search', async (req, res) => {
+  const search = String(req.query.q || '').trim().slice(0, 120);
+  if (!search) return res.status(400).json({ error: 'Search text is required.' });
+  try {
+    return res.json(await getWikidataEntityCandidates(search));
+  } catch (error) {
+    console.error('Failed to search Wikidata authors:', error);
+    return res.status(502).json({ error: 'Wikidata search is temporarily unavailable.' });
+  }
+});
+
+app.get('/api/catalog/wikidata/authors/:qid/works', async (req, res) => {
+  if (!/^Q\d+$/.test(req.params.qid)) return res.status(400).json({ error: 'A valid Wikidata QID is required.' });
+  try {
+    return res.json(await getWikidataWorks(req.params.qid));
+  } catch (error) {
+    console.error(`Failed to load Wikidata works for ${req.params.qid}:`, error);
+    return res.status(502).json({ error: 'Wikidata works are temporarily unavailable.' });
+  }
+});
+
+app.get('/api/catalog/books', (req, res) => {
+  const search = String(req.query.q || '').trim().slice(0, 120);
+  const rows = search
+    ? db.prepare(`
+      SELECT uid, title, author, isbn FROM books
+      WHERE title LIKE ? OR author LIKE ? OR isbn LIKE ?
+      ORDER BY title COLLATE NOCASE LIMIT 100
+    `).all(`%${search}%`, `%${search}%`, `%${search}%`)
+    : [];
+  res.json(rows.map((book) => ({ uid: book.uid, title: book.title, author: book.author, isbn: book.isbn })));
+});
+
+app.get('/api/catalog/works', (_req, res) => {
+  const works = db.prepare(`
+    SELECT works.*,
+      (SELECT COUNT(*) FROM book_works WHERE book_works.work_id = works.id) AS book_count
+    FROM works
+    ORDER BY works.title COLLATE NOCASE
+  `).all();
+  const getAuthors = db.prepare(`
+    SELECT authors.id, authors.name FROM authors
+    JOIN author_works ON author_works.author_id = authors.id
+    WHERE author_works.work_id = ? ORDER BY authors.sort_name COLLATE NOCASE
+  `);
+  const getBooks = db.prepare(`
+    SELECT books.uid, books.title, books.isbn FROM books
+    JOIN book_works ON book_works.book_uid = books.uid
+    WHERE book_works.work_id = ? ORDER BY books.title COLLATE NOCASE
+  `);
+  res.json(works.map((work) => ({
+    id: work.id,
+    wikidataQid: work.wikidata_qid,
+    title: work.title,
+    releaseDate: work.release_date,
+    datePrecision: work.date_precision,
+    sourceUrl: work.source_url,
+    authors: getAuthors.all(work.id),
+    books: getBooks.all(work.id)
+  })));
+});
+
+app.post('/api/catalog/works', (req, res) => {
+  try {
+    const existing = db.prepare('SELECT id FROM works WHERE wikidata_qid = ?').get(String(req.body?.wikidataQid || '').trim());
+    const id = createWorkRecord(db, req.body);
+    const work = db.prepare('SELECT * FROM works WHERE id = ?').get(id);
+    return res.status(existing ? 200 : 201).json({
+      id: work.id,
+      wikidataQid: work.wikidata_qid,
+      title: work.title,
+      releaseDate: work.release_date,
+      datePrecision: work.date_precision,
+      sourceUrl: work.source_url
+    });
+  } catch (error) {
+    const isConflict = error.code === 'SQLITE_CONSTRAINT_UNIQUE';
+    return res.status(isConflict ? 409 : 400).json({ error: isConflict ? 'This Wikidata Work has already been imported.' : error.message });
+  }
+});
+
+app.post('/api/catalog/works/:id/relationships', (req, res) => {
+  try {
+    addWorkRelationships(db, req.params.id, req.body);
+    return res.status(204).end();
+  } catch (error) {
+    return res.status(error.message === 'Work not found.' ? 404 : 400).json({ error: error.message });
+  }
+});
+
+app.delete('/api/catalog/works/:id', (req, res) => {
+  const result = db.prepare('DELETE FROM works WHERE id = ?').run(req.params.id);
+  if (!result.changes) return res.status(404).json({ error: 'Work not found.' });
+  return res.status(204).end();
 });
 
 app.post('/api/series', (req, res) => {

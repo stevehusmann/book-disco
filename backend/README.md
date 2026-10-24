@@ -14,9 +14,22 @@ When both Supabase variables are set, the API reads and writes the `public.books
 - `GET /api/books/spine-crop` - full catalog for the crop editor, loaded only when opened
 - `GET /api/books/not-displayed` - books excluded from the library display because their binding is not paperback
 - `DELETE /api/books/:uid` - permanently delete a book record
+- `GET /api/catalog/authors` - author catalog used by the Work review screen
+- `PUT /api/catalog/authors/:id/wikidata` - explicitly link an author to a reviewed Wikidata entity
+- `GET /api/catalog/wikidata/search?q=` - search Wikidata for an author identity candidate
+- `GET /api/catalog/wikidata/authors/:qid/works` - retrieve Wikidata Work candidates and publication-date claims
+- `GET /api/catalog/books?q=` - search edition records for Work association
+- `GET /api/catalog/works` - list reviewed Works, authors, and linked editions
+- `POST /api/catalog/works` - save a reviewed Work with release-date precision and many-to-many author/edition links
+- `POST /api/catalog/works/:id/relationships` - add author or edition links to an existing Work
+- `DELETE /api/catalog/works/:id` - remove a Work and its links while preserving books
 - `GET /api/image-proxy?url=` - bounded, public-host-only image proxy used by the crop editor for direct URLs
 - `POST /api/books`
 - `PUT /api/books/:uid`
+
+The Author / Work Catalog uses additive `authors`, `works`, `author_works`, and `book_works` tables. Existing edition records are not rewritten. Local SQLite startup creates these tables and imports author identities from `public/AuthorList.json` when available, using stable IDs derived from normalized author names. For Supabase, run `supabase_work_catalog_migration.sql` after the books schema migration. The Supabase API seeds author identities from `AUTHOR_SEED_PATH` (defaults to `../public/AuthorList.json`) the first time the author catalog is requested if the authors table is empty.
+
+The catalog requires explicit review of Wikidata author identity, Work, and first-publication date before saving. Date strings and Wikidata precision are preserved; the app does not invent missing month/day values. One book edition may link to multiple Works, and a Work may have multiple authors. Wikidata is incomplete and the per-author query is capped at 10,000 results, so the imported list is not a guarantee of a complete bibliography.
 
 `GET /api/books` responds with `{ books, total, page, pageSize, pageCount }`. The page size is capped at 100. The frontend submits search text only when the Search button is pressed or Enter is submitted; changing sort, series, or page runs a new server query.
 
@@ -31,6 +44,7 @@ When both Supabase variables are set, the API reads and writes the `public.books
 - `PORT` - API port (default: `4000`)
 - `DB_PATH` - SQLite file path (default: `./data/books.db`)
 - `SEED_PATH` - JSON seed file path (default: `./BookList.json`)
+- `AUTHOR_SEED_PATH` - generated author list used to seed the Work catalog (default: `../public/AuthorList.json`)
 - `CORS_ORIGIN` - comma-separated allowed origins
 - `SUPABASE_URL` - Supabase project URL (use the project base URL, not `/rest/v1/books`)
 - `SUPABASE_SERVICE_ROLE_KEY` - private server-side Supabase key; never expose it to the frontend

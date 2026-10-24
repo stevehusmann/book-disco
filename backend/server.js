@@ -4,6 +4,13 @@ const fs = require('fs');
 const path = require('path');
 const Database = require('better-sqlite3');
 const { createImageProxyHandler } = require('./imageProxy');
+const {
+  createWorkRecord,
+  addWorkRelationships,
+  getWikidataEntityCandidates,
+  getWikidataWorks,
+  stableAuthorId
+} = require('./workCatalog');
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -30,6 +37,7 @@ fs.mkdirSync(path.dirname(dbPath), { recursive: true });
 
 const db = new Database(dbPath);
 db.pragma('journal_mode = WAL');
+db.pragma('foreign_keys = ON');
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS books (
@@ -109,6 +117,11 @@ const ensureBookColumns = () => {
 };
 
 ensureBookColumns();
+if (!useSupabase) {
+  const { initializeWorkCatalog, seedAuthorsFromList } = require('./workCatalog');
+  initializeWorkCatalog(db);
+  seedAuthorsFromList(db, process.env.AUTHOR_SEED_PATH || path.resolve(__dirname, '../public/AuthorList.json'));
+}
 const seriesColumns = db.prepare('PRAGMA table_info(series)').all().map((column) => column.name);
 if (!seriesColumns.includes('thickness_multiplier')) {
   db.exec('ALTER TABLE series ADD COLUMN thickness_multiplier REAL NOT NULL DEFAULT 1.0');
@@ -443,6 +456,36 @@ const isMissingSupabaseSeriesTable = (error) => {
 };
 
 const supabaseSeriesMigrationMessage = 'The Supabase series table is missing. Run backend/supabase_series_migration.sql in the Supabase SQL Editor, then retry.';
+const supabaseWorkCatalogMigrationMessage = 'The Supabase work catalog tables are missing. Run backend/supabase_work_catalog_migration.sql in the Supabase SQL Editor, then retry.';
+
+const ensureSupabaseAuthorCatalog = async () => {
+  const existing = await supabaseRequest('authors?select=id&limit=1');
+  if (existing.length) return;
+  const authorSeedPath = process.env.AUTHOR_SEED_PATH || path.resolve(__dirname, '../public/AuthorList.json');
+  let authors;
+  try {
+    authors = JSON.parse(fs.readFileSync(authorSeedPath, 'utf8'));
+  } catch (error) {
+    if (error.code === 'ENOENT') return;
+    throw error;
+  }
+  if (!Array.isArray(authors) || !authors.length) return;
+  const rows = authors
+    .filter((author) => author?.id && author?.canonicalName)
+    .map((author) => ({
+      id: stableAuthorId(author),
+      name: String(author.canonicalName),
+      sort_name: String(author.sortName || ''),
+      wikidata_qid: /^Q\d+$/.test(String(author.wikidataQid || '')) ? String(author.wikidataQid) : null
+    }));
+  for (let offset = 0; offset < rows.length; offset += 500) {
+    await supabaseRequest('authors?on_conflict=id', {
+      method: 'POST',
+      headers: { Prefer: 'resolution=ignore-duplicates,return=minimal' },
+      body: JSON.stringify(rows.slice(offset, offset + 500))
+    });
+  }
+};
 
 const loadSupabaseSeriesFromBooks = async () => {
   const values = new Map();
@@ -742,6 +785,292 @@ app.delete('/api/series/:id', async (req, res) => {
     }
     console.error('Failed to delete series:', error);
     return res.status(502).json({ error: 'Failed to delete series.' });
+  }
+});
+
+app.get('/api/catalog/authors', async (_req, res) => {
+  try {
+    if (useSupabase) {
+      await ensureSupabaseAuthorCatalog();
+      const authors = await supabaseRequest('authors?select=id,name,sort_name,wikidata_qid&order=sort_name.asc,name.asc');
+      return res.json(authors.map((author) => ({ ...author, sortName: author.sort_name, wikidataQid: author.wikidata_qid })));
+    }
+    const authors = db.prepare(`
+      SELECT authors.id, authors.name, authors.sort_name, authors.wikidata_qid,
+        COUNT(DISTINCT author_works.work_id) AS work_count
+      FROM authors
+      LEFT JOIN author_works ON author_works.author_id = authors.id
+      GROUP BY authors.id
+      ORDER BY authors.sort_name COLLATE NOCASE, authors.name COLLATE NOCASE
+    `).all();
+    return res.json(authors.map((author) => ({
+      id: author.id,
+      name: author.name,
+      sortName: author.sort_name,
+      wikidataQid: author.wikidata_qid,
+      workCount: author.work_count
+    })));
+  } catch (error) {
+    if (useSupabase && /authors/i.test(error.message)) {
+      return res.status(503).json({ error: supabaseWorkCatalogMigrationMessage });
+    }
+    console.error('Failed to load catalog authors:', error);
+    return res.status(502).json({ error: 'Failed to load catalog authors.' });
+  }
+});
+
+app.put('/api/catalog/authors/:id/wikidata', async (req, res) => {
+  const qid = String(req.body?.wikidataQid || '').trim();
+  if (!/^Q\d+$/.test(qid)) return res.status(400).json({ error: 'A valid Wikidata QID is required.' });
+  try {
+    if (useSupabase) {
+      const authors = await supabaseRequest(`authors?id=eq.${encodeURIComponent(req.params.id)}&select=id`, {
+        method: 'PATCH',
+        headers: { Prefer: 'return=representation' },
+        body: JSON.stringify({ wikidata_qid: qid, updated_at: new Date().toISOString() })
+      });
+      if (!authors.length) return res.status(404).json({ error: 'Author not found.' });
+      return res.json({ id: req.params.id, wikidataQid: qid });
+    }
+    const result = db.prepare(`
+      UPDATE authors SET wikidata_qid = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?
+    `).run(qid, req.params.id);
+    if (!result.changes) return res.status(404).json({ error: 'Author not found.' });
+    return res.json({ id: req.params.id, wikidataQid: qid });
+  } catch (error) {
+    if (/authors/i.test(error.message)) return res.status(503).json({ error: supabaseWorkCatalogMigrationMessage });
+    if (/duplicate key|unique constraint|SQLITE_CONSTRAINT_UNIQUE/i.test(error.message)) {
+      return res.status(409).json({ error: 'That Wikidata entity is already linked to another author.' });
+    }
+    console.error('Failed to link author to Wikidata:', error);
+    return res.status(502).json({ error: 'Failed to link author to Wikidata.' });
+  }
+});
+
+app.get('/api/catalog/wikidata/search', async (req, res) => {
+  const search = String(req.query.q || '').trim().slice(0, 120);
+  if (!search) return res.status(400).json({ error: 'Search text is required.' });
+  try {
+    return res.json(await getWikidataEntityCandidates(search));
+  } catch (error) {
+    console.error('Failed to search Wikidata authors:', error);
+    return res.status(502).json({ error: 'Wikidata search is temporarily unavailable.' });
+  }
+});
+
+app.get('/api/catalog/wikidata/authors/:qid/works', async (req, res) => {
+  if (!/^Q\d+$/.test(req.params.qid)) return res.status(400).json({ error: 'A valid Wikidata QID is required.' });
+  try {
+    return res.json(await getWikidataWorks(req.params.qid));
+  } catch (error) {
+    console.error(`Failed to load Wikidata works for ${req.params.qid}:`, error);
+    return res.status(502).json({ error: 'Wikidata works are temporarily unavailable.' });
+  }
+});
+
+app.get('/api/catalog/books', async (req, res) => {
+  const search = String(req.query.q || '').trim().slice(0, 120);
+  if (!search) return res.json([]);
+  try {
+    if (useSupabase) {
+      const safeSearch = search.replace(/[,*()%]/g, ' ');
+      const query = new URLSearchParams({
+        select: 'uid,book',
+        or: `(book->>Title.ilike.*${safeSearch}*,book->>Author.ilike.*${safeSearch}*,book->>ISBN.ilike.*${safeSearch}*,book->>EAN.ilike.*${safeSearch}*)`,
+        order: 'uid.asc',
+        limit: '100'
+      });
+      const rows = await supabaseRequest(`books?${query.toString()}`);
+      return res.json(rows.map((row) => ({
+        uid: row.uid,
+        title: row.book?.Title || '',
+        author: row.book?.Author || '',
+        isbn: row.book?.ISBN || ''
+      })));
+    }
+    const rows = db.prepare(`
+      SELECT uid, title, author, isbn FROM books
+      WHERE title LIKE ? OR author LIKE ? OR isbn LIKE ? OR ean LIKE ?
+      ORDER BY title COLLATE NOCASE LIMIT 100
+    `).all(`%${search}%`, `%${search}%`, `%${search}%`, `%${search}%`);
+    return res.json(rows.map((book) => ({ uid: book.uid, title: book.title, author: book.author, isbn: book.isbn })));
+  } catch (error) {
+    console.error('Failed to search book editions for work linking:', error);
+    return res.status(502).json({ error: 'Failed to search book editions.' });
+  }
+});
+
+app.get('/api/catalog/works', async (_req, res) => {
+  try {
+    if (useSupabase) {
+      const rows = await supabaseRequest('works?select=id,wikidata_qid,title,release_date,date_precision,source_url,authors:author_works(author:authors(id,name)),books:book_works(book:books(uid,book))&order=title.asc');
+      return res.json(rows.map((work) => ({
+        id: work.id,
+        wikidataQid: work.wikidata_qid,
+        title: work.title,
+        releaseDate: work.release_date,
+        datePrecision: work.date_precision,
+        sourceUrl: work.source_url,
+        authors: (work.authors || []).map((entry) => entry.author).filter(Boolean),
+        books: (work.books || []).map((entry) => ({
+          uid: entry.book?.uid,
+          title: entry.book?.book?.Title || '',
+          isbn: entry.book?.book?.ISBN || ''
+        })).filter((book) => book.uid)
+      })));
+    }
+    const works = db.prepare('SELECT * FROM works ORDER BY title COLLATE NOCASE').all();
+    const getAuthors = db.prepare(`
+      SELECT authors.id, authors.name FROM authors
+      JOIN author_works ON author_works.author_id = authors.id
+      WHERE author_works.work_id = ? ORDER BY authors.sort_name COLLATE NOCASE
+    `);
+    const getBooks = db.prepare(`
+      SELECT books.uid, books.title, books.isbn FROM books
+      JOIN book_works ON book_works.book_uid = books.uid
+      WHERE book_works.work_id = ? ORDER BY books.title COLLATE NOCASE
+    `);
+    return res.json(works.map((work) => ({
+      id: work.id,
+      wikidataQid: work.wikidata_qid,
+      title: work.title,
+      releaseDate: work.release_date,
+      datePrecision: work.date_precision,
+      sourceUrl: work.source_url,
+      authors: getAuthors.all(work.id),
+      books: getBooks.all(work.id)
+    })));
+  } catch (error) {
+    if (useSupabase && /work|author_works|book_works/i.test(error.message)) {
+      return res.status(503).json({ error: supabaseWorkCatalogMigrationMessage });
+    }
+    console.error('Failed to load Works:', error);
+    return res.status(502).json({ error: 'Failed to load Works.' });
+  }
+});
+
+app.post('/api/catalog/works', async (req, res) => {
+  const title = String(req.body?.title || '').trim();
+  const qid = String(req.body?.wikidataQid || '').trim();
+  const authorIds = Array.isArray(req.body?.authorIds) ? [...new Set(req.body.authorIds.map(String))] : [];
+  const bookUids = Array.isArray(req.body?.bookUids) ? [...new Set(req.body.bookUids.map(String))] : [];
+  const releaseDate = req.body?.releaseDate == null ? null : String(req.body.releaseDate);
+  const datePrecision = req.body?.datePrecision == null ? null : Number(req.body.datePrecision);
+  if (!title || !/^Q\d+$/.test(qid) || !authorIds.length) {
+    return res.status(400).json({ error: 'A title, Wikidata work ID, and at least one author are required.' });
+  }
+  if (!releaseDate || !Number.isInteger(datePrecision) || datePrecision < 6 || datePrecision > 11) {
+    return res.status(400).json({ error: 'The release date must include valid Wikidata precision between 6 and 11.' });
+  }
+  if (!/^[+-]\d{4,}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(releaseDate)) {
+    return res.status(400).json({ error: 'Release dates must use the Wikidata time format.' });
+  }
+  try {
+    if (useSupabase) {
+      const work = await supabaseRequest('rpc/create_reviewed_work', {
+        method: 'POST',
+        body: JSON.stringify({
+          p_work: {
+            wikidataQid: qid,
+            title,
+            releaseDate,
+            datePrecision,
+            sourceUrl: req.body?.sourceUrl || `https://www.wikidata.org/wiki/${qid}`
+          },
+          p_author_ids: authorIds,
+          p_book_uids: bookUids
+        })
+      });
+      return res.status(201).json({
+        id: work.id,
+        wikidataQid: work.wikidata_qid,
+        title: work.title,
+        releaseDate: work.release_date,
+        datePrecision: work.date_precision,
+        sourceUrl: work.source_url
+      });
+    }
+    const existing = db.prepare('SELECT id FROM works WHERE wikidata_qid = ?').get(qid);
+    const id = createWorkRecord(db, {
+      ...req.body,
+      title,
+      wikidataQid: qid,
+      authorIds,
+      bookUids,
+      releaseDate,
+      datePrecision
+    });
+    const work = db.prepare('SELECT * FROM works WHERE id = ?').get(id);
+    return res.status(existing ? 200 : 201).json({
+      id: work.id,
+      wikidataQid: work.wikidata_qid,
+      title: work.title,
+      releaseDate: work.release_date,
+      datePrecision: work.date_precision,
+      sourceUrl: work.source_url
+    });
+  } catch (error) {
+    if (/work|author_works|book_works/i.test(error.message) && useSupabase) {
+      return res.status(503).json({ error: supabaseWorkCatalogMigrationMessage });
+    }
+    if (/duplicate key|unique constraint|SQLITE_CONSTRAINT_UNIQUE/i.test(error.message)) {
+      return res.status(409).json({ error: 'This Wikidata Work has already been imported.' });
+    }
+    console.error('Failed to save reviewed Work:', error);
+    return res.status(400).json({ error: error.message || 'Failed to save reviewed Work.' });
+  }
+});
+
+app.post('/api/catalog/works/:id/relationships', async (req, res) => {
+  const authorIds = Array.isArray(req.body?.authorIds) ? [...new Set(req.body.authorIds.map(String))] : [];
+  const bookUids = Array.isArray(req.body?.bookUids) ? [...new Set(req.body.bookUids.map(String))] : [];
+  if (!authorIds.length && !bookUids.length) {
+    return res.status(400).json({ error: 'At least one author or book edition is required.' });
+  }
+  try {
+    if (useSupabase) {
+      await supabaseRequest('rpc/add_work_relationships', {
+        method: 'POST',
+        body: JSON.stringify({
+          p_work_id: req.params.id,
+          p_author_ids: authorIds,
+          p_book_uids: bookUids
+        })
+      });
+      return res.status(204).end();
+    }
+    addWorkRelationships(db, req.params.id, { authorIds, bookUids });
+    return res.status(204).end();
+  } catch (error) {
+    if (useSupabase && /work|author_works|book_works/i.test(error.message)) {
+      return res.status(503).json({ error: supabaseWorkCatalogMigrationMessage });
+    }
+    if (/not found/i.test(error.message)) return res.status(404).json({ error: error.message });
+    console.error('Failed to link authors or editions to a Work:', error);
+    return res.status(400).json({ error: error.message || 'Unable to link the selected records.' });
+  }
+});
+
+app.delete('/api/catalog/works/:id', async (req, res) => {
+  try {
+    if (useSupabase) {
+      const rows = await supabaseRequest(`works?id=eq.${encodeURIComponent(req.params.id)}&select=id`);
+      if (!rows.length) return res.status(404).json({ error: 'Work not found.' });
+      await supabaseRequest(`works?id=eq.${encodeURIComponent(req.params.id)}`, {
+        method: 'DELETE',
+        headers: { Prefer: 'return=minimal' }
+      });
+      return res.status(204).end();
+    }
+    const result = db.prepare('DELETE FROM works WHERE id = ?').run(req.params.id);
+    if (!result.changes) return res.status(404).json({ error: 'Work not found.' });
+    return res.status(204).end();
+  } catch (error) {
+    if (useSupabase && /works|author_works|book_works/i.test(error.message)) {
+      return res.status(503).json({ error: supabaseWorkCatalogMigrationMessage });
+    }
+    console.error('Failed to delete Work:', error);
+    return res.status(502).json({ error: 'Failed to delete Work.' });
   }
 });
 

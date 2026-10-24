@@ -11,6 +11,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import TitleView from './components/TitleView';
 import AuthorView from './components/AuthorView';
 import SpineCropEditor from './components/SpineCropEditor';
+import WorkCatalog from './components/WorkCatalog';
 import { apiUrl } from './apiUrl';
 
 const ADD_BOOK_FIELDS = [
@@ -321,6 +322,8 @@ const App = () => {
                   <SpineCropEditor books={spineBooks} setBooks={setSpineBooks} seriesOptions={seriesOptions} />
                 </Col>
               </Row>
+            ) : view === 'work-catalog' ? (
+              <WorkCatalog onBack={() => setView('library')} />
             ) : (
               <Row>
                 <Col xs={12} lg={2} className="d-flex flex-column align-items-stretch">
@@ -356,6 +359,7 @@ const App = () => {
                       <button className="btn btn-outline-primary" onClick={openSpineCropPage} disabled={isLoadingSpineBooks}>{isLoadingSpineBooks ? 'Loading Spine Books...' : 'Open Spine Crop Tool'}</button>
                       {spineBooksError && <div className="small text-danger">{spineBooksError}</div>}
                       <button className="btn btn-outline-secondary" onClick={openSeriesManager}>Manage Series</button>
+                      <button className="btn btn-outline-primary" onClick={() => setView('work-catalog')}>Manage Author / Work Catalog</button>
                       <button className="btn btn-outline-danger" onClick={openUndisplayedBooksPanel}>Manage Undisplayed Books</button>
                       <button className="btn btn-outline-success" onClick={openAddBookModal}>Add Book</button>
                     </div>
