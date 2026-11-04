@@ -1,6 +1,28 @@
 import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { getSupabaseClient } from '../../supabaseClient';
 import SpineCropEditor from '../SpineCropEditor';
+
+jest.mock('../../supabaseClient', () => ({
+  getSupabaseClient: jest.fn()
+}));
+
+const storageBucket = {
+  list: jest.fn(),
+  getPublicUrl: jest.fn(),
+  upload: jest.fn()
+};
+
+beforeEach(() => {
+  storageBucket.list.mockResolvedValue({ data: [], error: null });
+  storageBucket.getPublicUrl.mockImplementation((path) => ({
+    data: { publicUrl: `https://project.supabase.co/storage/v1/object/public/images/${path}` }
+  }));
+  storageBucket.upload.mockResolvedValue({ data: { path: 'uploaded-spine.png' }, error: null });
+  getSupabaseClient.mockReturnValue({
+    storage: { from: jest.fn(() => storageBucket) }
+  });
+});
 
 describe('SpineCropEditor save feedback', () => {
   test('shows saved state for each book and the current session total', () => {
@@ -21,11 +43,16 @@ describe('SpineCropEditor save feedback', () => {
     expect(screen.getByRole('option', { name: /Saved Book.*crop saved/i })).toBeInTheDocument();
     expect(screen.getByRole('option', { name: /New Book.*no crop/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Generate Preview' })).toBeDisabled();
-    expect(screen.queryByText('Upload file')).not.toBeInTheDocument();
+    expect(screen.getByLabelText('Image from Supabase')).toBeInTheDocument();
+    expect(screen.getByLabelText('Image file to upload')).toBeInTheDocument();
+    expect(screen.queryByLabelText('Direct image URL')).not.toBeInTheDocument();
   });
 
-  test('routes direct image URLs through the proxy and keeps a recent URL option', () => {
-    window.localStorage.removeItem('spineCropRecentDirectUrls');
+  test('lists Supabase images and loads the selected image', async () => {
+    storageBucket.list.mockResolvedValue({
+      data: [{ id: 'image-id', name: 'spine.jpg', metadata: { mimetype: 'image/jpeg' } }],
+      error: null
+    });
     render(
       <SpineCropEditor
         books={[]}
@@ -34,26 +61,17 @@ describe('SpineCropEditor save feedback', () => {
       />
     );
 
-    fireEvent.click(screen.getByLabelText('Direct image URL'));
-    fireEvent.change(screen.getByPlaceholderText('https://example.com/spine.jpg'), {
-      target: { value: 'https://images.example.org/spine.jpg' }
-    });
-    fireEvent.click(screen.getByRole('button', { name: 'Load' }));
-
-    expect(screen.getByAltText('Spine crop source loader').src).toContain('/api/image-proxy?url=');
+    const imageSelect = await screen.findByLabelText('Image from Supabase');
+    expect(screen.getByRole('option', { name: 'spine.jpg' })).toBeInTheDocument();
+    fireEvent.change(imageSelect, { target: { value: 'spine.jpg' } });
+    expect(screen.getByAltText('Spine crop source loader').src).toBe(
+      'https://project.supabase.co/storage/v1/object/public/images/spine.jpg'
+    );
     expect(screen.getByRole('button', { name: 'Generate Preview' })).toBeDisabled();
-    expect(screen.getByRole('option', { name: 'https://images.example.org/spine.jpg' })).toBeInTheDocument();
-    fireEvent.change(screen.getByLabelText('Recent direct image URLs'), {
-      target: { value: 'https://images.example.org/spine.jpg' }
-    });
-    expect(screen.getByPlaceholderText('https://example.com/spine.jpg')).toHaveValue('https://images.example.org/spine.jpg');
-    expect(JSON.parse(window.localStorage.getItem('spineCropRecentDirectUrls'))).toEqual([
-      'https://images.example.org/spine.jpg'
-    ]);
+    expect(storageBucket.list).toHaveBeenCalledWith('', expect.objectContaining({ limit: 1000 }));
   });
 
-  test('keeps the recent URL dropdown visible when there are no saved URLs', () => {
-    window.localStorage.removeItem('spineCropRecentDirectUrls');
+  test('uploads an image into the images bucket and selects it for cropping', async () => {
     render(
       <SpineCropEditor
         books={[]}
@@ -62,10 +80,20 @@ describe('SpineCropEditor save feedback', () => {
       />
     );
 
-    fireEvent.click(screen.getByLabelText('Direct image URL'));
+    fireEvent.change(screen.getByLabelText('Image file to upload'), {
+      target: { files: [new File(['image'], 'new spine.png', { type: 'image/png' })] }
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Upload' }));
 
-    expect(screen.getByLabelText('Recent direct image URLs')).toBeDisabled();
-    expect(screen.getByRole('option', { name: 'No recent URLs yet' })).toBeInTheDocument();
+    await waitFor(() => expect(storageBucket.upload).toHaveBeenCalledWith(
+      expect.stringMatching(/new_spine\.png$/),
+      expect.objectContaining({ name: 'new spine.png' }),
+      expect.objectContaining({ contentType: 'image/png', upsert: false })
+    ));
+    expect(await screen.findByRole('option', { name: 'uploaded-spine.png' })).toBeInTheDocument();
+    expect(screen.getByLabelText('Image from Supabase')).toHaveValue('uploaded-spine.png');
+    expect(screen.getByAltText('Spine crop source loader').src).toContain('/uploaded-spine.png');
+    expect(await screen.findByText('Image uploaded and selected.')).toBeInTheDocument();
   });
 
   test('shows the selected book cover beside the spine crop preview', () => {
@@ -156,7 +184,6 @@ describe('SpineCropEditor save feedback', () => {
       fireEvent.change(screen.getByLabelText('PCD Book'), { target: { value: 'saved-direct-book' } });
       const sourceImage = screen.getByAltText('Spine crop source loader');
       expect(sourceImage.src).toContain('/api/image-proxy?url=');
-      expect(screen.getByPlaceholderText('https://example.com/spine.jpg')).toHaveValue('https://images.example.org/saved-spine.jpg');
 
       Object.defineProperties(sourceImage, {
         naturalWidth: { configurable: true, value: 400 },

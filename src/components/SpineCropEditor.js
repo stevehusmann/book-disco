@@ -9,12 +9,11 @@ import {
   renderSpineCropCanvas
 } from './spineCropUtils';
 import { getBookSpineThickness, getMainBookRenderDimensions } from './bookSpineSizing';
+import UploadImage from './UploadImage';
+import { listSpineImages } from './spineImageStorage';
 
 const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
 const getBookUid = (book) => (book?._uid || book?.ISBN || book?.EAN || book?.Title || '').toString();
-const DEFAULT_LOCAL_IMAGE_PATH = 'PenguinDeluxeClassics.jpg';
-const RECENT_DIRECT_URLS_KEY = 'spineCropRecentDirectUrls';
-const MAX_RECENT_DIRECT_URLS = 10;
 
 const getSavedCropSource = (crop) => {
   const source = String(crop?.src || crop?.source || '').trim();
@@ -23,30 +22,18 @@ const getSavedCropSource = (crop) => {
     const parsed = new URL(source, window.location.origin);
     const directUrl = parsed.searchParams.get('url');
     if (parsed.pathname.endsWith('/api/image-proxy') && directUrl) {
-      return { src: source, mode: 'url', directUrl };
+      return { src: source };
     }
     if (['http:', 'https:'].includes(parsed.protocol) && parsed.origin !== window.location.origin) {
       return {
-        src: apiUrl(`/api/image-proxy?url=${encodeURIComponent(source)}`),
-        mode: 'url',
-        directUrl: source
+        src: apiUrl(`/api/image-proxy?url=${encodeURIComponent(source)}`)
       };
     }
   } catch (error) {
     console.error('Could not parse saved spine crop source:', error);
   }
 
-  let publicPath = source;
-  try {
-    publicPath = decodeURI(source);
-  } catch (error) {
-    console.error('Could not decode saved spine crop source:', error);
-  }
-  return {
-    src: source,
-    mode: 'public',
-    publicPath: publicPath.replace(/^\/+/, '')
-  };
+  return { src: source };
 };
 
 const getComparableImageSource = (source) => {
@@ -72,19 +59,11 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
   );
 
   const [selectedId, setSelectedId] = useState('');
-  const [sourceMode, setSourceMode] = useState('public');
-  const [imageSrc, setImageSrc] = useState(encodeURI(`/${DEFAULT_LOCAL_IMAGE_PATH}`));
-  const [publicPath, setPublicPath] = useState(DEFAULT_LOCAL_IMAGE_PATH);
-  const [directUrl, setDirectUrl] = useState('');
-  const [recentDirectUrls, setRecentDirectUrls] = useState(() => {
-    try {
-      const urls = JSON.parse(window.localStorage.getItem(RECENT_DIRECT_URLS_KEY) || '[]');
-      return Array.isArray(urls) ? urls.filter((url) => typeof url === 'string') : [];
-    } catch (error) {
-      console.error('Could not load recent spine image URLs:', error);
-      return [];
-    }
-  });
+  const [imageSrc, setImageSrc] = useState('');
+  const [selectedImagePath, setSelectedImagePath] = useState('');
+  const [storageImages, setStorageImages] = useState([]);
+  const [isLoadingStorageImages, setIsLoadingStorageImages] = useState(true);
+  const [storageImagesError, setStorageImagesError] = useState('');
   const [saveStatus, setSaveStatus] = useState('');
   const [isSavingCrop, setIsSavingCrop] = useState(false);
   const [isDeletingBook, setIsDeletingBook] = useState(false);
@@ -114,6 +93,13 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
     () => pcdBooks.find((book) => getBookUid(book) === selectedId) || null,
     [pcdBooks, selectedId]
   );
+  useEffect(() => {
+    if (!selectedBook?.SpineCrop || !imageSrc) return;
+    const savedImage = storageImages.find((image) => (
+      getComparableImageSource(image.src) === getComparableImageSource(imageSrc)
+    ));
+    if (savedImage) setSelectedImagePath(savedImage.path);
+  }, [selectedBook, imageSrc, storageImages]);
   const savedCropCount = useMemo(
     () => pcdBooks.filter((book) => Boolean(book?.SpineCrop)).length,
     [pcdBooks]
@@ -132,23 +118,50 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
     ].some((value) => (value || '').toString().toLocaleLowerCase().includes(query)));
   }, [bookSearch, pcdBooks]);
 
-  const publicImageOptions = useMemo(() => {
-    const local = books
-      .map((b) => (b?.Image || '').toString().trim())
-      .filter((src) => {
-        if (!src) return false;
-        const lower = src.toLowerCase();
-        if (lower.startsWith('http://') || lower.startsWith('https://') || lower.startsWith('data:') || lower.startsWith('blob:')) return false;
-        return true;
+  useEffect(() => {
+    let cancelled = false;
+    setIsLoadingStorageImages(true);
+    listSpineImages()
+      .then((images) => {
+        if (!cancelled) {
+          setStorageImages((current) => {
+            const byPath = new Map([...images, ...current].map((image) => [image.path, image]));
+            return Array.from(byPath.values()).sort((left, right) => left.path.localeCompare(right.path));
+          });
+          setStorageImagesError('');
+        }
+      })
+      .catch((error) => {
+        console.error('Could not load images from Supabase Storage:', error);
+        if (!cancelled) setStorageImagesError(error?.message || 'Could not load images from Supabase Storage.');
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoadingStorageImages(false);
       });
-    return Array.from(new Set([DEFAULT_LOCAL_IMAGE_PATH, ...local]));
-  }, [books]);
 
-  const normalizePublicPath = (value) => {
-    const v = (value || '').trim();
-    if (!v) return '';
-    const pathValue = v.startsWith('/') ? v : `/${v}`;
-    return encodeURI(pathValue);
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const loadStorageImage = (image) => {
+    setSelectedImagePath(image.path);
+    setImageSrc(image.src);
+    setCropDisplay(null);
+    setRotation(0);
+    setPreviewRotation(0);
+    setPreviewSrc('');
+    setPreviewSignature('');
+    setImageLoadError('');
+  };
+
+  const handleImageUploaded = (image) => {
+    setStorageImages((current) => [...current.filter((item) => item.path !== image.path), {
+      ...image,
+      name: image.path.split('/').pop()
+    }].sort((left, right) => left.path.localeCompare(right.path)));
+    setStorageImagesError('');
+    loadStorageImage(image);
   };
 
   const getPointInStage = (evt) => {
@@ -295,19 +308,6 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
     setImgRendered({ width: renderedWidth, height: renderedHeight });
   }, [rotation]);
 
-  const loadPublicImage = () => {
-    const normalized = normalizePublicPath(publicPath);
-    if (!normalized) return;
-    setSourceMode('public');
-    setImageSrc(normalized);
-    setCropDisplay(null);
-    setRotation(0);
-    setPreviewRotation(0);
-    setPreviewSrc('');
-    setPreviewSignature('');
-    setImageLoadError('');
-  };
-
   const selectBook = (uid) => {
     const book = pcdBooks.find((item) => getBookUid(item) === uid);
     setSelectedId(uid);
@@ -324,45 +324,15 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
     setSelectionMode(savedCrop.mode === 'rect' ? 'rect' : 'quad');
     const savedSource = getSavedCropSource(savedCrop);
     if (savedSource) {
-      setSourceMode(savedSource.mode);
-      if (savedSource.mode === 'url') {
-        setDirectUrl(savedSource.directUrl);
-        setRecentDirectUrls((current) => [
-          savedSource.directUrl,
-          ...current.filter((url) => url !== savedSource.directUrl)
-        ].slice(0, MAX_RECENT_DIRECT_URLS));
-      } else {
-        setPublicPath(savedSource.publicPath);
-      }
-      setImageSrc(savedSource.src);
+      const savedImage = storageImages.find((image) => getComparableImageSource(image.src) === getComparableImageSource(savedSource.src));
+      setImageSrc(savedImage?.src || savedSource.src);
+      setSelectedImagePath(savedImage?.path || '');
     }
     setRotation([90, 180, 270].includes(Number(savedCrop.editorRotation))
       ? Number(savedCrop.editorRotation)
       : 0);
     setPreviewRotation(Number(savedCrop.outputRotation) || 0);
   };
-
-  const loadDirectUrlImage = () => {
-    const url = (directUrl || '').trim();
-    if (!url) return;
-    setRecentDirectUrls((current) => [url, ...current.filter((recentUrl) => recentUrl !== url)].slice(0, MAX_RECENT_DIRECT_URLS));
-    setSourceMode('url');
-    setImageSrc(apiUrl(`/api/image-proxy?url=${encodeURIComponent(url)}`));
-    setCropDisplay(null);
-    setRotation(0);
-    setPreviewRotation(0);
-    setPreviewSrc('');
-    setPreviewSignature('');
-    setImageLoadError('');
-  };
-
-  useEffect(() => {
-    try {
-      window.localStorage.setItem(RECENT_DIRECT_URLS_KEY, JSON.stringify(recentDirectUrls));
-    } catch (error) {
-      console.error('Could not save recent spine image URLs:', error);
-    }
-  }, [recentDirectUrls]);
 
   const cropSourceCoords = useMemo(() => {
     if (!cropDisplay || !imgRendered.width || !imgRendered.height || !imgNatural.width || !imgNatural.height) {
@@ -770,88 +740,37 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
         </button>
       )}
 
-      <label className="form-label mb-1">Image Source</label>
-      <div className="d-flex gap-3 mb-2">
-        <div className="form-check">
-          <input
-            className="form-check-input"
-            type="radio"
-            name="cropSourceMode"
-            id="sourcePublic"
-            checked={sourceMode === 'public'}
-            onChange={() => setSourceMode('public')}
-          />
-          <label className="form-check-label" htmlFor="sourcePublic">Public folder image</label>
+      <label className="form-label mb-1" htmlFor="supabase-image-select">Image from Supabase</label>
+      <select
+        id="supabase-image-select"
+        className="form-select form-select-sm mb-2"
+        value={selectedImagePath}
+        disabled={isLoadingStorageImages || !storageImages.length}
+        onChange={(event) => {
+          const image = storageImages.find((item) => item.path === event.target.value);
+          if (image) loadStorageImage(image);
+        }}
+      >
+        <option value="">
+          {isLoadingStorageImages
+            ? 'Loading Supabase images...'
+            : storageImages.length
+              ? 'Select an image...'
+              : 'No Supabase images available'}
+        </option>
+        {storageImages.map((image) => (
+          <option key={image.path} value={image.path}>{image.path}</option>
+        ))}
+      </select>
+      {storageImagesError && (
+        <div className="small text-danger mb-2" role="alert">
+          Could not load Supabase images: {storageImagesError}
         </div>
-        <div className="form-check">
-          <input
-            className="form-check-input"
-            type="radio"
-            name="cropSourceMode"
-            id="sourceUrl"
-            checked={sourceMode === 'url'}
-            onChange={() => setSourceMode('url')}
-          />
-          <label className="form-check-label" htmlFor="sourceUrl">Direct image URL</label>
-        </div>
-      </div>
-
-      {sourceMode === 'public' ? (
-        <>
-          <label className="form-label mb-1">Choose existing local image path</label>
-          <select
-            className="form-select form-select-sm mb-2"
-            value={publicPath}
-            onChange={(e) => setPublicPath(e.target.value)}
-          >
-            <option value="">Select a local image path...</option>
-            {publicImageOptions.map((src) => (
-              <option key={src} value={src}>{src}</option>
-            ))}
-          </select>
-
-          <label className="form-label mb-1">Or type path under public/</label>
-          <div className="input-group input-group-sm mb-2">
-            <input
-              className="form-control"
-              placeholder="e.g. shelf.jpg or images/shelf.jpg"
-              value={publicPath}
-              onChange={(e) => setPublicPath(e.target.value)}
-            />
-            <button className="btn btn-outline-secondary" type="button" onClick={loadPublicImage}>Load</button>
-          </div>
-        </>
-      ) : sourceMode === 'url' ? (
-        <>
-          <label className="form-label mb-1">Direct Image URL</label>
-          <div className="input-group input-group-sm mb-2">
-            <input
-              className="form-control"
-              placeholder="https://example.com/spine.jpg"
-              value={directUrl}
-              onChange={(e) => setDirectUrl(e.target.value)}
-            />
-            <button className="btn btn-outline-secondary" type="button" onClick={loadDirectUrlImage}>Load</button>
-          </div>
-          <label className="form-label mb-1" htmlFor="recentDirectUrls">Recent direct image URLs</label>
-          <select
-            id="recentDirectUrls"
-            className="form-select form-select-sm mb-2"
-            value=""
-            disabled={!recentDirectUrls.length}
-            onChange={(event) => {
-              if (event.target.value) setDirectUrl(event.target.value);
-            }}
-          >
-            <option value="">
-              {recentDirectUrls.length ? 'Choose a recent URL...' : 'No recent URLs yet'}
-            </option>
-            {recentDirectUrls.map((url) => (
-              <option key={url} value={url}>{url}</option>
-            ))}
-          </select>
-        </>
-      ) : null}
+      )}
+      {!isLoadingStorageImages && !storageImagesError && !storageImages.length && (
+        <div className="small text-muted mb-2">Upload an image to add it to the images bucket.</div>
+      )}
+      <UploadImage onUploaded={handleImageUploaded} />
 
       <label className="form-label mb-1">Selection Mode</label>
       <div className="d-flex gap-3 mb-2">
@@ -1007,7 +926,7 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
             </div>
           </div>
         ) : (
-          <div className="spine-crop-placeholder">Load a public image path or direct URL to start cropping.</div>
+          <div className="spine-crop-placeholder">Choose or upload a Supabase image to start cropping.</div>
         )}
       </div>
 

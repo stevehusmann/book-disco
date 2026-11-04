@@ -69,3 +69,12 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
 # book-disco
+
+## Spine crop image storage
+
+The Spine Crop Tool lists images from the Supabase Storage bucket named `images` and uploads selected image files to that bucket. Set these variables in the repository-root `.env.local` (see [.env.example](./.env.example)) and restart the frontend:
+
+- `REACT_APP_SUPABASE_URL` - Supabase project URL
+- `REACT_APP_SUPABASE_ANON_KEY` - Supabase publishable/anon key
+
+The bucket must allow image listing and public reads for the dropdown and crop previews to work. Uploads also require a Storage `INSERT` policy for the app's role. This frontend does not include Supabase sign-in, so allowing the `anon` role to upload also allows unauthenticated users to upload; configure Storage policies according to the access model you want before enabling that permission. Never put a Supabase service-role key in a `REACT_APP_*` variable or frontend code.
