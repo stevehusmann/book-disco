@@ -68,6 +68,11 @@ const stableAuthorId = (author) => {
   return `author-${crypto.createHash('sha256').update(identity).digest('hex').slice(0, 20)}`;
 };
 
+const normalizeWikipediaTitle = (value) => String(value || '').trim().replace(/_/g, ' ').replace(/\s+/g, ' ').toLocaleLowerCase();
+const getCachedWikipediaData = (cache, key) => (cache ? cache.get(key) : undefined);
+const setCachedWikipediaData = (cache, key, data) => (cache ? cache.set(key, data) : undefined);
+const WIKIPEDIA_USER_AGENT = 'MyBookshelf/1.0 (https://bookdisco.com; contact: steve.husmann@gmail.com)';
+
 const seedAuthorsFromList = (db, authorListPath) => {
   let authors;
   try {
@@ -98,7 +103,11 @@ const seedAuthorsFromList = (db, authorListPath) => {
   return insertAuthors(authors);
 };
 
-const getWikipediaAuthorCandidates = async (search) => {
+const getWikipediaAuthorCandidates = async (search, cache) => {
+  const cacheKey = `v1:author-search:${String(search || '').trim().toLocaleLowerCase()}`;
+  const cached = await getCachedWikipediaData(cache, cacheKey);
+  if (cached !== undefined) return cached;
+
   const url = new URL('https://en.wikipedia.org/w/api.php');
   url.search = new URLSearchParams({
     action: 'opensearch',
@@ -108,16 +117,18 @@ const getWikipediaAuthorCandidates = async (search) => {
     format: 'json'
   }).toString();
   const response = await fetch(url, {
-    headers: { 'User-Agent': 'MyBookshelf/1.0 (author-work catalog)' },
+    headers: { 'User-Agent': WIKIPEDIA_USER_AGENT },
     signal: AbortSignal.timeout(15000)
   });
   if (!response.ok) throw new Error(`Wikipedia author search failed (${response.status}).`);
   const result = await response.json();
-  return (result[1] || []).map((title, index) => ({
+  const candidates = (result[1] || []).map((title, index) => ({
     pageTitle: title,
     description: result[2]?.[index] || '',
     url: result[3]?.[index] || `https://en.wikipedia.org/wiki/${encodeURIComponent(title.replace(/ /g, '_'))}`
   }));
+  await setCachedWikipediaData(cache, cacheKey, candidates);
+  return candidates;
 };
 
 const extractYear = (text) => {
@@ -128,7 +139,11 @@ const extractYear = (text) => {
   return { value: String(year), precision: 9 };
 };
 
-const getWikipediaWorks = async (pageTitle) => {
+const getWikipediaWorks = async (pageTitle, cache) => {
+  const cacheKey = `v1:author-works:${normalizeWikipediaTitle(pageTitle)}`;
+  const cached = await getCachedWikipediaData(cache, cacheKey);
+  if (cached !== undefined) return cached;
+
   const sectionsUrl = new URL('https://en.wikipedia.org/w/api.php');
   sectionsUrl.search = new URLSearchParams({
     action: 'parse',
@@ -137,7 +152,7 @@ const getWikipediaWorks = async (pageTitle) => {
     format: 'json'
   }).toString();
   const sectionsResponse = await fetch(sectionsUrl, {
-    headers: { 'User-Agent': 'MyBookshelf/1.0 (author-work catalog)' },
+    headers: { 'User-Agent': WIKIPEDIA_USER_AGENT },
     signal: AbortSignal.timeout(20000)
   });
   if (!sectionsResponse.ok) throw new Error(`Wikipedia author page lookup failed (${sectionsResponse.status}).`);
@@ -159,7 +174,7 @@ const getWikipediaWorks = async (pageTitle) => {
       format: 'json'
     }).toString();
     const response = await fetch(sectionUrl, {
-      headers: { 'User-Agent': 'MyBookshelf/1.0 (author-work catalog)' },
+      headers: { 'User-Agent': WIKIPEDIA_USER_AGENT },
       signal: AbortSignal.timeout(20000)
     });
     if (!response.ok) throw new Error(`Wikipedia bibliography lookup failed (${response.status}).`);
@@ -198,10 +213,16 @@ const getWikipediaWorks = async (pageTitle) => {
       if (!previous || (!previous.date && entry.date)) candidates.set(entry.sourceId, entry);
     });
   }
-  return [...candidates.values()].sort((left, right) => left.title.localeCompare(right.title));
+  const works = [...candidates.values()].sort((left, right) => left.title.localeCompare(right.title));
+  await setCachedWikipediaData(cache, cacheKey, works);
+  return works;
 };
 
-const getWikipediaPageSummary = async (pageTitle) => {
+const getWikipediaPageSummary = async (pageTitle, cache) => {
+  const cacheKey = `v1:page-summary:${normalizeWikipediaTitle(pageTitle)}`;
+  const cached = await getCachedWikipediaData(cache, cacheKey);
+  if (cached !== undefined) return cached;
+
   const url = new URL('https://en.wikipedia.org/w/api.php');
   url.search = new URLSearchParams({
     action: 'query',
@@ -213,7 +234,7 @@ const getWikipediaPageSummary = async (pageTitle) => {
     format: 'json'
   }).toString();
   const response = await fetch(url, {
-    headers: { 'User-Agent': 'MyBookshelf/1.0 (author-work catalog)' },
+    headers: { 'User-Agent': WIKIPEDIA_USER_AGENT },
     signal: AbortSignal.timeout(20000)
   });
   if (!response.ok) throw new Error(`Wikipedia summary lookup failed (${response.status}).`);
@@ -221,12 +242,14 @@ const getWikipediaPageSummary = async (pageTitle) => {
   if (result.error) throw new Error(result.error.info || 'Wikipedia summary lookup failed.');
   const page = Object.values(result.query?.pages || {})[0];
   if (!page || page.missing !== undefined) throw new Error('Wikipedia page was not found.');
-  return {
+  const summary = {
     pageTitle: page.title,
     extract: page.extract || '',
     thumbnail: page.thumbnail?.source || '',
     url: `https://en.wikipedia.org/wiki/${encodeURIComponent(page.title.replace(/ /g, '_'))}`
   };
+  await setCachedWikipediaData(cache, cacheKey, summary);
+  return summary;
 };
 
 const insertWorkRelationships = (db, workId, authorIds, bookUids) => {

@@ -7,6 +7,8 @@ const { MessageChannel, MessagePort } = require('worker_threads');
 const { Blob } = require('buffer');
 const {
   createWorkRecord,
+  getWikipediaAuthorCandidates,
+  getWikipediaPageSummary,
   getWikipediaWorks,
   initializeWorkCatalog
 } = require('../../../backend/workCatalog');
@@ -297,6 +299,70 @@ test('extracts works from Wikipedia bibliography sections with linked source and
     global.MessageChannel = originalMessageChannel;
     global.MessagePort = originalMessagePort;
     global.Blob = originalBlob;
+  }
+});
+
+test('reads cached Wikipedia searches and bibliography results without contacting Wikipedia', async () => {
+  const originalFetch = global.fetch;
+  const fetchMock = jest.fn();
+  global.fetch = fetchMock;
+  const cachedResults = [{ pageTitle: 'Herman Melville' }];
+  const cache = {
+    get: jest.fn(async () => cachedResults),
+    set: jest.fn()
+  };
+
+  try {
+    await expect(getWikipediaAuthorCandidates('Herman Melville', cache)).resolves.toBe(cachedResults);
+    await expect(getWikipediaWorks('herman_melville', cache)).resolves.toBe(cachedResults);
+    expect(cache.get).toHaveBeenNthCalledWith(1, 'v1:author-search:herman melville');
+    expect(cache.get).toHaveBeenNthCalledWith(2, 'v1:author-works:herman melville');
+    expect(fetchMock).not.toHaveBeenCalled();
+  } finally {
+    global.fetch = originalFetch;
+  }
+});
+
+test('persists a successful Wikipedia page summary for later requests', async () => {
+  const originalFetch = global.fetch;
+  const originalTimeout = AbortSignal.timeout;
+  let persistedSummary;
+  const cache = {
+    get: jest.fn(async () => persistedSummary),
+    set: jest.fn(async (_key, data) => {
+      persistedSummary = data;
+    })
+  };
+  const fetchMock = jest.fn(async () => ({
+    ok: true,
+    json: async () => ({
+      query: {
+        pages: {
+          123: {
+            title: 'Charles Dickens',
+            extract: 'English novelist.',
+            thumbnail: { source: 'https://upload.wikimedia.org/example.jpg' }
+          }
+        }
+      }
+    })
+  }));
+  global.fetch = fetchMock;
+  AbortSignal.timeout = () => undefined;
+
+  try {
+    const summary = await getWikipediaPageSummary('Charles Dickens', cache);
+    expect(cache.set).toHaveBeenCalledWith('v1:page-summary:charles dickens', summary);
+    await expect(getWikipediaPageSummary('charles_dickens', cache)).resolves.toEqual(summary);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(summary).toEqual(expect.objectContaining({
+      pageTitle: 'Charles Dickens',
+      extract: 'English novelist.',
+      thumbnail: 'https://upload.wikimedia.org/example.jpg'
+    }));
+  } finally {
+    global.fetch = originalFetch;
+    AbortSignal.timeout = originalTimeout;
   }
 });
 

@@ -32,6 +32,8 @@ The Author / Work Catalog uses additive `authors`, `works`, `author_works`, and 
 
 The catalog searches Wikipedia Works and book editions after an author page is selected. Likely title matches are preselected as suggestions, but author identity, Work entries, publication years, and edition links still require explicit confirmation before saving. Wikipedia article formatting and bibliography coverage vary, so results are not guaranteed complete and candidates may need correction. A listed year is stored at year precision; no month or day is inferred. One book edition may link to multiple Works, and a Work may have multiple authors.
 
+Successful Wikipedia author searches, bibliography results, and page summaries are cached indefinitely in `wikipedia_cache`, so repeat requests use the saved result instead of contacting Wikipedia. Local SQLite creates this table automatically. For Supabase deployments, run `supabase_wikipedia_cache_migration.sql` in the Supabase SQL Editor. To refresh cached Wikipedia data, delete the corresponding rows from `public.wikipedia_cache`; a subsequent request will fetch and cache the latest result.
+
 `GET /api/books` responds with `{ books, total, page, pageSize, pageCount }`. The page size is capped at 100. The frontend submits search text only when the Search button is pressed or Enter is submitted; changing sort, series, or page runs a new server query.
 
 ## Local Run

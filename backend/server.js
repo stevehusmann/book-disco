@@ -88,6 +88,12 @@ db.exec(`
     spine_mode TEXT NOT NULL DEFAULT 'automatic',
     updated_at TEXT DEFAULT CURRENT_TIMESTAMP
   );
+
+  CREATE TABLE IF NOT EXISTS wikipedia_cache (
+    cache_key TEXT PRIMARY KEY,
+    cached_data TEXT NOT NULL,
+    fetched_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+  );
 `);
 
 const ensureBookColumns = () => {
@@ -445,6 +451,49 @@ const supabaseRequest = async (route, options = {}) => {
   return responseBody;
 };
 
+const getWikipediaCacheEntry = async (cacheKey) => {
+  if (useSupabase) {
+    const query = new URLSearchParams({
+      select: 'cached_data',
+      cache_key: `eq.${cacheKey}`,
+      limit: '1'
+    });
+    const rows = await supabaseRequest(`wikipedia_cache?${query.toString()}`);
+    return rows.length ? rows[0].cached_data : undefined;
+  }
+
+  const row = db.prepare('SELECT cached_data FROM wikipedia_cache WHERE cache_key = ?').get(cacheKey);
+  return row ? JSON.parse(row.cached_data) : undefined;
+};
+
+const setWikipediaCacheEntry = async (cacheKey, cachedData) => {
+  if (useSupabase) {
+    await supabaseRequest('wikipedia_cache?on_conflict=cache_key', {
+      method: 'POST',
+      headers: { Prefer: 'resolution=merge-duplicates,return=minimal' },
+      body: JSON.stringify([{
+        cache_key: cacheKey,
+        cached_data: cachedData,
+        fetched_at: new Date().toISOString()
+      }])
+    });
+    return;
+  }
+
+  db.prepare(`
+    INSERT INTO wikipedia_cache (cache_key, cached_data, fetched_at)
+    VALUES (?, ?, CURRENT_TIMESTAMP)
+    ON CONFLICT(cache_key) DO UPDATE SET
+      cached_data = excluded.cached_data,
+      fetched_at = CURRENT_TIMESTAMP
+  `).run(cacheKey, JSON.stringify(cachedData));
+};
+
+const wikipediaCache = {
+  get: getWikipediaCacheEntry,
+  set: setWikipediaCacheEntry
+};
+
 const supabaseBookRoute = (filters = {}) => {
   const query = new URLSearchParams({ select: 'uid,book', ...filters });
   return `books?${query.toString()}`;
@@ -458,6 +507,7 @@ const isMissingSupabaseSeriesTable = (error) => {
 
 const supabaseSeriesMigrationMessage = 'The Supabase series table is missing. Run backend/supabase_series_migration.sql in the Supabase SQL Editor, then retry.';
 const supabaseWorkCatalogMigrationMessage = 'The Supabase work catalog tables are missing or outdated. Run backend/supabase_work_catalog_migration.sql in the Supabase SQL Editor, then retry.';
+const supabaseWikipediaCacheMigrationMessage = 'The Supabase Wikipedia cache table is missing. Run backend/supabase_wikipedia_cache_migration.sql in the Supabase SQL Editor, then retry.';
 let supabaseAuthorsSeeded = false;
 
 const ensureSupabaseAuthorCatalog = async () => {
@@ -879,8 +929,11 @@ app.get('/api/catalog/wikipedia/search', async (req, res) => {
   const search = String(req.query.q || '').trim().slice(0, 120);
   if (!search) return res.status(400).json({ error: 'Search text is required.' });
   try {
-    return res.json(await getWikipediaAuthorCandidates(search));
+    return res.json(await getWikipediaAuthorCandidates(search, wikipediaCache));
   } catch (error) {
+    if (useSupabase && /wikipedia_cache/i.test(error.message)) {
+      return res.status(503).json({ error: supabaseWikipediaCacheMigrationMessage });
+    }
     console.error('Failed to search Wikipedia authors:', error);
     return res.status(502).json({ error: 'Wikipedia search is temporarily unavailable.' });
   }
@@ -890,8 +943,11 @@ app.get('/api/catalog/wikipedia/authors/works', async (req, res) => {
   const pageTitle = String(req.query.pageTitle || '').trim();
   if (!pageTitle || pageTitle.length > 300) return res.status(400).json({ error: 'A valid Wikipedia page title is required.' });
   try {
-    return res.json(await getWikipediaWorks(pageTitle));
+    return res.json(await getWikipediaWorks(pageTitle, wikipediaCache));
   } catch (error) {
+    if (useSupabase && /wikipedia_cache/i.test(error.message)) {
+      return res.status(503).json({ error: supabaseWikipediaCacheMigrationMessage });
+    }
     console.error(`Failed to load Wikipedia works for ${pageTitle}:`, error);
     const detail = error instanceof Error ? error.message : String(error);
     return res.status(502).json({ error: `Wikipedia works could not be loaded: ${detail}` });
@@ -902,8 +958,11 @@ app.get('/api/catalog/wikipedia/summary', async (req, res) => {
   const pageTitle = String(req.query.pageTitle || '').trim();
   if (!pageTitle || pageTitle.length > 300) return res.status(400).json({ error: 'A valid Wikipedia page title is required.' });
   try {
-    return res.json(await getWikipediaPageSummary(pageTitle));
+    return res.json(await getWikipediaPageSummary(pageTitle, wikipediaCache));
   } catch (error) {
+    if (useSupabase && /wikipedia_cache/i.test(error.message)) {
+      return res.status(503).json({ error: supabaseWikipediaCacheMigrationMessage });
+    }
     console.error(`Failed to load Wikipedia summary for ${pageTitle}:`, error);
     const detail = error instanceof Error ? error.message : String(error);
     return res.status(502).json({ error: `Wikipedia summary could not be loaded: ${detail}` });
