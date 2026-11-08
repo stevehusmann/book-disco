@@ -10,7 +10,9 @@ const {
   getWikipediaAuthorCandidates,
   getWikipediaPageSummary,
   getWikipediaWorks,
-  stableAuthorId
+  stableAuthorId,
+  getEditionAuthorNames,
+  syncEditionAuthors
 } = require('./workCatalog');
 
 const app = express();
@@ -544,6 +546,46 @@ const ensureSupabaseAuthorCatalog = async () => {
   supabaseAuthorsSeeded = true;
 };
 
+const syncSupabaseEditionAuthors = async () => {
+  const books = [];
+  for (let offset = 0; ; offset += 1000) {
+    const query = new URLSearchParams({
+      select: 'book',
+      order: 'uid.asc',
+      limit: '1000',
+      offset: String(offset)
+    });
+    const rows = await supabaseRequest(`books?${query.toString()}`);
+    books.push(...rows.map((row) => row.book || {}));
+    if (rows.length < 1000) break;
+  }
+
+  const authors = new Map();
+  books.forEach((book) => {
+    const names = getEditionAuthorNames(book);
+    names.forEach((name) => {
+      const id = stableAuthorId({ canonicalName: name });
+      if (!authors.has(id)) {
+        authors.set(id, {
+          id,
+          name,
+          sort_name: String(book.AlphaAuthor || '').trim() || name,
+          wikipedia_page_title: null,
+          wikipedia_url: null
+        });
+      }
+    });
+  });
+  const rows = [...authors.values()];
+  for (let offset = 0; offset < rows.length; offset += 500) {
+    await supabaseRequest('authors?on_conflict=id', {
+      method: 'POST',
+      headers: { Prefer: 'resolution=ignore-duplicates,return=minimal' },
+      body: JSON.stringify(rows.slice(offset, offset + 500))
+    });
+  }
+};
+
 const loadSupabaseSeriesFromBooks = async () => {
   const values = new Map();
   for (let offset = 0; ; offset += 1000) {
@@ -849,6 +891,7 @@ app.get('/api/catalog/authors', async (_req, res) => {
   try {
     if (useSupabase) {
       await ensureSupabaseAuthorCatalog();
+      await syncSupabaseEditionAuthors();
       const authors = await supabaseRequest('authors?select=id,name,sort_name,wikipedia_page_title,wikipedia_url&order=sort_name.asc,name.asc');
       const [authorWorks, bookWorks] = await Promise.all([
         supabaseRequest('author_works?select=author_id,work_id'),
@@ -867,6 +910,13 @@ app.get('/api/catalog/authors', async (_req, res) => {
         hasLinkedEditions: authorsWithEditions.has(author.id)
       })));
     }
+    const editionBooks = db.prepare('SELECT author, alpha_author, authors_json FROM books').all()
+      .map((book) => ({
+        Author: book.author,
+        AlphaAuthor: book.alpha_author,
+        Authors: parseJsonArray(book.authors_json)
+      }));
+    syncEditionAuthors(db, editionBooks);
     const authors = db.prepare(`
       SELECT authors.id, authors.name, authors.sort_name, authors.wikidata_qid,
         COUNT(DISTINCT book_works.book_uid) AS edition_count

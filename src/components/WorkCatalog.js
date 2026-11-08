@@ -31,9 +31,13 @@ const normalizeTitle = (title) => String(title || '')
   .replace(/[^a-z0-9]+/g, ' ')
   .trim();
 
+const getEditionSearchTitle = (title) => String(title || '')
+  .replace(/\s*\((?:[^)]*\b(?:novel|short story|story|novella|play|poem|poetry|essay|collection|drama|opera|libretto|screenplay|film|book|work|disambiguation)\b[^)]*)\)\s*$/i, '')
+  .trim();
+
 const isLikelyEditionMatch = (workTitle, editionTitle) => {
-  const work = normalizeTitle(workTitle);
-  const edition = normalizeTitle(editionTitle);
+  const work = normalizeTitle(getEditionSearchTitle(workTitle));
+  const edition = normalizeTitle(getEditionSearchTitle(editionTitle));
   if (!work || !edition) return false;
   if (work === edition) return true;
   return edition.includes(work) && work.length / edition.length >= 0.65;
@@ -53,6 +57,7 @@ const WorkCatalog = ({ onBack }) => {
   const [authorFilter, setAuthorFilter] = useState('');
   const [wikipediaCandidates, setWikipediaCandidates] = useState([]);
   const [workCandidates, setWorkCandidates] = useState([]);
+  const [showUnmatchedWorkCandidates, setShowUnmatchedWorkCandidates] = useState(false);
   const [selectedWork, setSelectedWork] = useState(null);
   const [selectedAuthorIds, setSelectedAuthorIds] = useState([]);
   const [coauthorFilter, setCoauthorFilter] = useState('');
@@ -84,6 +89,10 @@ const WorkCatalog = ({ onBack }) => {
   const selectedAuthorWorks = useMemo(() => works
     .filter((work) => (work.authors || []).some((author) => author.id === selectedAuthorId))
     .sort(comparePublicationOrder), [works, selectedAuthorId]);
+  const matchedWorkCandidateCount = workCandidates.filter((candidate) => candidate.suggestedBookUids?.length).length;
+  const visibleWorkCandidates = showUnmatchedWorkCandidates
+    ? workCandidates
+    : workCandidates.filter((candidate) => candidate.suggestedBookUids?.length);
 
   const loadCatalog = async () => {
     const [authorRows, workRows] = await Promise.all([
@@ -156,23 +165,34 @@ const WorkCatalog = ({ onBack }) => {
       const failedSearches = [];
       for (let offset = 0; offset < candidates.length; offset += 5) {
         const batch = candidates.slice(offset, offset + 5);
-        const batchResults = await Promise.allSettled(batch.map((candidate) => (
-          fetchJson(`/api/catalog/books?q=${encodeURIComponent(candidate.title)}`)
-        )));
+        const batchResults = await Promise.allSettled(batch.map(async (candidate) => {
+          const editionSearchTitle = getEditionSearchTitle(candidate.title) || candidate.title;
+          const searchTitles = [...new Set([editionSearchTitle, candidate.title].filter(Boolean))];
+          const searchResults = await Promise.all(searchTitles.map((title) => (
+            fetchJson(`/api/catalog/books?q=${encodeURIComponent(title)}`)
+          )));
+          return {
+            editionSearchTitle,
+            editionMatches: [...new Map(searchResults.flat().map((book) => [book.uid, book])).values()]
+          };
+        }));
         batchResults.forEach((result, index) => {
           let candidate;
           if (result.status === 'fulfilled') {
-            const editionMatches = result.value;
+            const { editionSearchTitle, editionMatches } = result.value;
             candidate = {
               ...batch[index],
+              editionSearchTitle,
               editionMatches,
               suggestedBookUids: editionMatches
-                .filter((book) => isLikelyEditionMatch(batch[index].title, book.title))
+                .filter((book) => isLikelyEditionMatch(editionSearchTitle, book.title)
+                  || isLikelyEditionMatch(batch[index].title, book.title))
                 .map((book) => book.uid)
             };
           } else {
             candidate = {
               ...batch[index],
+              editionSearchTitle: getEditionSearchTitle(batch[index].title) || batch[index].title,
               editionMatches: [],
               suggestedBookUids: [],
               editionSearchError: result.reason?.message || 'Edition search failed.'
@@ -183,6 +203,7 @@ const WorkCatalog = ({ onBack }) => {
         });
       }
       setWorkCandidates(matchedCandidates);
+      setShowUnmatchedWorkCandidates(false);
       setSelectedWork(null);
       if (!results.length) setStatus('No clearly labeled works or bibliography sections were found on that author page.');
       else if (failedSearches.length) setError(`Could not search book editions for: ${failedSearches.join(', ')}.`);
@@ -214,13 +235,17 @@ const WorkCatalog = ({ onBack }) => {
   };
 
   const beginWorkReview = (candidate) => {
-    setSelectedWork(candidate);
+    const reviewCandidate = {
+      ...candidate,
+      title: candidate.editionSearchTitle || candidate.title
+    };
+    setSelectedWork(reviewCandidate);
     setSelectedAuthorIds([selectedAuthorId]);
     setSelectedBookUids(candidate.suggestedBookUids || []);
     setReviewedDate(candidate.date?.value || '');
     setReviewedPrecision(candidate.date?.precision ? String(candidate.date.precision) : '');
     setConfirmedOriginalDate(false);
-    setBookSearch(candidate.title);
+    setBookSearch(reviewCandidate.title);
     setBookResults(candidate.editionMatches || []);
     setError('');
     setStatus('');
@@ -376,6 +401,7 @@ const WorkCatalog = ({ onBack }) => {
                 setSelectedAuthorId(nextAuthorId);
                 setWikipediaCandidates([]);
                 setWorkCandidates([]);
+                setShowUnmatchedWorkCandidates(false);
                 setSelectedWork(null);
                 setError('');
                 setStatus('');
@@ -455,13 +481,30 @@ const WorkCatalog = ({ onBack }) => {
 
           {workCandidates.length > 0 && (
             <div className="border rounded bg-white p-3">
-              <h5>2. Review Works found on Wikipedia ({workCandidates.length})</h5>
+              <h5>2. Review Works found on Wikipedia ({visibleWorkCandidates.length} shown)</h5>
               <p className="small text-muted">Book-title matches are searched automatically. Likely edition matches are preselected; confirm the suggested matches and publication year before saving.</p>
+              <div className="form-check mb-2">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  id="show-unmatched-work-candidates"
+                  checked={showUnmatchedWorkCandidates}
+                  onChange={(event) => setShowUnmatchedWorkCandidates(event.target.checked)}
+                />
+                <label className="form-check-label" htmlFor="show-unmatched-work-candidates">
+                  Show works without a likely edition match ({workCandidates.length - matchedWorkCandidateCount})
+                </label>
+              </div>
               <div className="list-group">
-                {workCandidates.map((candidate) => (
+                {visibleWorkCandidates.map((candidate) => (
                   <div className="list-group-item d-flex align-items-start justify-content-between gap-2" key={candidate.sourceId}>
                     <div>
-                      <strong>{candidate.title}</strong>
+                      <strong>{candidate.editionSearchTitle || candidate.title}</strong>
+                      {candidate.editionSearchTitle && candidate.editionSearchTitle !== candidate.title && (
+                        <div className="small text-muted">
+                          Wikipedia lists this as “{candidate.title}”; matching editions by the shorter title.
+                        </div>
+                      )}
                       <div className="small text-muted">
                         {candidate.publicationDates.length
                           ? `Publication year found: ${candidate.publicationDates[0].value}`
@@ -472,6 +515,16 @@ const WorkCatalog = ({ onBack }) => {
                           ? `Edition search failed: ${candidate.editionSearchError}`
                           : `${candidate.suggestedBookUids?.length || 0} likely edition match(es) suggested`}
                       </div>
+                      {candidate.suggestedBookUids?.length > 0 && (
+                        <ul className="small mt-1 mb-0 ps-3" aria-label={`Likely editions for ${candidate.editionSearchTitle || candidate.title}`}>
+                          {candidate.editionMatches
+                            .filter((book) => candidate.suggestedBookUids.includes(book.uid))
+                            .slice(0, 3)
+                            .map((book) => (
+                              <li key={book.uid}>{book.title}{book.isbn ? ` · ISBN ${book.isbn}` : ''}</li>
+                            ))}
+                        </ul>
+                      )}
                     </div>
                     <button className="btn btn-sm btn-outline-primary" type="button" onClick={() => beginWorkReview(candidate)}>
                       Review
@@ -637,9 +690,11 @@ const WorkCatalog = ({ onBack }) => {
                           {work.releaseDate} · {work.authors.map((author) => author.name).join(', ')}
                         </div>
                         <div className="small text-muted">
-                          {work.books.length
+                          {work.books.length && work.authors.some((author) => author.id === selectedAuthorId)
                             ? work.books.map((book) => `${book.title} (${book.isbn || book.uid})`).join('; ')
-                            : 'No edition linked'}
+                            : work.books.length
+                              ? 'Edition linked'
+                              : 'No edition linked'}
                         </div>
                       </div>
                       <div className="d-flex flex-column gap-1 align-self-start">

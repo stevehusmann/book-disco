@@ -7,10 +7,12 @@ const { MessageChannel, MessagePort } = require('worker_threads');
 const { Blob } = require('buffer');
 const {
   createWorkRecord,
+  getEditionAuthorNames,
   getWikipediaAuthorCandidates,
   getWikipediaPageSummary,
   getWikipediaWorks,
-  initializeWorkCatalog
+  initializeWorkCatalog,
+  syncEditionAuthors
 } = require('../../../backend/workCatalog');
 
 const author = { id: 'author-1', name: 'Herman Melville', sortName: 'Melville, Herman', wikipediaPageTitle: null };
@@ -103,7 +105,8 @@ test('searches Wikipedia using the selected author name when Search Wikipedia ag
 
   try {
     render(<WorkCatalog onBack={jest.fn()} />);
-    fireEvent.change(await screen.findByLabelText('Catalog author'), { target: { value: 'author-1' } });
+    await screen.findByRole('option', { name: /Herman Melville/ });
+    fireEvent.change(screen.getByLabelText('Catalog author'), { target: { value: 'author-1' } });
     fireEvent.click(await screen.findByRole('button', { name: 'Search Wikipedia again' }));
 
     expect(await screen.findByText('Herman Melville', { selector: 'strong' })).toBeInTheDocument();
@@ -186,6 +189,31 @@ test('upgrades existing catalog rows with a stable legacy source identifier', ()
     .toEqual({ source_type: 'wikidata', source_id: 'Q123' });
   expect(db.prepare('PRAGMA table_info(authors)').all().map((column) => column.name))
     .toContain('wikipedia_page_title');
+  db.close();
+});
+
+test('adds authors discovered in edition author fields to the catalog', () => {
+  const db = new Database(':memory:');
+  db.exec(`
+    PRAGMA foreign_keys = ON;
+    CREATE TABLE books (uid TEXT PRIMARY KEY, title TEXT NOT NULL);
+  `);
+  initializeWorkCatalog(db);
+
+  expect(getEditionAuthorNames({
+    Author: 'Jacob Grimm, Wilhelm Grimm',
+    AlphaAuthor: 'Jacob Grimm',
+    Authors: [{ name: 'Wilhelm Grimm' }, 'Brothers Grimm']
+  })).toEqual(['Jacob Grimm', 'Wilhelm Grimm', 'Brothers Grimm']);
+
+  syncEditionAuthors(db, [
+    { Author: 'Jacob Grimm, Wilhelm Grimm', AlphaAuthor: 'Jacob Grimm' },
+    { Author: 'Wilhelm Grimm' }
+  ]);
+  expect(db.prepare('SELECT name FROM authors ORDER BY name').all()).toEqual([
+    { name: 'Jacob Grimm' },
+    { name: 'Wilhelm Grimm' }
+  ]);
   db.close();
 });
 
@@ -390,6 +418,49 @@ test('shows an author’s linked Works in ascending publication order', async ()
   }
 });
 
+test('only shows linked edition details for Works by the selected author', async () => {
+  const originalFetch = global.fetch;
+  const selectedAuthor = { ...author, wikipediaPageTitle: 'Herman Melville' };
+  const otherAuthor = { id: 'author-2', name: 'Charles Dickens', wikipediaPageTitle: null };
+  const works = [
+    {
+      id: 'selected-work',
+      title: 'Selected Work',
+      releaseDate: '1851',
+      authors: [selectedAuthor],
+      books: [{ title: 'Selected Edition', isbn: '111' }]
+    },
+    {
+      id: 'other-work',
+      title: 'Other Work',
+      releaseDate: '1860',
+      authors: [otherAuthor],
+      books: [{ title: 'Other Edition', isbn: '222' }]
+    }
+  ];
+  global.fetch = jest.fn(async (url) => ({
+    ok: true,
+    json: async () => {
+      if (url === '/api/catalog/authors') return [selectedAuthor, otherAuthor];
+      if (url === '/api/catalog/works') return works;
+      if (url === '/api/catalog/wikipedia/authors/works?pageTitle=Herman%20Melville') return [];
+      throw new Error(`Unexpected request: ${url}`);
+    }
+  }));
+
+  try {
+    render(<WorkCatalog onBack={jest.fn()} />);
+    await screen.findByRole('option', { name: /Herman Melville/ });
+    fireEvent.change(screen.getByLabelText('Catalog author'), { target: { value: 'author-1' } });
+
+    expect(await screen.findByText('Selected Edition (111)')).toBeInTheDocument();
+    expect(screen.getByText('Edition linked')).toBeInTheDocument();
+    expect(screen.queryByText('Other Edition (222)')).not.toBeInTheDocument();
+  } finally {
+    global.fetch = originalFetch;
+  }
+});
+
 test('shows Wikipedia Work review candidates in chronological order with undated Works last', async () => {
   const originalFetch = global.fetch;
   const authorWithPage = { ...author, wikipediaPageTitle: 'Herman Melville' };
@@ -404,6 +475,10 @@ test('shows Wikipedia Work review candidates in chronological order with undated
       if (url === '/api/catalog/authors') return [authorWithPage];
       if (url === '/api/catalog/works') return [];
       if (url === '/api/catalog/wikipedia/authors/works?pageTitle=Herman%20Melville') return candidates;
+      if (url === '/api/catalog/books?q=Earlier%20Work') {
+        return [{ uid: 'earlier-edition', title: 'Earlier Work', isbn: '111' }];
+      }
+      if (url === '/api/catalog/books?q=Later%20Work' || url === '/api/catalog/books?q=Undated%20Work') return [];
       throw new Error(`Unexpected request: ${url}`);
     }
   }));
@@ -412,13 +487,56 @@ test('shows Wikipedia Work review candidates in chronological order with undated
     render(<WorkCatalog onBack={jest.fn()} />);
     fireEvent.change(await screen.findByLabelText('Catalog author'), { target: { value: 'author-1' } });
 
-    const reviewButtons = await screen.findAllByRole('button', { name: 'Review' });
-    await waitFor(() => expect(reviewButtons).toHaveLength(3));
-    expect(reviewButtons.map((button) => button.parentElement.textContent)).toEqual([
-      expect.stringContaining('Earlier Work'),
-      expect.stringContaining('Later Work'),
-      expect.stringContaining('Undated Work')
-    ]);
+    const defaultReviewButtons = await screen.findAllByRole('button', { name: 'Review' });
+    expect(defaultReviewButtons).toHaveLength(1);
+    expect(defaultReviewButtons[0].parentElement.textContent).toContain('Earlier Work');
+    expect(screen.getByText('Earlier Work · ISBN 111')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByLabelText('Show works without a likely edition match (2)'));
+    await waitFor(() => expect(screen.getAllByRole('button', { name: 'Review' })).toHaveLength(3));
+  } finally {
+    global.fetch = originalFetch;
+  }
+});
+
+test('matches Wikipedia works with parenthetical work types to edition titles', async () => {
+  const originalFetch = global.fetch;
+  const authorWithPage = { ...author, wikipediaPageTitle: 'Herman Melville' };
+  global.fetch = jest.fn(async (url) => ({
+    ok: true,
+    json: async () => {
+      if (url === '/api/catalog/authors') return [authorWithPage];
+      if (url === '/api/catalog/works') return [];
+      if (url === '/api/catalog/wikipedia/authors/works?pageTitle=Herman%20Melville') {
+        return [{
+          sourceId: 'https://en.wikipedia.org/wiki/The_Red_Badge_of_Courage',
+          sourceUrl: 'https://en.wikipedia.org/wiki/The_Red_Badge_of_Courage',
+          title: 'The Red Badge of Courage (novel)',
+          sourceStatement: 'Novels',
+          date: { value: '1895', precision: 9 }
+        }];
+      }
+      if (url.startsWith('/api/catalog/books?q=')) {
+        const title = decodeURIComponent(url.slice('/api/catalog/books?q='.length));
+        if (title === 'The Red Badge of Courage') {
+          return [{ uid: 'badge-edition', title: 'The Red Badge of Courage', isbn: '222' }];
+        }
+        if (title === 'The Red Badge of Courage (novel)') return [];
+      }
+      throw new Error(`Unexpected request: ${url}`);
+    }
+  }));
+
+  try {
+    render(<WorkCatalog onBack={jest.fn()} />);
+    await screen.findByRole('option', { name: /Herman Melville/ });
+    fireEvent.change(screen.getByLabelText('Catalog author'), { target: { value: 'author-1' } });
+
+    expect(await screen.findByText('The Red Badge of Courage · ISBN 222')).toBeInTheDocument();
+    expect(screen.getByText('Wikipedia lists this as “The Red Badge of Courage (novel)”; matching editions by the shorter title.')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Review' }));
+    expect(screen.getByLabelText('Work title')).toHaveValue('The Red Badge of Courage');
+    expect(screen.getByLabelText('Search book editions')).toHaveValue('The Red Badge of Courage');
   } finally {
     global.fetch = originalFetch;
   }

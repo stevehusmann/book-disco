@@ -68,6 +68,50 @@ const stableAuthorId = (author) => {
   return `author-${crypto.createHash('sha256').update(identity).digest('hex').slice(0, 20)}`;
 };
 
+const getEditionAuthorNames = (book) => {
+  const names = new Set();
+  const addNames = (value) => {
+    if (Array.isArray(value)) {
+      value.forEach(addNames);
+      return;
+    }
+    if (value && typeof value === 'object') {
+      addNames(value.canonicalName || value.name || value.author);
+      return;
+    }
+    String(value || '')
+      .split(/[,;]|\s+&\s+|\s+and\s+/i)
+      .map((name) => name.trim())
+      .filter(Boolean)
+      .forEach((name) => names.add(name));
+  };
+
+  addNames(book?.Author);
+  addNames(book?.Authors || book?.AUTHORS);
+  addNames(book?.AlphaAuthor);
+  return [...names];
+};
+
+const syncEditionAuthors = (db, books) => {
+  const insertAuthor = db.prepare(`
+    INSERT OR IGNORE INTO authors (id, name, sort_name)
+    VALUES (@id, @name, @sortName)
+  `);
+  const insertAuthors = db.transaction((rows) => rows.reduce((count, book) => {
+    const names = getEditionAuthorNames(book);
+    names.forEach((name) => {
+      const result = insertAuthor.run({
+        id: stableAuthorId({ canonicalName: name }),
+        name,
+        sortName: String(book?.AlphaAuthor || '').trim() || name
+      });
+      count += result.changes;
+    });
+    return count;
+  }, 0));
+  return insertAuthors(books);
+};
+
 const normalizeWikipediaTitle = (value) => String(value || '').trim().replace(/_/g, ' ').replace(/\s+/g, ' ').toLocaleLowerCase();
 const getCachedWikipediaData = (cache, key) => (cache ? cache.get(key) : undefined);
 const setCachedWikipediaData = (cache, key, data) => (cache ? cache.set(key, data) : undefined);
@@ -339,7 +383,9 @@ module.exports = {
   getWikipediaAuthorCandidates,
   getWikipediaPageSummary,
   getWikipediaWorks,
+  getEditionAuthorNames,
   initializeWorkCatalog,
+  syncEditionAuthors,
   seedAuthorsFromList,
   stableAuthorId,
   addWorkRelationships
