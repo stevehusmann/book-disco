@@ -25,12 +25,14 @@ create table if not exists public.works (
   source_type text not null default 'wikidata',
   source_id text not null,
   source_statement text,
+  work_type text check (work_type in ('Novel', 'Nonfiction', 'Short Story') or work_type is null),
   updated_at timestamptz not null default now()
 );
 
 alter table public.works alter column wikidata_qid drop not null;
 alter table public.works add column if not exists source_type text not null default 'wikidata';
 alter table public.works add column if not exists source_id text;
+alter table public.works add column if not exists work_type text check (work_type in ('Novel', 'Nonfiction', 'Short Story') or work_type is null);
 update public.works set source_id = wikidata_qid where source_id is null and wikidata_qid is not null;
 alter table public.works alter column source_id set not null;
 create unique index if not exists works_source_id_idx
@@ -83,7 +85,8 @@ begin
     source_url,
     source_type,
     source_id,
-    source_statement
+    source_statement,
+    work_type
   ) values (
     nullif(p_work ->> 'wikidataQid', ''),
     p_work ->> 'title',
@@ -92,9 +95,11 @@ begin
     p_work ->> 'sourceUrl',
     coalesce(p_work ->> 'sourceType', 'wikidata'),
     p_work ->> 'sourceId',
-    p_work ->> 'sourceStatement'
+    p_work ->> 'sourceStatement',
+    nullif(p_work ->> 'workType', '')
   )
-  on conflict (source_type, source_id) do nothing;
+  on conflict (source_type, source_id) do update
+  set work_type = coalesce(excluded.work_type, works.work_type);
 
   select id, release_date, date_precision
   into new_id, existing_release_date, existing_precision

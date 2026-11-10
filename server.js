@@ -536,6 +536,7 @@ app.get('/api/catalog/works', (_req, res) => {
     sourceType: work.source_type,
     sourceId: work.source_id,
     title: work.title,
+    workType: work.work_type,
     releaseDate: work.release_date,
     datePrecision: work.date_precision,
     sourceUrl: work.source_url,
@@ -580,6 +581,7 @@ app.post('/api/catalog/works', (req, res) => {
       sourceType: work.source_type,
       sourceId: work.source_id,
       title: work.title,
+      workType: work.work_type,
       releaseDate: work.release_date,
       datePrecision: work.date_precision,
       sourceUrl: work.source_url

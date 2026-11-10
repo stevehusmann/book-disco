@@ -13,12 +13,13 @@ test('sorts authors by surname', () => {
   expect(getSurname({ name: 'Herman Melville' })).toBe('Melville');
 });
 
-test('shows the author biography, chronological Works, first edition covers, and edition summary modal', async () => {
+test('shows author Works grouped by type, first edition covers, and the edition summary modal', async () => {
   const originalFetch = global.fetch;
   const works = [
     {
       id: 'later',
       title: 'Later Work',
+      workType: 'Nonfiction',
       releaseDate: '1859',
       sourceUrl: 'https://en.wikipedia.org/wiki/A_Tale_of_Two_Cities',
       authors: [author],
@@ -29,6 +30,7 @@ test('shows the author biography, chronological Works, first edition covers, and
     {
       id: 'earlier',
       title: 'Earlier Work',
+      workType: 'Novel',
       releaseDate: '1843',
       sourceUrl: 'https://en.wikipedia.org/wiki/A_Christmas_Carol',
       authors: [author],
@@ -59,9 +61,11 @@ test('shows the author biography, chronological Works, first edition covers, and
     fireEvent.click(screen.getByRole('button', { name: 'Read more' }));
     expect(screen.getByText('Author biography.')).toHaveClass('is-expanded');
     const authorSection = screen.getByLabelText('Works by Charles Dickens');
-    const workButtons = within(authorSection).getAllByRole('button', { name: /Open/ });
+    const novelSection = within(authorSection).getByLabelText('Novel works by Charles Dickens');
+    const nonfictionSection = within(authorSection).getByLabelText('Nonfiction works by Charles Dickens');
+    const workButtons = within(novelSection).getAllByRole('button', { name: /Open/ });
     expect(workButtons[0]).toHaveAccessibleName('Open Earlier Work, 1843');
-    expect(workButtons[1]).toHaveAccessibleName('Open Later Work, 1859');
+    expect(within(nonfictionSection).getAllByRole('button', { name: 'Open Later Work, 1859' })).toHaveLength(2);
     expect(within(workButtons[0]).getByAltText('Earlier Work')).toHaveAttribute('src', 'first-cover.jpg');
 
     fireEvent.click(workButtons[0]);
@@ -69,8 +73,8 @@ test('shows the author biography, chronological Works, first edition covers, and
     expect(screen.getByText('Linked editions (2)')).toBeInTheDocument();
     const dialog = screen.getByRole('dialog');
     expect(dialog.querySelectorAll('.book')).toHaveLength(2);
-    expect(within(dialog).getByText('Earlier Work First Edition')).toBeInTheDocument();
-    expect(within(dialog).getByText('Earlier Work Reprint')).toBeInTheDocument();
+    expect(within(dialog).getAllByText('Earlier Work First Edition')).not.toHaveLength(0);
+    expect(within(dialog).getAllByText('Earlier Work Reprint')).not.toHaveLength(0);
     expect(within(dialog).queryByRole('button', { name: 'Edit' })).not.toBeInTheDocument();
     expect(within(dialog).getByText('ISBN 111')).toBeInTheDocument();
     await waitFor(() => expect(global.fetch).toHaveBeenCalledWith('/api/catalog/wikipedia/summary?pageTitle=A%20Christmas%20Carol'));

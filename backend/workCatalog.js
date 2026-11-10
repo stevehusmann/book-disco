@@ -1,6 +1,8 @@
 const crypto = require('crypto');
 const fs = require('fs');
 
+const WORK_TYPES = ['Novel', 'Nonfiction', 'Short Story'];
+
 const initializeWorkCatalog = (db) => {
   db.exec(`
     CREATE TABLE IF NOT EXISTS authors (
@@ -23,6 +25,7 @@ const initializeWorkCatalog = (db) => {
       source_type TEXT NOT NULL DEFAULT 'wikidata',
       source_id TEXT,
       source_statement TEXT,
+      work_type TEXT CHECK (work_type IN ('Novel', 'Nonfiction', 'Short Story') OR work_type IS NULL),
       updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
       CHECK (date_precision IS NULL OR date_precision BETWEEN 6 AND 11)
     );
@@ -58,6 +61,9 @@ const initializeWorkCatalog = (db) => {
   if (!workColumns.includes('source_id')) {
     db.exec('ALTER TABLE works ADD COLUMN source_id TEXT');
   }
+  if (!workColumns.includes('work_type')) {
+    db.exec("ALTER TABLE works ADD COLUMN work_type TEXT CHECK (work_type IN ('Novel', 'Nonfiction', 'Short Story') OR work_type IS NULL)");
+  }
   db.exec("UPDATE works SET source_id = wikidata_qid WHERE source_id IS NULL AND wikidata_qid IS NOT NULL");
   db.exec('CREATE UNIQUE INDEX IF NOT EXISTS works_source_id_idx ON works(source_type, source_id)');
 };
@@ -70,25 +76,20 @@ const stableAuthorId = (author) => {
 
 const getEditionAuthorNames = (book) => {
   const names = new Set();
-  const addNames = (value) => {
+  const addName = (value) => {
     if (Array.isArray(value)) {
-      value.forEach(addNames);
+      value.forEach(addName);
       return;
     }
     if (value && typeof value === 'object') {
-      addNames(value.canonicalName || value.name || value.author);
+      addName(value.canonicalName || value.name || value.author);
       return;
     }
-    String(value || '')
-      .split(/[,;]|\s+&\s+|\s+and\s+/i)
-      .map((name) => name.trim())
-      .filter(Boolean)
-      .forEach((name) => names.add(name));
+    const name = String(value || '').trim();
+    if (name) names.add(name);
   };
 
-  addNames(book?.Author);
-  addNames(book?.Authors || book?.AUTHORS);
-  addNames(book?.AlphaAuthor);
+  addName(book?.Author);
   return [...names];
 };
 
@@ -332,6 +333,7 @@ const createWorkRecord = (db, input) => {
   const qid = String(input?.wikidataQid || '').trim();
   const sourceId = String(input?.sourceId || qid).trim();
   const releaseDate = input?.releaseDate == null ? '' : String(input.releaseDate).trim();
+  const workType = String(input?.workType || '').trim() || null;
   const datePrecision = input?.datePrecision == null ? NaN : Number(input.datePrecision);
   const sourceUrl = input?.sourceUrl == null ? null : String(input.sourceUrl);
   const authorIds = Array.isArray(input?.authorIds)
@@ -346,6 +348,9 @@ const createWorkRecord = (db, input) => {
   }
   if (!releaseDate || !Number.isInteger(datePrecision)) {
     throw new Error('A release date and its precision are required.');
+  }
+  if (workType && !WORK_TYPES.includes(workType)) {
+    throw new Error('Work type must be Novel, Nonfiction, or Short Story.');
   }
   if (sourceType === 'wikidata' && !/^[+-]\d{4,}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(releaseDate)) {
     throw new Error('Release dates must use the Wikidata time format.');
@@ -366,11 +371,14 @@ const createWorkRecord = (db, input) => {
         throw new Error('This Work already exists with a different reviewed release date. Review the existing Work before changing its date.');
       }
       workId = existing.id;
+      if (workType) {
+        db.prepare('UPDATE works SET work_type = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?').run(workType, workId);
+      }
     } else {
       db.prepare(`
-        INSERT INTO works (id, wikidata_qid, title, release_date, date_precision, source_url, source_type, source_id, source_statement)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `).run(id, sourceType === 'wikidata' ? qid : null, title, releaseDate, datePrecision, sourceUrl, sourceType, sourceId, input?.sourceStatement || null);
+        INSERT INTO works (id, wikidata_qid, title, release_date, date_precision, source_url, source_type, source_id, source_statement, work_type)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `).run(id, sourceType === 'wikidata' ? qid : null, title, releaseDate, datePrecision, sourceUrl, sourceType, sourceId, input?.sourceStatement || null, workType);
     }
     insertWorkRelationships(db, workId, authorIds, bookUids);
     return workId;
@@ -379,6 +387,7 @@ const createWorkRecord = (db, input) => {
 };
 
 module.exports = {
+  WORK_TYPES,
   createWorkRecord,
   getWikipediaAuthorCandidates,
   getWikipediaPageSummary,

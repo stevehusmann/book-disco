@@ -70,6 +70,7 @@ const WorkCatalog = ({ onBack }) => {
   const [linkBookUids, setLinkBookUids] = useState([]);
   const [reviewedDate, setReviewedDate] = useState('');
   const [reviewedPrecision, setReviewedPrecision] = useState('');
+  const [workType, setWorkType] = useState('');
   const [confirmedOriginalDate, setConfirmedOriginalDate] = useState(false);
   const [status, setStatus] = useState('');
   const [error, setError] = useState('');
@@ -244,6 +245,7 @@ const WorkCatalog = ({ onBack }) => {
     setSelectedBookUids(candidate.suggestedBookUids || []);
     setReviewedDate(candidate.date?.value || '');
     setReviewedPrecision(candidate.date?.precision ? String(candidate.date.precision) : '');
+    setWorkType('');
     setConfirmedOriginalDate(false);
     setBookSearch(reviewCandidate.title);
     setBookResults(candidate.editionMatches || []);
@@ -328,6 +330,7 @@ const WorkCatalog = ({ onBack }) => {
           sourceType: 'wikipedia',
           sourceId: selectedWork.sourceId,
           title: selectedWork.title,
+          workType,
           releaseDate: reviewedDate,
           datePrecision: Number(reviewedPrecision),
           sourceUrl: selectedWork.sourceUrl,
@@ -550,6 +553,18 @@ const WorkCatalog = ({ onBack }) => {
                 value={selectedWork.title}
                 onChange={(event) => setSelectedWork((current) => ({ ...current, title: event.target.value }))}
               />
+              <label className="form-label" htmlFor="review-work-type">Work type</label>
+              <select
+                id="review-work-type"
+                className="form-select mb-3"
+                value={workType}
+                onChange={(event) => setWorkType(event.target.value)}
+              >
+                <option value="">Uncategorized</option>
+                <option value="Novel">Novel</option>
+                <option value="Nonfiction">Nonfiction</option>
+                <option value="Short Story">Short Story</option>
+              </select>
               <fieldset className="mb-3">
                 <legend className="form-label">Publication year</legend>
                 {selectedWork.publicationDates.length ? selectedWork.publicationDates.map((date) => (
@@ -687,7 +702,7 @@ const WorkCatalog = ({ onBack }) => {
                       <div className="min-w-0">
                         <strong>{work.title}</strong>
                         <div className="small text-muted">
-                          {work.releaseDate} · {work.authors.map((author) => author.name).join(', ')}
+                          {[work.workType || 'Uncategorized', work.releaseDate, work.authors.map((author) => author.name).join(', ')].filter(Boolean).join(' · ')}
                         </div>
                         <div className="small text-muted">
                           {work.books.length && work.authors.some((author) => author.id === selectedAuthorId)

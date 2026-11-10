@@ -49,7 +49,7 @@ test('lists and deletes books that are not displayed', async () => {
   }
 });
 
-test('lists authors alphabetically by surname and shows the selected author works', async () => {
+test('lists all catalog authors alphabetically by surname and shows the selected author works', async () => {
   const authors = [
     { id: 'melville', name: 'Herman Melville', sortName: 'Melville, Herman', wikipediaPageTitle: 'Herman Melville', hasLinkedEditions: true },
     { id: 'dickens', name: 'Charles Dickens', sortName: 'Dickens, Charles', wikipediaPageTitle: 'Charles Dickens', hasLinkedEditions: true },
@@ -79,9 +79,10 @@ test('lists authors alphabetically by surname and shows the selected author work
 
   try {
     render(<App />);
+    expect(screen.getByLabelText('Sort:')).toHaveValue('author-asc');
     const authorSelect = await screen.findByLabelText('Authors:');
     const options = within(authorSelect).getAllByRole('option').map((option) => option.textContent);
-    expect(options).toEqual(['Select an author', 'Charles Dickens', 'Herman Melville']);
+    expect(options).toEqual(['Select an author', 'Unlinked Author', 'Charles Dickens', 'Herman Melville']);
 
     fireEvent.change(authorSelect, { target: { value: 'dickens' } });
     expect(await screen.findAllByText('Great Expectations')).not.toHaveLength(0);

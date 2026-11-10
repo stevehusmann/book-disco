@@ -16,6 +16,8 @@ const getSurname = (author) => {
   return name.split(/\s+/).at(-1) || name;
 };
 
+const WORK_TYPE_ORDER = ['Novel', 'Nonfiction', 'Short Story', 'Uncategorized'];
+
 const compareByYear = (left, right, dateKey) => {
   const leftYear = getYear(left[dateKey]);
   const rightYear = getYear(right[dateKey]);
@@ -105,6 +107,12 @@ const AuthorWorksView = ({ author, setBooks, seriesOptions = [] }) => {
   }, [author]);
 
   const orderedWorks = useMemo(() => [...works].sort((left, right) => compareByYear(left, right, 'releaseDate')), [works]);
+  const workGroups = useMemo(() => WORK_TYPE_ORDER
+    .map((type) => ({
+      type,
+      works: orderedWorks.filter((work) => (work.workType || 'Uncategorized') === type)
+    }))
+    .filter((group) => group.works.length), [orderedWorks]);
   const orderedEditions = useMemo(() => [...(selectedWork?.books || [])].sort((left, right) => (
     compareByYear(left, right, 'publicationDate')
   )), [selectedWork]);
@@ -194,16 +202,19 @@ const AuthorWorksView = ({ author, setBooks, seriesOptions = [] }) => {
       {authorSummaryError && <div className="alert alert-warning" role="alert">{authorSummaryError}</div>}
       {error && <div className="alert alert-danger" role="alert">{error}</div>}
       {loadingWorks ? <p>Loading Works…</p> : orderedWorks.length ? (
-        <>
-          <div className="row d-none d-md-flex title-row-desktop">
-            {orderedWorks.map((work, index) => renderWorkBook(work, index, 'desktop'))}
-          </div>
-          <div className="d-md-none">
-            <MobileChevronRow rowClassName="title-row" ariaLabel={`Scrollable works by ${author.name}`} resetKey={author.id}>
-              {orderedWorks.map((work, index) => renderWorkBook(work, index, 'mobile'))}
-            </MobileChevronRow>
-          </div>
-        </>
+        workGroups.map((group) => (
+          <section key={group.type} aria-label={`${group.type} works by ${author.name}`} className="mb-4">
+            <h3>{group.type}</h3>
+            <div className="row d-none d-md-flex title-row-desktop">
+              {group.works.map((work, index) => renderWorkBook(work, index, `${group.type}-desktop`))}
+            </div>
+            <div className="d-md-none">
+              <MobileChevronRow rowClassName="title-row" ariaLabel={`Scrollable ${group.type} works by ${author.name}`} resetKey={`${author.id}-${group.type}`}>
+                {group.works.map((work, index) => renderWorkBook(work, index, `${group.type}-mobile`))}
+              </MobileChevronRow>
+            </div>
+          </section>
+        ))
       ) : !error ? <p className="text-muted">No reviewed Works are linked to this author yet.</p> : null}
 
       <Modal show={Boolean(selectedWork)} onHide={() => setSelectedWork(null)} size="lg" scrollable>

@@ -67,7 +67,7 @@ const App = () => {
   const [booksError, setBooksError] = useState('');
   const [spineBooksError, setSpineBooksError] = useState('');
   const [refreshVersion, setRefreshVersion] = useState(0);
-  const [sortOption, setSortOption] = useState('title-asc');
+  const [sortOption, setSortOption] = useState('author-asc');
   const [searchTerm, setSearchTerm] = useState('');
   const [submittedSearch, setSubmittedSearch] = useState('');
   const [selectedSeries, setSelectedSeries] = useState('');
@@ -157,10 +157,9 @@ const App = () => {
   const currentPageBooks = books;
   const selectedCatalogAuthor = catalogAuthors.find((author) => author.id === selectedCatalogAuthorId);
   const orderedCatalogAuthors = catalogAuthors
-    .filter((author) => author.hasLinkedEditions)
     .sort((left, right) => (
-    getSurname(left).localeCompare(getSurname(right)) || left.name.localeCompare(right.name)
-  ));
+      getSurname(left).localeCompare(getSurname(right)) || left.name.localeCompare(right.name)
+    ));
   const effectiveSortOption = sortOption;
   const mobileResetKey = `${submittedSearch}|${sortOption}|${selectedSeries}|${page}`;
 

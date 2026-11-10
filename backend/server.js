@@ -12,7 +12,8 @@ const {
   getWikipediaWorks,
   stableAuthorId,
   getEditionAuthorNames,
-  syncEditionAuthors
+  syncEditionAuthors,
+  WORK_TYPES
 } = require('./workCatalog');
 
 const app = express();
@@ -1054,13 +1055,14 @@ app.get('/api/catalog/books', async (req, res) => {
 app.get('/api/catalog/works', async (_req, res) => {
   try {
     if (useSupabase) {
-      const rows = await supabaseRequest('works?select=id,wikidata_qid,source_type,source_id,title,release_date,date_precision,source_url,authors:author_works(author:authors(id,name)),books:book_works(book:books(uid,book))&order=title.asc');
+      const rows = await supabaseRequest('works?select=id,wikidata_qid,source_type,source_id,title,work_type,release_date,date_precision,source_url,authors:author_works(author:authors(id,name)),books:book_works(book:books(uid,book))&order=title.asc');
       return res.json(rows.map((work) => ({
         id: work.id,
         wikidataQid: work.wikidata_qid,
         sourceType: work.source_type,
         sourceId: work.source_id,
         title: work.title,
+        workType: work.work_type,
         releaseDate: work.release_date,
         datePrecision: work.date_precision,
         sourceUrl: work.source_url,
@@ -1094,6 +1096,7 @@ app.get('/api/catalog/works', async (_req, res) => {
       sourceType: work.source_type,
       sourceId: work.source_id,
       title: work.title,
+      workType: work.work_type,
       releaseDate: work.release_date,
       datePrecision: work.date_precision,
       sourceUrl: work.source_url,
@@ -1124,12 +1127,16 @@ app.post('/api/catalog/works', async (req, res) => {
   const authorIds = Array.isArray(req.body?.authorIds) ? [...new Set(req.body.authorIds.map(String))] : [];
   const bookUids = Array.isArray(req.body?.bookUids) ? [...new Set(req.body.bookUids.map(String))] : [];
   const releaseDate = req.body?.releaseDate == null ? null : String(req.body.releaseDate);
+  const workType = String(req.body?.workType || '').trim() || null;
   const datePrecision = req.body?.datePrecision == null ? null : Number(req.body.datePrecision);
   if (!title || !sourceId || (sourceType === 'wikidata' && !/^Q\d+$/.test(qid)) || !authorIds.length) {
     return res.status(400).json({ error: 'A title, source ID, and at least one author are required.' });
   }
   if (!releaseDate || !Number.isInteger(datePrecision) || datePrecision < 6 || datePrecision > 11) {
     return res.status(400).json({ error: 'The release year must include valid source precision between 6 and 11.' });
+  }
+  if (workType && !WORK_TYPES.includes(workType)) {
+    return res.status(400).json({ error: 'Work type must be Novel, Nonfiction, or Short Story.' });
   }
   if (sourceType === 'wikidata' && !/^[+-]\d{4,}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(releaseDate)) {
     return res.status(400).json({ error: 'Release dates must use the Wikidata time format.' });
@@ -1147,6 +1154,7 @@ app.post('/api/catalog/works', async (req, res) => {
             sourceType,
             sourceId,
             title,
+            workType,
             releaseDate,
             datePrecision,
             sourceUrl: req.body?.sourceUrl,
@@ -1162,6 +1170,7 @@ app.post('/api/catalog/works', async (req, res) => {
         sourceType: work.source_type,
         sourceId: work.source_id,
         title: work.title,
+        workType: work.work_type,
         releaseDate: work.release_date,
         datePrecision: work.date_precision,
         sourceUrl: work.source_url
@@ -1186,6 +1195,7 @@ app.post('/api/catalog/works', async (req, res) => {
       sourceType: work.source_type,
       sourceId: work.source_id,
       title: work.title,
+      workType: work.work_type,
       releaseDate: work.release_date,
       datePrecision: work.date_precision,
       sourceUrl: work.source_url

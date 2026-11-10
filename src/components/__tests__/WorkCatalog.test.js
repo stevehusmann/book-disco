@@ -57,6 +57,8 @@ test('automatically searches Wikipedia and edition matches, then requires review
     fireEvent.click(await screen.findByRole('button', { name: 'Review' }));
 
     expect(screen.getByLabelText('Search book editions')).toHaveValue('Moby-Dick');
+    expect(screen.getByLabelText('Work type')).toHaveValue('');
+    fireEvent.change(screen.getByLabelText('Work type'), { target: { value: 'Novel' } });
     const editionCheckbox = await screen.findByLabelText(/ISBN 9780000000000/);
     expect(editionCheckbox).toBeChecked();
     expect(screen.getByLabelText('Reviewed publication year')).toHaveValue(1851);
@@ -75,6 +77,7 @@ test('automatically searches Wikipedia and edition matches, then requires review
       sourceType: 'wikipedia',
       sourceId: 'https://en.wikipedia.org/wiki/Moby-Dick',
       releaseDate: '1851',
+      workType: 'Novel',
       datePrecision: 9,
       sourceStatement: 'Novels',
       authorIds: ['author-1'],
@@ -138,25 +141,37 @@ test('stores reviewed Works with many authors and many edition links without cha
   const id = createWorkRecord(db, {
     wikidataQid: 'Q123',
     title: 'Collected Poems',
+    workType: 'Novel',
     releaseDate: '+1900-00-00T00:00:00Z',
     datePrecision: 9,
     authorIds: ['author-1', 'author-2'],
     bookUids: ['edition-1', 'edition-2']
   });
 
+  expect(db.prepare('SELECT work_type FROM works WHERE id = ?').get(id)).toEqual({ work_type: 'Novel' });
   expect(db.prepare('SELECT COUNT(*) AS count FROM author_works WHERE work_id = ?').get(id).count).toBe(2);
   expect(db.prepare('SELECT COUNT(*) AS count FROM book_works WHERE work_id = ?').get(id).count).toBe(2);
   expect(db.prepare('SELECT COUNT(*) AS count FROM books').get().count).toBe(3);
   expect(createWorkRecord(db, {
     wikidataQid: 'Q123',
     title: 'Collected Poems',
+    workType: 'Short Story',
     releaseDate: '+1900-00-00T00:00:00Z',
     datePrecision: 9,
     authorIds: ['author-3'],
     bookUids: ['edition-3']
   })).toBe(id);
+  expect(db.prepare('SELECT work_type FROM works WHERE id = ?').get(id)).toEqual({ work_type: 'Short Story' });
   expect(db.prepare('SELECT COUNT(*) AS count FROM author_works WHERE work_id = ?').get(id).count).toBe(3);
   expect(db.prepare('SELECT COUNT(*) AS count FROM book_works WHERE work_id = ?').get(id).count).toBe(3);
+  expect(() => createWorkRecord(db, {
+    wikidataQid: 'Q789',
+    title: 'Invalid category',
+    workType: 'Essay',
+    releaseDate: '+1900-00-00T00:00:00Z',
+    datePrecision: 9,
+    authorIds: ['author-1']
+  })).toThrow('Work type must be Novel, Nonfiction, or Short Story.');
   expect(() => createWorkRecord(db, {
     wikidataQid: 'Q456',
     title: 'Missing Date',
@@ -189,10 +204,12 @@ test('upgrades existing catalog rows with a stable legacy source identifier', ()
     .toEqual({ source_type: 'wikidata', source_id: 'Q123' });
   expect(db.prepare('PRAGMA table_info(authors)').all().map((column) => column.name))
     .toContain('wikipedia_page_title');
+  expect(db.prepare('PRAGMA table_info(works)').all().map((column) => column.name))
+    .toContain('work_type');
   db.close();
 });
 
-test('adds authors discovered in edition author fields to the catalog', () => {
+test('adds complete author names from edition Author fields to the catalog', () => {
   const db = new Database(':memory:');
   db.exec(`
     PRAGMA foreign_keys = ON;
@@ -201,17 +218,17 @@ test('adds authors discovered in edition author fields to the catalog', () => {
   initializeWorkCatalog(db);
 
   expect(getEditionAuthorNames({
-    Author: 'Jacob Grimm, Wilhelm Grimm',
+    Author: 'Grimm, Jacob',
     AlphaAuthor: 'Jacob Grimm',
     Authors: [{ name: 'Wilhelm Grimm' }, 'Brothers Grimm']
-  })).toEqual(['Jacob Grimm', 'Wilhelm Grimm', 'Brothers Grimm']);
+  })).toEqual(['Grimm, Jacob']);
 
   syncEditionAuthors(db, [
-    { Author: 'Jacob Grimm, Wilhelm Grimm', AlphaAuthor: 'Jacob Grimm' },
+    { Author: 'Grimm, Jacob', AlphaAuthor: 'Jacob Grimm' },
     { Author: 'Wilhelm Grimm' }
   ]);
   expect(db.prepare('SELECT name FROM authors ORDER BY name').all()).toEqual([
-    { name: 'Jacob Grimm' },
+    { name: 'Grimm, Jacob' },
     { name: 'Wilhelm Grimm' }
   ]);
   db.close();
