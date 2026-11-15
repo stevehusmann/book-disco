@@ -432,6 +432,7 @@ app.get('/api/series', (_req, res) => {
 app.get('/api/catalog/authors', (_req, res) => {
   const authors = db.prepare(`
     SELECT authors.id, authors.name, authors.sort_name, authors.wikidata_qid,
+      COUNT(DISTINCT author_works.work_id) AS work_count,
       COUNT(DISTINCT book_works.book_uid) AS edition_count
     FROM authors
     LEFT JOIN author_works ON author_works.author_id = authors.id
@@ -445,6 +446,7 @@ app.get('/api/catalog/authors', (_req, res) => {
     sortName: author.sort_name,
     wikipediaPageTitle: author.wikipedia_page_title,
     wikipediaUrl: author.wikipedia_url,
+    hasLinkedWorks: author.work_count > 0,
     hasLinkedEditions: author.edition_count > 0
   })));
 });

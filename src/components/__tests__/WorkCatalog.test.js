@@ -435,6 +435,38 @@ test('shows an author’s linked Works in ascending publication order', async ()
   }
 });
 
+test('shows duplicate author rows once and includes Works linked to either author id', async () => {
+  const originalFetch = global.fetch;
+  const duplicateAuthor = { id: 'author-duplicate', name: 'Herman  Melville', sortName: 'Melville, Herman' };
+  const works = [{
+    id: 'alias-work',
+    title: 'Alias-linked Work',
+    releaseDate: '1851',
+    authors: [duplicateAuthor],
+    books: []
+  }];
+  global.fetch = jest.fn(async (url) => {
+    if (url === '/api/catalog/authors') return { ok: true, json: async () => [author, duplicateAuthor] };
+    if (url === '/api/catalog/works') return { ok: true, json: async () => works };
+    if (url.startsWith('/api/catalog/wikipedia/search')) return { ok: true, json: async () => [] };
+    throw new Error(`Unexpected request: ${url}`);
+  });
+
+  try {
+    render(<WorkCatalog onBack={jest.fn()} />);
+    const authorSelect = await screen.findByLabelText('Catalog author');
+    expect(within(authorSelect).getAllByRole('option').map((option) => option.textContent))
+      .toEqual(['Select an author...', 'Herman Melville']);
+
+    fireEvent.change(authorSelect, { target: { value: author.id } });
+    expect(within(screen.getByLabelText('Author view')).getByText('Alias-linked Work')).toBeInTheDocument();
+    await screen.findByText('No Wikipedia author pages were found for Herman Melville.');
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Search Wikipedia again' })).toBeEnabled());
+  } finally {
+    global.fetch = originalFetch;
+  }
+});
+
 test('only shows linked edition details for Works by the selected author', async () => {
   const originalFetch = global.fetch;
   const selectedAuthor = { ...author, wikipediaPageTitle: 'Herman Melville' };

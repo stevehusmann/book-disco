@@ -94,7 +94,8 @@ const AuthorWorksView = ({ author, setBooks, seriesOptions = [] }) => {
       summaryRequest
     ])
       .then(([allWorks, summary]) => {
-        setWorks(allWorks.filter((work) => (work.authors || []).some((workAuthor) => workAuthor.id === author.id)));
+        const authorIds = new Set(author.aliasIds || [author.id]);
+        setWorks(allWorks.filter((work) => (work.authors || []).some((workAuthor) => authorIds.has(workAuthor.id))));
         setAuthorSummary(summary);
       })
       .catch((loadError) => {

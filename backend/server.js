@@ -898,6 +898,7 @@ app.get('/api/catalog/authors', async (_req, res) => {
         supabaseRequest('author_works?select=author_id,work_id'),
         supabaseRequest('book_works?select=work_id')
       ]);
+      const authorsWithWorks = new Set(authorWorks.map((relation) => relation.author_id));
       const editionLinkedWorkIds = new Set(bookWorks.map((relation) => relation.work_id));
       const authorsWithEditions = new Set(authorWorks
         .filter((relation) => editionLinkedWorkIds.has(relation.work_id))
@@ -908,6 +909,7 @@ app.get('/api/catalog/authors', async (_req, res) => {
         sortName: author.sort_name,
         wikipediaPageTitle: author.wikipedia_page_title,
         wikipediaUrl: author.wikipedia_url,
+        hasLinkedWorks: authorsWithWorks.has(author.id),
         hasLinkedEditions: authorsWithEditions.has(author.id)
       })));
     }
@@ -920,6 +922,7 @@ app.get('/api/catalog/authors', async (_req, res) => {
     syncEditionAuthors(db, editionBooks);
     const authors = db.prepare(`
       SELECT authors.id, authors.name, authors.sort_name, authors.wikidata_qid,
+        COUNT(DISTINCT author_works.work_id) AS work_count,
         COUNT(DISTINCT book_works.book_uid) AS edition_count
       FROM authors
       LEFT JOIN author_works ON author_works.author_id = authors.id
@@ -933,6 +936,7 @@ app.get('/api/catalog/authors', async (_req, res) => {
       sortName: author.sort_name,
       wikipediaPageTitle: author.wikipedia_page_title,
       wikipediaUrl: author.wikipedia_url,
+      hasLinkedWorks: author.work_count > 0,
       hasLinkedEditions: author.edition_count > 0
     })));
   } catch (error) {

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { apiUrl } from '../apiUrl';
+import { groupCatalogAuthors } from '../authorCatalog';
 
 const getPublicationYear = (date) => {
   const year = Number.parseInt(String(date || ''), 10);
@@ -77,6 +78,7 @@ const WorkCatalog = ({ onBack }) => {
   const [loading, setLoading] = useState(false);
 
   const selectedAuthor = authors.find((author) => author.id === selectedAuthorId);
+  const selectedAuthorAliasIds = selectedAuthor?.aliasIds;
   const filteredAuthors = useMemo(() => {
     const query = authorFilter.trim().toLowerCase();
     if (!query) return authors;
@@ -88,8 +90,8 @@ const WorkCatalog = ({ onBack }) => {
     return authors.filter((author) => `${author.name} ${author.sortName}`.toLowerCase().includes(query)).slice(0, 100);
   }, [authors, coauthorFilter, selectedAuthorIds]);
   const selectedAuthorWorks = useMemo(() => works
-    .filter((work) => (work.authors || []).some((author) => author.id === selectedAuthorId))
-    .sort(comparePublicationOrder), [works, selectedAuthorId]);
+    .filter((work) => (work.authors || []).some((author) => selectedAuthorAliasIds?.includes(author.id)))
+    .sort(comparePublicationOrder), [works, selectedAuthorAliasIds]);
   const matchedWorkCandidateCount = workCandidates.filter((candidate) => candidate.suggestedBookUids?.length).length;
   const visibleWorkCandidates = showUnmatchedWorkCandidates
     ? workCandidates
@@ -100,7 +102,7 @@ const WorkCatalog = ({ onBack }) => {
       fetchJson('/api/catalog/authors'),
       fetchJson('/api/catalog/works')
     ]);
-    setAuthors(authorRows);
+    setAuthors(groupCatalogAuthors(authorRows));
     setWorks(workRows);
   };
 
@@ -705,7 +707,7 @@ const WorkCatalog = ({ onBack }) => {
                           {[work.workType || 'Uncategorized', work.releaseDate, work.authors.map((author) => author.name).join(', ')].filter(Boolean).join(' · ')}
                         </div>
                         <div className="small text-muted">
-                          {work.books.length && work.authors.some((author) => author.id === selectedAuthorId)
+                          {work.books.length && work.authors.some((author) => selectedAuthorAliasIds?.includes(author.id))
                             ? work.books.map((book) => `${book.title} (${book.isbn || book.uid})`).join('; ')
                             : work.books.length
                               ? 'Edition linked'

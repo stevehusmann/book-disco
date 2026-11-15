@@ -14,6 +14,7 @@ import AuthorWorksView, { getSurname } from './components/AuthorWorksView';
 import SpineCropEditor from './components/SpineCropEditor';
 import WorkCatalog from './components/WorkCatalog';
 import { apiUrl } from './apiUrl';
+import { groupCatalogAuthors } from './authorCatalog';
 
 const ADD_BOOK_FIELDS = [
   { key: 'Title', label: 'Title', required: true },
@@ -140,7 +141,7 @@ const App = () => {
         if (!response.ok) throw new Error(result?.error || `Author query failed (${response.status}).`);
         return result;
       })
-      .then((result) => setCatalogAuthors(Array.isArray(result) ? result : []))
+      .then((result) => setCatalogAuthors(groupCatalogAuthors(result)))
       .catch((error) => {
         if (error.name !== 'AbortError') setCatalogAuthorsError(error.message || 'Unable to load authors.');
       });
@@ -157,6 +158,7 @@ const App = () => {
   const currentPageBooks = books;
   const selectedCatalogAuthor = catalogAuthors.find((author) => author.id === selectedCatalogAuthorId);
   const orderedCatalogAuthors = catalogAuthors
+    .filter((author) => author.hasLinkedWorks && author.hasLinkedEditions)
     .sort((left, right) => (
       getSurname(left).localeCompare(getSurname(right)) || left.name.localeCompare(right.name)
     ));
