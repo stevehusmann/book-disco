@@ -15,6 +15,7 @@ When both Supabase variables are set, the API reads and writes the `public.books
 - `GET /api/books/not-displayed` - books excluded from the library display because their binding is not paperback
 - `DELETE /api/books/:uid` - permanently delete a book record
 - `GET /api/catalog/authors` - author catalog used by the Work review screen
+- `DELETE /api/catalog/authors` - remove author records and their Work links while preserving Works and book editions; accepts `{ "authorIds": ["..."] }`
 - `PUT /api/catalog/authors/:id/wikipedia` - explicitly link an author to a reviewed Wikipedia page
 - `GET /api/catalog/wikipedia/search?q=` - search Wikipedia for an author-page candidate
 - `GET /api/catalog/wikipedia/authors/works?pageTitle=` - retrieve bibliography candidates and years from an author page

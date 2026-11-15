@@ -467,7 +467,7 @@ test('shows duplicate author rows once and includes Works linked to either autho
   const duplicateAuthor = { id: 'author-duplicate', name: 'Herman  Melville', sortName: 'Melville, Herman' };
   const linkedAuthor = {
     id: 'author-linked',
-    name: 'Jane Austen',
+    name: 'Austen, Jane',
     sortName: 'Austen, Jane',
     wikipediaPageTitle: 'Jane Austen',
     wikipediaUrl: 'https://en.wikipedia.org/wiki/Jane_Austen'
@@ -493,13 +493,79 @@ test('shows duplicate author rows once and includes Works linked to either autho
     expect(within(authorList).getAllByText('Herman Melville', { selector: '.text-break' })).toHaveLength(1);
     expect(within(authorList).getByText('Not linked')).toBeInTheDocument();
     expect(within(authorList).getByText('Linked to Jane Austen')).toBeInTheDocument();
-    expect(within(authorList).getByRole('button', { name: 'Manage Jane Austen' })).toBeInTheDocument();
+    expect(within(authorList).getByRole('button', { name: 'Manage Austen, Jane' })).toBeInTheDocument();
+    expect(within(authorList).getAllByText(/Jane Austen|Herman Melville/, { selector: '.text-break' }).map((node) => node.textContent))
+      .toEqual(['Jane Austen', 'Herman Melville']);
     await clickAuthorAction('Herman Melville');
     expect(within(screen.getByLabelText('Author view')).getByText('Alias-linked Work')).toBeInTheDocument();
     await screen.findByText('No Wikipedia author pages were found for Herman Melville.');
     await waitFor(() => expect(screen.getByRole('button', { name: 'Search Wikipedia again' })).toBeEnabled());
   } finally {
     global.fetch = originalFetch;
+  }
+});
+
+test('displays first and last name when the canonical name contains only a surname', async () => {
+  const originalFetch = global.fetch;
+  global.fetch = jest.fn(async (url) => {
+    if (url === '/api/catalog/authors') {
+      return {
+        ok: true,
+        json: async () => [{ id: 'author-grimm', name: 'Grimm', sortName: 'Jacob Grimm' }]
+      };
+    }
+    if (url === '/api/catalog/works') return { ok: true, json: async () => [] };
+    throw new Error(`Unexpected request: ${url}`);
+  });
+
+  try {
+    render(<WorkCatalog onBack={jest.fn()} />);
+    const authorList = await screen.findByLabelText('Normalized author list');
+    expect(await within(authorList).findByText('Jacob Grimm', { selector: '.text-break' })).toBeInTheDocument();
+  } finally {
+    global.fetch = originalFetch;
+  }
+});
+
+test('removes all author records in a normalized-name group and refreshes the list', async () => {
+  const originalFetch = global.fetch;
+  const confirm = jest.spyOn(window, 'confirm').mockReturnValue(true);
+  const authorRows = [
+    { id: 'incorrect-author', name: 'Incorrect Author', sortName: 'Author, Incorrect' },
+    { id: 'incorrect-author-duplicate', name: ' Incorrect  Author ', sortName: 'Author, Incorrect' }
+  ];
+  const calls = [];
+  let removed = false;
+  global.fetch = jest.fn(async (url, options = {}) => {
+    calls.push({ url, options });
+    if (url === '/api/catalog/authors' && options.method === 'DELETE') {
+      removed = true;
+      return { ok: true, status: 204 };
+    }
+    if (url === '/api/catalog/authors') {
+      return { ok: true, json: async () => removed ? [] : authorRows };
+    }
+    if (url === '/api/catalog/works') return { ok: true, json: async () => [] };
+    return { ok: true, json: async () => ({}) };
+  });
+
+  try {
+    render(<WorkCatalog onBack={jest.fn()} />);
+    fireEvent.click(await screen.findByRole('button', { name: 'Remove Incorrect Author from list' }));
+
+    await screen.findByText('No authors match this search.');
+    expect(confirm).toHaveBeenCalledWith(expect.stringContaining('2 duplicate-name records'));
+    expect(calls).toContainEqual(expect.objectContaining({
+      url: '/api/catalog/authors',
+      options: expect.objectContaining({
+        method: 'DELETE',
+        body: JSON.stringify({ authorIds: ['incorrect-author', 'incorrect-author-duplicate'] })
+      })
+    }));
+    expect(await screen.findByText('Removed Incorrect Author from the author catalog.')).toBeInTheDocument();
+  } finally {
+    global.fetch = originalFetch;
+    confirm.mockRestore();
   }
 });
 

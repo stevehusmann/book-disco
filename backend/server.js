@@ -949,6 +949,46 @@ app.get('/api/catalog/authors', async (_req, res) => {
   }
 });
 
+app.delete('/api/catalog/authors', async (req, res) => {
+  const authorIds = [...new Set(
+    (Array.isArray(req.body?.authorIds) ? req.body.authorIds : [])
+      .filter((id) => typeof id === 'string' && id.trim())
+      .map((id) => id.trim())
+  )];
+  if (!authorIds.length || authorIds.length > 100) {
+    return res.status(400).json({ error: 'Provide between 1 and 100 author IDs to remove.' });
+  }
+
+  try {
+    if (useSupabase) {
+      const filter = encodeURIComponent(`in.(${authorIds.join(',')})`);
+      const existing = await supabaseRequest(`authors?id=${filter}&select=id`);
+      if (existing.length !== authorIds.length) {
+        return res.status(404).json({ error: 'One or more authors were not found; no authors were removed.' });
+      }
+      await supabaseRequest(`authors?id=${filter}`, {
+        method: 'DELETE',
+        headers: { Prefer: 'return=minimal' }
+      });
+      return res.status(204).end();
+    }
+
+    const placeholders = authorIds.map(() => '?').join(', ');
+    const existing = db.prepare(`SELECT id FROM authors WHERE id IN (${placeholders})`).all(...authorIds);
+    if (existing.length !== authorIds.length) {
+      return res.status(404).json({ error: 'One or more authors were not found; no authors were removed.' });
+    }
+    db.prepare(`DELETE FROM authors WHERE id IN (${placeholders})`).run(...authorIds);
+    return res.status(204).end();
+  } catch (error) {
+    if (useSupabase && /authors|author_works/i.test(error.message)) {
+      return res.status(503).json({ error: supabaseWorkCatalogMigrationMessage });
+    }
+    console.error('Failed to remove catalog authors:', error);
+    return res.status(502).json({ error: 'Failed to remove catalog authors.' });
+  }
+});
+
 app.put('/api/catalog/authors/:id/wikipedia', async (req, res) => {
   const pageTitle = String(req.body?.wikipediaPageTitle || '').trim();
   if (!pageTitle || pageTitle.length > 300) return res.status(400).json({ error: 'A Wikipedia page title is required.' });

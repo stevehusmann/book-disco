@@ -1,6 +1,19 @@
 import { useEffect, useMemo, useState } from 'react';
 import { apiUrl } from '../apiUrl';
 import { groupCatalogAuthors } from '../authorCatalog';
+import { getSurname } from './AuthorWorksView';
+
+const formatAuthorName = (author) => {
+  let name = String(author.name || '').trim().replace(/\s+/g, ' ');
+  if (!name.includes(' ') && !name.includes(',')) {
+    const sortName = String(author.sortName || '').trim().replace(/\s+/g, ' ');
+    if (sortName.includes(' ') || sortName.includes(',')) name = sortName;
+  }
+  if (!name.includes(',')) return name;
+  const parts = name.split(',').map((part) => part.trim()).filter(Boolean);
+  if (parts.length < 2) return name;
+  return `${parts.slice(1).join(' ')} ${parts[0]}`;
+};
 
 const getPublicationYear = (date) => {
   const year = Number.parseInt(String(date || ''), 10);
@@ -83,7 +96,10 @@ const WorkCatalog = ({ onBack }) => {
     const query = authorFilter.trim().toLowerCase();
     return [...authors]
       .filter((author) => !query || `${author.name} ${author.sortName}`.toLowerCase().includes(query))
-      .sort((left, right) => left.name.localeCompare(right.name));
+      .sort((left, right) => (
+        getSurname(left).localeCompare(getSurname(right))
+        || formatAuthorName(left).localeCompare(formatAuthorName(right))
+      ));
   }, [authors, authorFilter]);
   const workAuthorOptions = useMemo(() => {
     const query = coauthorFilter.trim().toLowerCase();
@@ -149,6 +165,38 @@ const WorkCatalog = ({ onBack }) => {
       await loadWikipediaWorks(candidate.pageTitle);
     } catch (linkError) {
       setError(linkError.message || 'Unable to link the Wikipedia author.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const removeAuthor = async (author) => {
+    const authorIds = author.aliasIds || [author.id];
+    const recordCount = authorIds.length;
+    const message = recordCount === 1
+      ? `Remove ${author.name} from the author catalog? Its Work links will be removed; Works and book editions will remain.`
+      : `Remove ${author.name} and its ${recordCount} duplicate-name records from the author catalog? Their Work links will be removed; Works and book editions will remain.`;
+    if (!window.confirm(message)) return;
+
+    setLoading(true);
+    setError('');
+    setStatus('');
+    try {
+      await fetchJson('/api/catalog/authors', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ authorIds })
+      });
+      if (authorIds.includes(selectedAuthorId)) {
+        setSelectedAuthorId('');
+        setWikipediaCandidates([]);
+        setWorkCandidates([]);
+        setSelectedWork(null);
+      }
+      await loadCatalog();
+      setStatus(`Removed ${author.name} from the author catalog.`);
+    } catch (removeError) {
+      setError(removeError.message || `Unable to remove ${author.name} from the author catalog.`);
     } finally {
       setLoading(false);
     }
@@ -419,7 +467,7 @@ const WorkCatalog = ({ onBack }) => {
                   key={author.id}
                 >
                   <div className="min-w-0">
-                    <div className="text-break">{author.name}</div>
+                    <div className="text-break">{formatAuthorName(author)}</div>
                     <div className={`small${selectedAuthorId === author.id ? '' : ' text-muted'}`}>
                       {author.wikipediaPageTitle ? `Linked to ${author.wikipediaPageTitle}` : 'Not linked'}
                     </div>
@@ -432,6 +480,15 @@ const WorkCatalog = ({ onBack }) => {
                     disabled={loading}
                   >
                     {author.wikipediaPageTitle ? 'Manage' : 'Link'}
+                  </button>
+                  <button
+                    className={`btn btn-sm btn-outline-danger flex-shrink-0${selectedAuthorId === author.id ? ' border-light text-white' : ''}`}
+                    type="button"
+                    aria-label={`Remove ${author.name} from list`}
+                    onClick={() => removeAuthor(author)}
+                    disabled={loading}
+                  >
+                    Remove from list
                   </button>
                 </div>
               ))}
