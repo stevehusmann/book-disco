@@ -15,6 +15,7 @@ const {
   syncEditionAuthors,
   WORK_TYPES
 } = require('./workCatalog');
+const { fetchAllSupabaseRows } = require('./supabasePagination');
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -893,10 +894,10 @@ app.get('/api/catalog/authors', async (_req, res) => {
     if (useSupabase) {
       await ensureSupabaseAuthorCatalog();
       await syncSupabaseEditionAuthors();
-      const authors = await supabaseRequest('authors?select=id,name,sort_name,wikipedia_page_title,wikipedia_url&order=sort_name.asc,name.asc');
-      const [authorWorks, bookWorks] = await Promise.all([
-        supabaseRequest('author_works?select=author_id,work_id'),
-        supabaseRequest('book_works?select=work_id')
+      const [authors, authorWorks, bookWorks] = await Promise.all([
+        fetchAllSupabaseRows(supabaseRequest, 'authors?select=id,name,sort_name,wikipedia_page_title,wikipedia_url&order=sort_name.asc,name.asc,id.asc'),
+        fetchAllSupabaseRows(supabaseRequest, 'author_works?select=author_id,work_id&order=author_id.asc,work_id.asc'),
+        fetchAllSupabaseRows(supabaseRequest, 'book_works?select=work_id,book_uid&order=work_id.asc,book_uid.asc')
       ]);
       const authorsWithWorks = new Set(authorWorks.map((relation) => relation.author_id));
       const editionLinkedWorkIds = new Set(bookWorks.map((relation) => relation.work_id));

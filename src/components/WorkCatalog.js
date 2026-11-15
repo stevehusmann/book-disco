@@ -81,8 +81,9 @@ const WorkCatalog = ({ onBack }) => {
   const selectedAuthorAliasIds = selectedAuthor?.aliasIds;
   const filteredAuthors = useMemo(() => {
     const query = authorFilter.trim().toLowerCase();
-    if (!query) return authors;
-    return authors.filter((author) => `${author.name} ${author.sortName}`.toLowerCase().includes(query));
+    return [...authors]
+      .filter((author) => !query || `${author.name} ${author.sortName}`.toLowerCase().includes(query))
+      .sort((left, right) => left.name.localeCompare(right.name));
   }, [authors, authorFilter]);
   const workAuthorOptions = useMemo(() => {
     const query = coauthorFilter.trim().toLowerCase();
@@ -216,6 +217,18 @@ const WorkCatalog = ({ onBack }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const selectAuthor = (author) => {
+    setSelectedAuthorId(author.id);
+    setWikipediaCandidates([]);
+    setWorkCandidates([]);
+    setShowUnmatchedWorkCandidates(false);
+    setSelectedWork(null);
+    setError('');
+    setStatus('');
+    if (author.wikipediaPageTitle) loadWikipediaWorks(author.wikipediaPageTitle);
+    else searchWikipediaAuthors(author);
   };
 
   const loadBookMatches = async (search, preselectMatches = false) => {
@@ -387,7 +400,7 @@ const WorkCatalog = ({ onBack }) => {
       <div className="row g-3">
         <div className="col-12 col-xl-5">
           <div className="border rounded bg-white p-3 mb-3">
-            <h5>1. Confirm author identity and review matches</h5>
+            <h5>1. Normalized authors found in database ({authors.length})</h5>
             <label className="form-label" htmlFor="author-filter">Find an author</label>
             <input
               id="author-filter"
@@ -396,31 +409,33 @@ const WorkCatalog = ({ onBack }) => {
               onChange={(event) => setAuthorFilter(event.target.value)}
               placeholder="Search authors"
             />
-            <select
-              className="form-select mb-2"
-              aria-label="Catalog author"
-              value={selectedAuthorId}
-              onChange={(event) => {
-                const nextAuthorId = event.target.value;
-                const nextAuthor = authors.find((author) => author.id === nextAuthorId);
-                setSelectedAuthorId(nextAuthorId);
-                setWikipediaCandidates([]);
-                setWorkCandidates([]);
-                setShowUnmatchedWorkCandidates(false);
-                setSelectedWork(null);
-                setError('');
-                setStatus('');
-                if (nextAuthor?.wikipediaPageTitle) loadWikipediaWorks(nextAuthor.wikipediaPageTitle);
-                else if (nextAuthor) searchWikipediaAuthors(nextAuthor);
-              }}
-            >
-              <option value="">Select an author...</option>
+            <div className="list-group mb-3" aria-label="Normalized author list" style={{ maxHeight: '32rem', overflowY: 'auto' }}>
+              {!filteredAuthors.length && (
+                <div className="list-group-item text-muted">No authors match this search.</div>
+              )}
               {filteredAuthors.map((author) => (
-                <option key={author.id} value={author.id}>
-                  {author.name}{author.wikipediaPageTitle ? ` (${author.wikipediaPageTitle})` : ''}
-                </option>
+                <div
+                  className={`list-group-item d-flex align-items-center justify-content-between gap-2${selectedAuthorId === author.id ? ' active' : ''}`}
+                  key={author.id}
+                >
+                  <div className="min-w-0">
+                    <div className="text-break">{author.name}</div>
+                    <div className={`small${selectedAuthorId === author.id ? '' : ' text-muted'}`}>
+                      {author.wikipediaPageTitle ? `Linked to ${author.wikipediaPageTitle}` : 'Not linked'}
+                    </div>
+                  </div>
+                  <button
+                    className={`btn btn-sm flex-shrink-0${selectedAuthorId === author.id ? ' btn-light' : ' btn-outline-primary'}`}
+                    type="button"
+                    aria-label={`${author.wikipediaPageTitle ? 'Manage' : 'Link'} ${author.name}`}
+                    onClick={() => selectAuthor(author)}
+                    disabled={loading}
+                  >
+                    {author.wikipediaPageTitle ? 'Manage' : 'Link'}
+                  </button>
+                </div>
               ))}
-            </select>
+            </div>
             {selectedAuthor && (
               <>
                 <div className="small mb-2">

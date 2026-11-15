@@ -5,6 +5,7 @@ const { TextDecoder, TextEncoder } = require('util');
 const { ReadableStream, WritableStream, TransformStream } = require('stream/web');
 const { MessageChannel, MessagePort } = require('worker_threads');
 const { Blob } = require('buffer');
+const { fetchAllSupabaseRows } = require('../../../backend/supabasePagination');
 const {
   createWorkRecord,
   getEditionAuthorNames,
@@ -23,6 +24,34 @@ const candidateWork = {
   sourceStatement: 'Novels',
   date: { value: '1851', precision: 9 }
 };
+
+const clickAuthorAction = async (name, action = 'Link') => {
+  fireEvent.click(await screen.findByRole('button', { name: `${action} ${name}` }));
+};
+
+test('fetches all Supabase pages while retaining query parameters', async () => {
+  const records = Array.from({ length: 10 }, (_value, index) => ({ id: index + 1 }));
+  const requests = [];
+  const request = jest.fn(async (route) => {
+    requests.push(route);
+    const params = new URLSearchParams(route.split('?')[1]);
+    const offset = Number(params.get('offset'));
+    const limit = Number(params.get('limit'));
+    return records.slice(offset, offset + limit);
+  });
+
+  await expect(fetchAllSupabaseRows(request, 'authors?select=id,name&order=name.asc', 4))
+    .resolves.toEqual(records);
+  expect(requests).toHaveLength(3);
+  expect(requests.map((route) => new URLSearchParams(route.split('?')[1]).get('offset')))
+    .toEqual(['0', '4', '8']);
+  expect(requests[0]).toContain('select=id%2Cname');
+});
+
+test('reports malformed paginated Supabase results', async () => {
+  await expect(fetchAllSupabaseRows(async () => null, 'authors'))
+    .rejects.toThrow('Supabase query for authors did not return rows.');
+});
 
 test('automatically searches Wikipedia and edition matches, then requires review before importing a Work', async () => {
   const originalFetch = global.fetch;
@@ -51,8 +80,7 @@ test('automatically searches Wikipedia and edition matches, then requires review
 
   try {
     render(<WorkCatalog onBack={jest.fn()} />);
-    await screen.findByRole('option', { name: 'Herman Melville' });
-    fireEvent.change(screen.getByLabelText('Catalog author'), { target: { value: 'author-1' } });
+    await clickAuthorAction('Herman Melville');
     fireEvent.click(await screen.findByRole('button', { name: 'Confirm identity' }));
     fireEvent.click(await screen.findByRole('button', { name: 'Review' }));
 
@@ -108,8 +136,7 @@ test('searches Wikipedia using the selected author name when Search Wikipedia ag
 
   try {
     render(<WorkCatalog onBack={jest.fn()} />);
-    await screen.findByRole('option', { name: /Herman Melville/ });
-    fireEvent.change(screen.getByLabelText('Catalog author'), { target: { value: 'author-1' } });
+    await clickAuthorAction('Herman Melville');
     fireEvent.click(await screen.findByRole('button', { name: 'Search Wikipedia again' }));
 
     expect(await screen.findByText('Herman Melville', { selector: 'strong' })).toBeInTheDocument();
@@ -425,7 +452,7 @@ test('shows an author’s linked Works in ascending publication order', async ()
 
   try {
     render(<WorkCatalog onBack={jest.fn()} />);
-    fireEvent.change(await screen.findByLabelText('Catalog author'), { target: { value: 'author-1' } });
+    await clickAuthorAction('Herman Melville', 'Manage');
     const authorView = screen.getByLabelText('Author view');
     const titles = within(authorView).getAllByRole('listitem').map((item) => item.textContent);
     expect(titles[0]).toContain('Earlier Work');
@@ -438,6 +465,13 @@ test('shows an author’s linked Works in ascending publication order', async ()
 test('shows duplicate author rows once and includes Works linked to either author id', async () => {
   const originalFetch = global.fetch;
   const duplicateAuthor = { id: 'author-duplicate', name: 'Herman  Melville', sortName: 'Melville, Herman' };
+  const linkedAuthor = {
+    id: 'author-linked',
+    name: 'Jane Austen',
+    sortName: 'Austen, Jane',
+    wikipediaPageTitle: 'Jane Austen',
+    wikipediaUrl: 'https://en.wikipedia.org/wiki/Jane_Austen'
+  };
   const works = [{
     id: 'alias-work',
     title: 'Alias-linked Work',
@@ -446,7 +480,7 @@ test('shows duplicate author rows once and includes Works linked to either autho
     books: []
   }];
   global.fetch = jest.fn(async (url) => {
-    if (url === '/api/catalog/authors') return { ok: true, json: async () => [author, duplicateAuthor] };
+    if (url === '/api/catalog/authors') return { ok: true, json: async () => [author, duplicateAuthor, linkedAuthor] };
     if (url === '/api/catalog/works') return { ok: true, json: async () => works };
     if (url.startsWith('/api/catalog/wikipedia/search')) return { ok: true, json: async () => [] };
     throw new Error(`Unexpected request: ${url}`);
@@ -454,11 +488,13 @@ test('shows duplicate author rows once and includes Works linked to either autho
 
   try {
     render(<WorkCatalog onBack={jest.fn()} />);
-    const authorSelect = await screen.findByLabelText('Catalog author');
-    expect(within(authorSelect).getAllByRole('option').map((option) => option.textContent))
-      .toEqual(['Select an author...', 'Herman Melville']);
-
-    fireEvent.change(authorSelect, { target: { value: author.id } });
+    const authorList = await screen.findByLabelText('Normalized author list');
+    await screen.findByRole('button', { name: 'Link Herman Melville' });
+    expect(within(authorList).getAllByText('Herman Melville', { selector: '.text-break' })).toHaveLength(1);
+    expect(within(authorList).getByText('Not linked')).toBeInTheDocument();
+    expect(within(authorList).getByText('Linked to Jane Austen')).toBeInTheDocument();
+    expect(within(authorList).getByRole('button', { name: 'Manage Jane Austen' })).toBeInTheDocument();
+    await clickAuthorAction('Herman Melville');
     expect(within(screen.getByLabelText('Author view')).getByText('Alias-linked Work')).toBeInTheDocument();
     await screen.findByText('No Wikipedia author pages were found for Herman Melville.');
     await waitFor(() => expect(screen.getByRole('button', { name: 'Search Wikipedia again' })).toBeEnabled());
@@ -499,8 +535,7 @@ test('only shows linked edition details for Works by the selected author', async
 
   try {
     render(<WorkCatalog onBack={jest.fn()} />);
-    await screen.findByRole('option', { name: /Herman Melville/ });
-    fireEvent.change(screen.getByLabelText('Catalog author'), { target: { value: 'author-1' } });
+    await clickAuthorAction('Herman Melville', 'Manage');
 
     expect(await screen.findByText('Selected Edition (111)')).toBeInTheDocument();
     expect(screen.getByText('Edition linked')).toBeInTheDocument();
@@ -534,7 +569,7 @@ test('shows Wikipedia Work review candidates in chronological order with undated
 
   try {
     render(<WorkCatalog onBack={jest.fn()} />);
-    fireEvent.change(await screen.findByLabelText('Catalog author'), { target: { value: 'author-1' } });
+    await clickAuthorAction('Herman Melville', 'Manage');
 
     const defaultReviewButtons = await screen.findAllByRole('button', { name: 'Review' });
     expect(defaultReviewButtons).toHaveLength(1);
@@ -578,8 +613,7 @@ test('matches Wikipedia works with parenthetical work types to edition titles', 
 
   try {
     render(<WorkCatalog onBack={jest.fn()} />);
-    await screen.findByRole('option', { name: /Herman Melville/ });
-    fireEvent.change(screen.getByLabelText('Catalog author'), { target: { value: 'author-1' } });
+    await clickAuthorAction('Herman Melville', 'Manage');
 
     expect(await screen.findByText('The Red Badge of Courage · ISBN 222')).toBeInTheDocument();
     expect(screen.getByText('Wikipedia lists this as “The Red Badge of Courage (novel)”; matching editions by the shorter title.')).toBeInTheDocument();

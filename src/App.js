@@ -427,7 +427,7 @@ const App = () => {
                   <hr></hr>
                   <Row className="d-flex">
                     {!isLoadingBooks && !booksError && effectiveSortOption.startsWith('author') ? (
-                      <AuthorView books={currentPageBooks} pageIndex={page * pageSize} mobileResetKey={mobileResetKey} setBooks={setBooks} seriesOptions={seriesOptions} />
+                      <AuthorView books={currentPageBooks} pageIndex={page * pageSize} setBooks={setBooks} seriesOptions={seriesOptions} />
                     ) : !isLoadingBooks && !booksError ? (
                         <TitleView books={currentPageBooks} pageIndex={page * pageSize} mobileResetKey={mobileResetKey} setBooks={setBooks} seriesOptions={seriesOptions} />
                     ) : null}

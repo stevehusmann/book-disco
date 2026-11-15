@@ -1,7 +1,6 @@
 import React from 'react';
 import Row from 'react-bootstrap/Row';
 import BookItem from './BookItem';
-import MobileChevronRow from './MobileChevronRow';
 
 const getBookKey = (book, fallbackIndex) => {
   return (
@@ -18,7 +17,7 @@ const getBookKey = (book, fallbackIndex) => {
   );
 };
 
-const AuthorView = ({ books, pageIndex = 0, mobileResetKey = '', setBooks, seriesOptions = [] }) => {
+const AuthorView = ({ books, pageIndex = 0, setBooks, seriesOptions = [] }) => {
   const formatAuthor = (name) => {
     if (!name) return 'Unknown';
     const s = name.trim();
@@ -68,10 +67,10 @@ const AuthorView = ({ books, pageIndex = 0, mobileResetKey = '', setBooks, serie
       </Row>
 
       <div className="d-md-none author-mobile-groups">
-        {mobileGroups.map((group, groupIndex) => (
-          <section key={`${group.key}-${groupIndex}`} className="author-mobile-group">
-            <h5 className="author-mobile-group-title mb-2">{formatAuthor(group.key)}</h5>
-            <MobileChevronRow rowClassName="author-mobile-row" ariaLabel={`Books by ${formatAuthor(group.key)}`} resetKey={mobileResetKey}>
+        {mobileGroups.map((group) => (
+          <section key={group.key} className="author-mobile-group" aria-label={`Books by ${formatAuthor(group.key)}`}>
+            <h5 className="author-mobile-group-title">{formatAuthor(group.key)}</h5>
+            <Row className="author-mobile-grid">
               {group.items.map((book, i) => (
                 <BookItem
                   key={getBookKey(book, i)}
@@ -80,11 +79,12 @@ const AuthorView = ({ books, pageIndex = 0, mobileResetKey = '', setBooks, serie
                   pageIndex={pageIndex}
                   header={null}
                   layout="author-mobile"
+                  colClass="author-mobile-col"
                   setBooks={setBooks}
                   seriesOptions={seriesOptions}
                 />
               ))}
-            </MobileChevronRow>
+            </Row>
           </section>
         ))}
       </div>
