@@ -427,6 +427,27 @@ const WorkCatalog = ({ onBack }) => {
     }
   };
 
+  const deleteBook = async (book) => {
+    if (!book.uid) {
+      setError('Cannot delete this edition because it is missing a stable identifier.');
+      return;
+    }
+    if (!window.confirm(`Permanently delete "${book.title || 'this edition'}" from the database? Its Work links will be removed; the Works will remain.`)) return;
+
+    setLoading(true);
+    setError('');
+    setStatus('');
+    try {
+      await fetchJson(`/api/books/${encodeURIComponent(book.uid)}`, { method: 'DELETE' });
+      await loadCatalog();
+      setStatus(`Deleted "${book.title || 'Edition'}" from the database. Its Works remain.`);
+    } catch (deleteError) {
+      setError(deleteError.message || 'Unable to delete the book edition.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const toggleValue = (values, setValues, value) => {
     setValues((current) => current.includes(value)
       ? current.filter((item) => item !== value)
@@ -778,13 +799,31 @@ const WorkCatalog = ({ onBack }) => {
                         <div className="small text-muted">
                           {[work.workType || 'Uncategorized', work.releaseDate, work.authors.map((author) => author.name).join(', ')].filter(Boolean).join(' · ')}
                         </div>
-                        <div className="small text-muted">
-                          {work.books.length && work.authors.some((author) => selectedAuthorAliasIds?.includes(author.id))
-                            ? work.books.map((book) => `${book.title} (${book.isbn || book.uid})`).join('; ')
-                            : work.books.length
-                              ? 'Edition linked'
-                              : 'No edition linked'}
-                        </div>
+                        {work.books.length && work.authors.some((author) => selectedAuthorAliasIds?.includes(author.id)) ? (
+                          <div className="small mt-1">
+                            <div className="text-muted">Linked editions</div>
+                            {work.books.map((book) => (
+                              <div className="d-flex align-items-center justify-content-between gap-2" key={book.uid || `${book.title}-${book.isbn}`}>
+                                <span className="text-muted">{book.title} ({book.isbn || book.uid})</span>
+                                {book.uid && (
+                                  <button
+                                    className="btn btn-sm btn-outline-danger flex-shrink-0"
+                                    type="button"
+                                    aria-label={`Delete ${book.title || 'edition'} from database`}
+                                    onClick={() => deleteBook(book)}
+                                    disabled={loading}
+                                  >
+                                    Delete book
+                                  </button>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="small text-muted">
+                            {work.books.length ? 'Edition linked' : 'No edition linked'}
+                          </div>
+                        )}
                       </div>
                       <div className="d-flex flex-column gap-1 align-self-start">
                         <button

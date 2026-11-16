@@ -231,6 +231,16 @@ const App = () => {
     }
   };
 
+  const deleteBookRecord = async (uid) => {
+    const response = await fetch(apiUrl(`/api/books/${encodeURIComponent(uid)}`), { method: 'DELETE' });
+    if (!response.ok) throw new Error(`Unable to delete book (${response.status}).`);
+    if (books.length === 1 && page > 0) {
+      setPage((current) => Math.max(0, current - 1));
+    } else {
+      setRefreshVersion((version) => version + 1);
+    }
+  };
+
   const updateBookSeries = (setter, seriesId) => {
     const selected = seriesOptions.find((option) => option.id === seriesId);
     setter((current) => ({
@@ -427,9 +437,9 @@ const App = () => {
                   <hr></hr>
                   <Row className="d-flex">
                     {!isLoadingBooks && !booksError && effectiveSortOption.startsWith('author') ? (
-                      <AuthorView books={currentPageBooks} pageIndex={page * pageSize} setBooks={setBooks} seriesOptions={seriesOptions} />
+                      <AuthorView books={currentPageBooks} pageIndex={page * pageSize} setBooks={setBooks} seriesOptions={seriesOptions} onDeleteBook={deleteBookRecord} />
                     ) : !isLoadingBooks && !booksError ? (
-                        <TitleView books={currentPageBooks} pageIndex={page * pageSize} mobileResetKey={mobileResetKey} setBooks={setBooks} seriesOptions={seriesOptions} />
+                          <TitleView books={currentPageBooks} pageIndex={page * pageSize} mobileResetKey={mobileResetKey} setBooks={setBooks} seriesOptions={seriesOptions} onDeleteBook={deleteBookRecord} />
                     ) : null}
                   </Row>
                   </>

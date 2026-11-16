@@ -472,17 +472,32 @@ test('shows duplicate author rows once and includes Works linked to either autho
     wikipediaPageTitle: 'Jane Austen',
     wikipediaUrl: 'https://en.wikipedia.org/wiki/Jane_Austen'
   };
-  const works = [{
-    id: 'alias-work',
-    title: 'Alias-linked Work',
-    releaseDate: '1851',
-    authors: [duplicateAuthor],
-    books: []
-  }];
+  const naturalOrderAuthor = {
+    id: 'author-jane-natural',
+    name: 'Jane Q. Austen',
+    sortName: 'Austen, Jane Q.'
+  };
+  const works = [
+    {
+      id: 'alias-work',
+      title: 'Alias-linked Work',
+      releaseDate: '1851',
+      authors: [duplicateAuthor],
+      books: []
+    },
+    {
+      id: 'jane-alias-work',
+      title: 'Jane Alias Work',
+      releaseDate: '1852',
+      authors: [naturalOrderAuthor],
+      books: []
+    }
+  ];
   global.fetch = jest.fn(async (url) => {
-    if (url === '/api/catalog/authors') return { ok: true, json: async () => [author, duplicateAuthor, linkedAuthor] };
+    if (url === '/api/catalog/authors') return { ok: true, json: async () => [author, duplicateAuthor, linkedAuthor, naturalOrderAuthor] };
     if (url === '/api/catalog/works') return { ok: true, json: async () => works };
     if (url.startsWith('/api/catalog/wikipedia/search')) return { ok: true, json: async () => [] };
+    if (url.startsWith('/api/catalog/wikipedia/authors/works')) return { ok: true, json: async () => [] };
     throw new Error(`Unexpected request: ${url}`);
   });
 
@@ -490,14 +505,19 @@ test('shows duplicate author rows once and includes Works linked to either autho
     render(<WorkCatalog onBack={jest.fn()} />);
     const authorList = await screen.findByLabelText('Normalized author list');
     await screen.findByRole('button', { name: 'Link Herman Melville' });
+    expect(screen.getByRole('heading', { name: '1. Normalized authors found in database (2)' })).toBeInTheDocument();
     expect(within(authorList).getAllByText('Herman Melville', { selector: '.text-break' })).toHaveLength(1);
+    expect(within(authorList).getAllByText('Jane Austen', { selector: '.text-break' })).toHaveLength(1);
     expect(within(authorList).getByText('Not linked')).toBeInTheDocument();
     expect(within(authorList).getByText('Linked to Jane Austen')).toBeInTheDocument();
     expect(within(authorList).getByRole('button', { name: 'Manage Austen, Jane' })).toBeInTheDocument();
     expect(within(authorList).getAllByText(/Jane Austen|Herman Melville/, { selector: '.text-break' }).map((node) => node.textContent))
       .toEqual(['Jane Austen', 'Herman Melville']);
+    await clickAuthorAction('Austen, Jane', 'Manage');
+    expect(within(screen.getByLabelText('Author view')).getByText('Jane Alias Work')).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Link Herman Melville' })).toBeEnabled());
     await clickAuthorAction('Herman Melville');
-    expect(within(screen.getByLabelText('Author view')).getByText('Alias-linked Work')).toBeInTheDocument();
+    expect(await within(screen.getByLabelText('Author view')).findByText('Alias-linked Work')).toBeInTheDocument();
     await screen.findByText('No Wikipedia author pages were found for Herman Melville.');
     await waitFor(() => expect(screen.getByRole('button', { name: 'Search Wikipedia again' })).toBeEnabled());
   } finally {
@@ -608,6 +628,52 @@ test('only shows linked edition details for Works by the selected author', async
     expect(screen.queryByText('Other Edition (222)')).not.toBeInTheDocument();
   } finally {
     global.fetch = originalFetch;
+  }
+});
+
+test('deletes a linked book edition from the Author Catalog while keeping its Work', async () => {
+  const originalFetch = global.fetch;
+  const confirm = jest.spyOn(window, 'confirm').mockReturnValue(true);
+  const edition = { uid: 'edition-to-delete', title: 'Linked Edition', isbn: '12345' };
+  const work = {
+    id: 'work-kept',
+    title: 'Work Kept',
+    releaseDate: '1851',
+    authors: [author],
+    books: [edition]
+  };
+  const calls = [];
+  let deleted = false;
+  global.fetch = jest.fn(async (url, options = {}) => {
+    calls.push({ url, options });
+    if (url === '/api/catalog/authors') return { ok: true, json: async () => [author] };
+    if (url === '/api/catalog/works') {
+      return { ok: true, json: async () => [{ ...work, books: deleted ? [] : [edition] }] };
+    }
+    if (url.startsWith('/api/catalog/wikipedia/search')) return { ok: true, json: async () => [] };
+    if (url === '/api/books/edition-to-delete' && options.method === 'DELETE') {
+      deleted = true;
+      return { ok: true, status: 204 };
+    }
+    throw new Error(`Unexpected request: ${url}`);
+  });
+
+  try {
+    render(<WorkCatalog onBack={jest.fn()} />);
+    await clickAuthorAction('Herman Melville');
+    fireEvent.click(await screen.findByRole('button', { name: 'Delete Linked Edition from database' }));
+
+    expect(await screen.findByText('Deleted "Linked Edition" from the database. Its Works remain.')).toBeInTheDocument();
+    expect(calls).toContainEqual({
+      url: '/api/books/edition-to-delete',
+      options: expect.objectContaining({ method: 'DELETE' })
+    });
+    expect(screen.getByText('Work Kept')).toBeInTheDocument();
+    expect(screen.queryByText('Linked Edition (12345)')).not.toBeInTheDocument();
+    expect(confirm).toHaveBeenCalledWith(expect.stringContaining('the Works will remain'));
+  } finally {
+    global.fetch = originalFetch;
+    confirm.mockRestore();
   }
 });
 

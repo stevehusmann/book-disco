@@ -61,6 +61,7 @@ const BookItem = ({
   colClass = '',
   layout = 'title',
   setBooks,
+  onDeleteBook,
   seriesOptions = [],
   footer = null,
   onBookClick,
@@ -84,6 +85,8 @@ const BookItem = ({
   const [topPadding, setTopPadding] = useState(0);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editStatus, setEditStatus] = useState('');
+  const [deleteStatus, setDeleteStatus] = useState('');
+  const [isDeletingBook, setIsDeletingBook] = useState(false);
   const [editForm, setEditForm] = useState(() => normalizeEditableBook(book));
 
   useEffect(() => {
@@ -177,6 +180,22 @@ const BookItem = ({
         ...book,
         ...editForm,
         PAGINATION: editForm.PAGINATION,
+      };
+
+      const deleteBook = async () => {
+        const uid = book?._uid || book?.ISBN || book?.EAN || book?.Title;
+        if (!uid || typeof onDeleteBook !== 'function') return;
+        if (!window.confirm(`Permanently delete "${book.Title || 'this book'}" from the database? Its Work links will also be removed.`)) return;
+
+        setIsDeletingBook(true);
+        setDeleteStatus('');
+        try {
+          await onDeleteBook(uid);
+        } catch (error) {
+          setDeleteStatus(error?.message || 'Unable to delete book.');
+        } finally {
+          setIsDeletingBook(false);
+        }
       };
 
       const response = await fetch(apiUrl(`/api/books/${encodeURIComponent(uid)}`), {
@@ -283,16 +302,27 @@ const BookItem = ({
           )}
         </div>
         {footer}
-        {!readOnly && !compactMetadata && <div>
+        {!readOnly && !compactMetadata && <div className="d-flex gap-2 mt-2">
           <Button
             size="sm"
             variant="outline-primary"
-            className="mt-2"
             onClick={() => setShowEditModal(true)}
           >
             Edit
           </Button>
+          {typeof onDeleteBook === 'function' && (
+            <Button
+              size="sm"
+              variant="outline-danger"
+              onClick={deleteBook}
+              disabled={isDeletingBook}
+              aria-label={`Delete ${book.Title || 'book'} from database`}
+            >
+              {isDeletingBook ? 'Deleting...' : 'Delete'}
+            </Button>
+          )}
         </div>}
+        {deleteStatus && <div className="small text-danger mt-1" role="alert">{deleteStatus}</div>}
       </div>
 
       {!readOnly && <Modal show={showEditModal} onHide={() => setShowEditModal(false)} size="lg" scrollable>

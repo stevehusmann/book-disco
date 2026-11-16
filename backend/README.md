@@ -13,7 +13,7 @@ This folder is prepared to become a standalone backend repository.
 When both Supabase variables are set, the API reads and writes the `public.books` table with `uid` (text primary key) and `book` (jsonb) columns, and stores series metadata in `public.series`. For an existing deployment, run `supabase_series_migration.sql` in the Supabase SQL Editor; for a fresh setup, run `supabase_books_schema.sql` to install the tables, indexes, and `search_books` RPC. The first series request imports existing series IDs and names from books. Until the series migration is applied, `GET /api/series` falls back to book data; creating, editing, or deleting series requires the migration. When neither Supabase variable is set, the API uses local SQLite and optionally seeds from `SEED_PATH`; existing book series are migrated into the local series catalog automatically.
 - `GET /api/books/spine-crop` - full catalog for the crop editor, loaded only when opened
 - `GET /api/books/not-displayed` - books excluded from the library display because their binding is not paperback
-- `DELETE /api/books/:uid` - permanently delete a book record
+- `DELETE /api/books/:uid` - permanently delete a book record and its Work links while preserving Works
 - `GET /api/catalog/authors` - author catalog used by the Work review screen
 - `DELETE /api/catalog/authors` - remove author records and their Work links while preserving Works and book editions; accepts `{ "authorIds": ["..."] }`
 - `PUT /api/catalog/authors/:id/wikipedia` - explicitly link an author to a reviewed Wikipedia page

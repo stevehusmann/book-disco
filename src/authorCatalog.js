@@ -1,13 +1,30 @@
-const normalizeAuthorName = (name) => String(name || '')
-  .normalize('NFKC')
-  .trim()
-  .replace(/\s+/g, ' ')
-  .toLowerCase();
+const normalizeAuthorName = (author) => {
+  let name = String(author?.name || '')
+    .normalize('NFKC')
+    .trim()
+    .replace(/\s+/g, ' ');
+  const sortName = String(author?.sortName || '')
+    .normalize('NFKC')
+    .trim()
+    .replace(/\s+/g, ' ');
+
+  if (!name.includes(' ') && !name.includes(',') && (sortName.includes(' ') || sortName.includes(','))) {
+    name = sortName;
+  }
+  if (name.includes(',')) {
+    const [surname, ...givenNames] = name.split(',').map((part) => part.trim()).filter(Boolean);
+    if (givenNames.length) name = `${givenNames.join(' ')} ${surname}`;
+  }
+
+  const nameParts = name.toLowerCase().split(/\s+/).filter(Boolean);
+  if (nameParts.length < 2) return nameParts[0] ? `single:${nameParts[0]}` : '';
+  return `${nameParts[0]} ${nameParts[nameParts.length - 1]}`;
+};
 
 export const groupCatalogAuthors = (authors) => {
   const groupedAuthors = new Map();
   (Array.isArray(authors) ? authors : []).forEach((author) => {
-    const nameKey = normalizeAuthorName(author?.name);
+    const nameKey = normalizeAuthorName(author);
     if (!nameKey || !author?.id) return;
     if (!groupedAuthors.has(nameKey)) groupedAuthors.set(nameKey, []);
     groupedAuthors.get(nameKey).push(author);

@@ -49,6 +49,37 @@ test('lists and deletes books that are not displayed', async () => {
   }
 });
 
+test('deletes a book record from the main library', async () => {
+  const book = { _uid: 'library-book', Title: 'Example Library Book', Author: 'A. Writer' };
+  const originalFetch = global.fetch;
+  const confirm = jest.spyOn(window, 'confirm').mockReturnValue(true);
+  let deleted = false;
+  global.fetch = jest.fn(async (url, options) => {
+    if (url.startsWith('/api/books?')) {
+      return { ok: true, json: async () => ({ books: deleted ? [] : [book], total: deleted ? 0 : 1, pageCount: 1 }) };
+    }
+    if (url === '/api/series') return { ok: true, json: async () => [] };
+    if (url === '/api/catalog/authors') return { ok: true, json: async () => [] };
+    if (url === '/api/books/library-book' && options?.method === 'DELETE') {
+      deleted = true;
+      return { ok: true, status: 204 };
+    }
+    return { ok: true, json: async () => ({}) };
+  });
+
+  try {
+    render(<App />);
+    expect(await screen.findByText('Example Library Book')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Delete Example Library Book from database' }));
+    expect(await screen.findByText('0 Books')).toBeInTheDocument();
+    expect(global.fetch).toHaveBeenCalledWith('/api/books/library-book', { method: 'DELETE' });
+    expect(confirm).toHaveBeenCalledWith(expect.stringContaining('Example Library Book'));
+  } finally {
+    global.fetch = originalFetch;
+    confirm.mockRestore();
+  }
+});
+
 test('lists authors with linked editions alphabetically by surname and shows the selected author works', async () => {
   const authors = [
     { id: 'melville', name: 'Herman Melville', sortName: 'Melville, Herman', wikipediaPageTitle: 'Herman Melville', hasLinkedWorks: true, hasLinkedEditions: true },
