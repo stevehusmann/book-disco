@@ -182,22 +182,6 @@ const BookItem = ({
         PAGINATION: editForm.PAGINATION,
       };
 
-      const deleteBook = async () => {
-        const uid = book?._uid || book?.ISBN || book?.EAN || book?.Title;
-        if (!uid || typeof onDeleteBook !== 'function') return;
-        if (!window.confirm(`Permanently delete "${book.Title || 'this book'}" from the database? Its Work links will also be removed.`)) return;
-
-        setIsDeletingBook(true);
-        setDeleteStatus('');
-        try {
-          await onDeleteBook(uid);
-        } catch (error) {
-          setDeleteStatus(error?.message || 'Unable to delete book.');
-        } finally {
-          setIsDeletingBook(false);
-        }
-      };
-
       const response = await fetch(apiUrl(`/api/books/${encodeURIComponent(uid)}`), {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -221,6 +205,22 @@ const BookItem = ({
       setShowEditModal(false);
     } catch (error) {
       setEditStatus(error?.message || 'Failed to save book.');
+    }
+  };
+
+  const deleteBook = async () => {
+    const uid = book?._uid || book?.ISBN || book?.EAN || book?.Title;
+    if (!uid || typeof onDeleteBook !== 'function') return;
+    if (!window.confirm(`Permanently delete "${book.Title || 'this book'}" from the database? Its Work links will also be removed.`)) return;
+
+    setIsDeletingBook(true);
+    setDeleteStatus('');
+    try {
+      await onDeleteBook(uid);
+    } catch (error) {
+      setDeleteStatus(error?.message || 'Unable to delete book.');
+    } finally {
+      setIsDeletingBook(false);
     }
   };
 

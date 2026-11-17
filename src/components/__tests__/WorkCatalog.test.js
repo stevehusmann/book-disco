@@ -661,8 +661,11 @@ test('deletes a linked book edition from the Author Catalog while keeping its Wo
   try {
     render(<WorkCatalog onBack={jest.fn()} />);
     await clickAuthorAction('Herman Melville');
-    fireEvent.click(await screen.findByRole('button', { name: 'Delete Linked Edition from database' }));
+    const deleteButton = await screen.findByRole('button', { name: 'Delete Linked Edition from database' });
+    expect(deleteButton).toBeEnabled();
+    fireEvent.click(deleteButton);
 
+    await waitFor(() => expect(confirm).toHaveBeenCalled());
     expect(await screen.findByText('Deleted "Linked Edition" from the database. Its Works remain.')).toBeInTheDocument();
     expect(calls).toContainEqual({
       url: '/api/books/edition-to-delete',

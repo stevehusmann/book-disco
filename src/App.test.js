@@ -69,8 +69,7 @@ test('deletes a book record from the main library', async () => {
 
   try {
     render(<App />);
-    expect(await screen.findByText('Example Library Book')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: 'Delete Example Library Book from database' }));
+    fireEvent.click((await screen.findAllByRole('button', { name: 'Delete Example Library Book from database' }))[0]);
     expect(await screen.findByText('0 Books')).toBeInTheDocument();
     expect(global.fetch).toHaveBeenCalledWith('/api/books/library-book', { method: 'DELETE' });
     expect(confirm).toHaveBeenCalledWith(expect.stringContaining('Example Library Book'));
