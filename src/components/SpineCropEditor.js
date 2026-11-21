@@ -309,7 +309,7 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [], initialSelectedB
     setImgRendered({ width: renderedWidth, height: renderedHeight });
   }, [rotation]);
 
-  const selectBook = (uid) => {
+  const selectBook = useCallback((uid) => {
     const book = pcdBooks.find((item) => getBookUid(item) === uid);
     setSelectedId(uid);
     setCropDisplay(null);
@@ -333,14 +333,14 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [], initialSelectedB
       ? Number(savedCrop.editorRotation)
       : 0);
     setPreviewRotation(Number(savedCrop.outputRotation) || 0);
-  };
+  }, [pcdBooks, storageImages]);
 
   useEffect(() => {
     if (initialBookSelectionApplied.current || !initialSelectedBookId) return;
     if (!pcdBooks.some((book) => getBookUid(book) === initialSelectedBookId)) return;
     initialBookSelectionApplied.current = true;
     selectBook(initialSelectedBookId);
-  }, [initialSelectedBookId, pcdBooks]);
+  }, [initialSelectedBookId, pcdBooks, selectBook]);
 
   const cropSourceCoords = useMemo(() => {
     if (!cropDisplay || !imgRendered.width || !imgRendered.height || !imgNatural.width || !imgNatural.height) {

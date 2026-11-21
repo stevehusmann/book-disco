@@ -310,9 +310,14 @@ const BookItem = ({
         {!readOnly && (!compactMetadata || showEditButton) && <div className="d-flex gap-2 mt-2">
           {(!compactMetadata || showEditButton) && (
             <Button
+              type="button"
               size="sm"
               variant="outline-primary"
-              onClick={() => setShowEditModal(true)}
+              onClick={(event) => {
+                event.stopPropagation();
+                setEditStatus('');
+                setShowEditModal(true);
+              }}
             >
               Edit
             </Button>

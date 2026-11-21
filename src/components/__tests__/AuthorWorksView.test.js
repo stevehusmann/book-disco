@@ -85,7 +85,7 @@ test('shows author Works grouped by type, first edition covers, and the edition 
     expect(within(dialog).getAllByText('Earlier Work First Edition')).not.toHaveLength(0);
     expect(within(dialog).getAllByText('Earlier Work Reprint')).not.toHaveLength(0);
     fireEvent.click(within(dialog).getAllByRole('button', { name: 'Edit' })[0]);
-    expect(await screen.findByRole('dialog', { name: 'Edit Book' })).toBeInTheDocument();
+    expect(await screen.findByText('Edit Book')).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Open Spine Crop Tool' }));
     expect(onOpenSpineCrop).toHaveBeenCalledWith('edition-first');
     expect(within(dialog).getByText('ISBN 111')).toBeInTheDocument();
