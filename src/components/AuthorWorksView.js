@@ -46,7 +46,7 @@ const fetchJson = async (path) => {
   return result;
 };
 
-const AuthorWorksView = ({ author, setBooks, seriesOptions = [] }) => {
+const AuthorWorksView = ({ author, setBooks, seriesOptions = [], onOpenSpineCrop }) => {
   const [works, setWorks] = useState([]);
   const [authorSummary, setAuthorSummary] = useState(null);
   const [selectedWork, setSelectedWork] = useState(null);
@@ -243,12 +243,15 @@ const AuthorWorksView = ({ author, setBooks, seriesOptions = [] }) => {
                   }}
                   index={index}
                   pageIndex={0}
-                  readOnly
                   compactMetadata
+                  showEditButton
+                  disableBookHover
                   seriesOptions={seriesOptions}
+                  onOpenSpineCrop={onOpenSpineCrop}
                   footer={(
                     <div className="text-muted">
                       <div>{edition.publicationDate || 'Publication date unknown'}</div>
+                      {edition.book?.PublicationYear && <div>Work publication year: {edition.book.PublicationYear}</div>}
                       {edition.isbn && <div>ISBN {edition.isbn}</div>}
                     </div>
                   )}

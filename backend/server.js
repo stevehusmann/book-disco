@@ -7,12 +7,14 @@ const { createImageProxyHandler } = require('./imageProxy');
 const {
   createWorkRecord,
   addWorkRelationships,
+  getPublicationYear,
   getWikipediaAuthorCandidates,
   getWikipediaPageSummary,
   getWikipediaWorks,
   stableAuthorId,
   getEditionAuthorNames,
   syncEditionAuthors,
+  syncBookPublicationYears,
   WORK_TYPES
 } = require('./workCatalog');
 const { fetchAllSupabaseRows } = require('./supabasePagination');
@@ -504,6 +506,61 @@ const supabaseBookRoute = (filters = {}) => {
 };
 
 const supabaseRowToBook = (row) => ({ ...row.book, _uid: row.uid });
+const getWorkPublicationYearMap = (works) => {
+  const yearsByBook = new Map();
+  works.forEach((work) => {
+    const year = getPublicationYear(work.releaseDate || work.release_date);
+    if (year == null) return;
+    (work.books || []).forEach((entry) => {
+      const uid = entry.book?.uid || entry.uid || entry.book_uid;
+      if (!uid) return;
+      if (!yearsByBook.has(uid)) yearsByBook.set(uid, new Set());
+      yearsByBook.get(uid).add(year);
+    });
+  });
+  return new Map([...yearsByBook].map(([uid, years]) => [
+    uid,
+    [...years].sort((left, right) => left - right).join('/')
+  ]));
+};
+const withPublicationYear = (book, publicationYear) => {
+  if (!book) return book;
+  if (!publicationYear) {
+    const { PublicationYear: _publicationYear, ...bookWithoutPublicationYear } = book;
+    return bookWithoutPublicationYear;
+  }
+  return { ...book, PublicationYear: publicationYear };
+};
+const syncSupabaseBookPublicationYears = async (bookUids) => {
+  const uids = [...new Set((bookUids || []).map((uid) => String(uid).trim()).filter(Boolean))];
+  if (!uids.length) return;
+  const uidFilter = `in.(${uids.join(',')})`;
+  const relationParams = new URLSearchParams({
+    select: 'book_uid,work:works(release_date)',
+    book_uid: uidFilter
+  });
+  const relations = await supabaseRequest(`book_works?${relationParams.toString()}`);
+  const yearsByBook = new Map();
+  relations.forEach((relation) => {
+    const year = getPublicationYear(relation.work?.release_date);
+    if (year == null) return;
+    if (!yearsByBook.has(relation.book_uid)) yearsByBook.set(relation.book_uid, new Set());
+    yearsByBook.get(relation.book_uid).add(year);
+  });
+  const bookParams = new URLSearchParams({ select: 'uid,book', uid: uidFilter });
+  const booksToUpdate = await supabaseRequest(`books?${bookParams.toString()}`);
+  await Promise.all(booksToUpdate.map((row) => {
+    const publicationYear = [...(yearsByBook.get(row.uid) || [])]
+      .sort((left, right) => left - right)
+      .join('/');
+    const book = withPublicationYear(row.book || {}, publicationYear);
+    return supabaseRequest(`books?uid=eq.${encodeURIComponent(row.uid)}`, {
+      method: 'PATCH',
+      headers: { Prefer: 'return=minimal' },
+      body: JSON.stringify({ book })
+    });
+  }));
+};
 const isMissingSupabaseSeriesTable = (error) => {
   const message = String(error?.message || error || '');
   return /series/i.test(message) && /(schema cache|could not find|does not exist|PGRST205|42P01)/i.test(message);
@@ -1101,6 +1158,10 @@ app.get('/api/catalog/works', async (_req, res) => {
   try {
     if (useSupabase) {
       const rows = await supabaseRequest('works?select=id,wikidata_qid,source_type,source_id,title,work_type,release_date,date_precision,source_url,authors:author_works(author:authors(id,name)),books:book_works(book:books(uid,book))&order=title.asc');
+      const publicationYears = getWorkPublicationYearMap(rows.map((work) => ({
+        releaseDate: work.release_date,
+        books: (work.books || []).map((entry) => ({ book: entry.book }))
+      })));
       return res.json(rows.map((work) => ({
         id: work.id,
         wikidataQid: work.wikidata_qid,
@@ -1119,7 +1180,10 @@ app.get('/api/catalog/works', async (_req, res) => {
           image: entry.book?.book?.Image || '',
           publicationDate: entry.book?.book?.PublicationDate || entry.book?.book?.['PUB DATE'] || '',
           book: entry.book?.book
-            ? { ...entry.book.book, _uid: entry.book.uid }
+            ? withPublicationYear(
+              { ...entry.book.book, _uid: entry.book.uid },
+              publicationYears.get(entry.book.uid)
+            )
             : null
         })).filter((book) => book.uid)
       })));
@@ -1135,6 +1199,10 @@ app.get('/api/catalog/works', async (_req, res) => {
       JOIN book_works ON book_works.book_uid = books.uid
       WHERE book_works.work_id = ? ORDER BY books.title COLLATE NOCASE
     `);
+    const publicationYears = getWorkPublicationYearMap(works.map((work) => ({
+      releaseDate: work.release_date,
+      books: getBooks.all(work.id).map((book) => ({ uid: book.uid }))
+    })));
     return res.json(works.map((work) => ({
       id: work.id,
       wikidataQid: work.wikidata_qid,
@@ -1152,7 +1220,7 @@ app.get('/api/catalog/works', async (_req, res) => {
         isbn: book.isbn,
         image: book.image,
         publicationDate: book.publication_date,
-        book: rowToBook(book)
+        book: withPublicationYear(rowToBook(book), publicationYears.get(book.uid))
       }))
     })));
   } catch (error) {
@@ -1209,6 +1277,7 @@ app.post('/api/catalog/works', async (req, res) => {
           p_book_uids: bookUids
         })
       });
+      await syncSupabaseBookPublicationYears(bookUids);
       return res.status(201).json({
         id: work.id,
         wikidataQid: work.wikidata_qid,
@@ -1273,6 +1342,7 @@ app.post('/api/catalog/works/:id/relationships', async (req, res) => {
           p_book_uids: bookUids
         })
       });
+      await syncSupabaseBookPublicationYears(bookUids);
       return res.status(204).end();
     }
     addWorkRelationships(db, req.params.id, { authorIds, bookUids });
@@ -1292,14 +1362,20 @@ app.delete('/api/catalog/works/:id', async (req, res) => {
     if (useSupabase) {
       const rows = await supabaseRequest(`works?id=eq.${encodeURIComponent(req.params.id)}&select=id`);
       if (!rows.length) return res.status(404).json({ error: 'Work not found.' });
+      const bookLinks = await supabaseRequest(`book_works?work_id=eq.${encodeURIComponent(req.params.id)}&select=book_uid`);
       await supabaseRequest(`works?id=eq.${encodeURIComponent(req.params.id)}`, {
         method: 'DELETE',
         headers: { Prefer: 'return=minimal' }
       });
+      await syncSupabaseBookPublicationYears(bookLinks.map((link) => link.book_uid));
       return res.status(204).end();
     }
+    const linkedBookUids = db.prepare('SELECT book_uid FROM book_works WHERE work_id = ?')
+      .all(req.params.id)
+      .map((link) => link.book_uid);
     const result = db.prepare('DELETE FROM works WHERE id = ?').run(req.params.id);
     if (!result.changes) return res.status(404).json({ error: 'Work not found.' });
+    syncBookPublicationYears(db, linkedBookUids);
     return res.status(204).end();
   } catch (error) {
     if (useSupabase && /works|author_works|book_works/i.test(error.message)) {

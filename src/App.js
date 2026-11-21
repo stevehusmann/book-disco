@@ -58,6 +58,7 @@ const createEmptyAddBookForm = () => ADD_BOOK_FIELDS.reduce((acc, field) => {
 const App = () => {
   const [books, setBooks] = useState([]);
   const [spineBooks, setSpineBooks] = useState([]);
+  const [spineCropBookId, setSpineCropBookId] = useState('');
   const [view, setView] = useState('library');
   const [page, setPage] = useState(0);
   const pageSize = 80;
@@ -171,7 +172,7 @@ const App = () => {
     setSubmittedSearch(searchTerm.trim());
   };
 
-  const openSpineCropPage = async () => {
+  const openSpineCropPage = async (bookId = '') => {
     setIsLoadingSpineBooks(true);
     setSpineBooksError('');
     try {
@@ -179,6 +180,7 @@ const App = () => {
       if (!response.ok) throw new Error(`Spine book query failed (${response.status}).`);
       const result = await response.json();
       setSpineBooks(Array.isArray(result) ? result : []);
+      setSpineCropBookId(bookId);
       setView('spine-crop');
     } catch (error) {
       setSpineBooksError(error.message || 'Unable to load spine books.');
@@ -357,7 +359,7 @@ const App = () => {
                       <button className="btn btn-secondary" onClick={() => setView('library')}>Back To Library</button>
                     </Col>
                   </Row>
-                  <SpineCropEditor books={spineBooks} setBooks={setSpineBooks} seriesOptions={seriesOptions} />
+                  <SpineCropEditor books={spineBooks} setBooks={setSpineBooks} seriesOptions={seriesOptions} initialSelectedBookId={spineCropBookId} />
                 </Col>
               </Row>
             ) : view === 'work-catalog' ? (
@@ -420,7 +422,7 @@ const App = () => {
                 </Col>
                 <Col xs={12} lg={10}>
                   {selectedCatalogAuthor ? (
-                    <AuthorWorksView author={selectedCatalogAuthor} setBooks={setBooks} seriesOptions={seriesOptions} />
+                    <AuthorWorksView author={selectedCatalogAuthor} setBooks={setBooks} seriesOptions={seriesOptions} onOpenSpineCrop={openSpineCropPage} />
                   ) : (
                   <>
                   <Row className="d-flex justify-content-between align-items-center mb-3">

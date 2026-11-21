@@ -310,6 +310,45 @@ const insertWorkRelationships = (db, workId, authorIds, bookUids) => {
   const addBook = db.prepare('INSERT OR IGNORE INTO book_works (book_uid, work_id) VALUES (?, ?)');
   authorIds.forEach((authorId) => addAuthor.run(authorId, workId));
   bookUids.forEach((uid) => addBook.run(uid, workId));
+  syncBookPublicationYears(db, bookUids);
+};
+
+const getPublicationYear = (releaseDate) => {
+  const match = String(releaseDate || '').match(/^([+-]?\d{1,6})/);
+  return match ? Number(match[1]) : null;
+};
+
+const syncBookPublicationYears = (db, bookUids) => {
+  const uids = [...new Set((bookUids || []).map((uid) => String(uid).trim()).filter(Boolean))];
+  if (!uids.length) return;
+  const bookColumns = db.prepare('PRAGMA table_info(books)').all().map((column) => column.name);
+  if (!bookColumns.includes('raw_json')) return;
+
+  const placeholders = uids.map(() => '?').join(', ');
+  const rows = db.prepare(`
+    SELECT books.uid, books.raw_json, works.release_date
+    FROM books
+    LEFT JOIN book_works ON book_works.book_uid = books.uid
+    LEFT JOIN works ON works.id = book_works.work_id
+    WHERE books.uid IN (${placeholders})
+  `).all(...uids);
+  const yearsByBook = new Map();
+  rows.forEach((row) => {
+    if (!yearsByBook.has(row.uid)) yearsByBook.set(row.uid, { rawJson: row.raw_json, years: new Set() });
+    const year = getPublicationYear(row.release_date);
+    if (year != null) yearsByBook.get(row.uid).years.add(year);
+  });
+
+  const updateBook = db.prepare(bookColumns.includes('updated_at')
+    ? 'UPDATE books SET raw_json = ?, updated_at = CURRENT_TIMESTAMP WHERE uid = ?'
+    : 'UPDATE books SET raw_json = ? WHERE uid = ?');
+  yearsByBook.forEach(({ rawJson, years }, uid) => {
+    const book = JSON.parse(rawJson || '{}');
+    const publicationYear = [...years].sort((left, right) => left - right).join('/');
+    if (publicationYear) book.PublicationYear = publicationYear;
+    else delete book.PublicationYear;
+    updateBook.run(JSON.stringify(book), uid);
+  });
 };
 
 const addWorkRelationships = (db, workId, input = {}) => {
@@ -389,6 +428,7 @@ const createWorkRecord = (db, input) => {
 module.exports = {
   WORK_TYPES,
   createWorkRecord,
+  getPublicationYear,
   getWikipediaAuthorCandidates,
   getWikipediaPageSummary,
   getWikipediaWorks,
@@ -397,5 +437,6 @@ module.exports = {
   syncEditionAuthors,
   seedAuthorsFromList,
   stableAuthorId,
-  addWorkRelationships
+  addWorkRelationships,
+  syncBookPublicationYears
 };

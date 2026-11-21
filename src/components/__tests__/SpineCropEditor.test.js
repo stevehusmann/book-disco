@@ -48,6 +48,20 @@ describe('SpineCropEditor save feedback', () => {
     expect(screen.queryByLabelText('Direct image URL')).not.toBeInTheDocument();
   });
 
+  test('preselects the requested crop book when the editor opens', () => {
+    render(
+      <SpineCropEditor
+        books={[{ ISBN: 'selected-book', Title: 'Selected Book', SeriesId: 'PCD' }]}
+        setBooks={jest.fn()}
+        seriesOptions={[{ id: 'PCD', spineMode: 'pcd-crop' }]}
+        initialSelectedBookId="selected-book"
+      />
+    );
+
+    expect(screen.getByLabelText('PCD Book')).toHaveValue('selected-book');
+    expect(screen.getByLabelText('Book preview with spine and cover')).toBeInTheDocument();
+  });
+
   test('lists Supabase images and loads the selected image', async () => {
     storageBucket.list.mockResolvedValue({
       data: [{ id: 'image-id', name: 'spine.jpg', metadata: { mimetype: 'image/jpeg' } }],

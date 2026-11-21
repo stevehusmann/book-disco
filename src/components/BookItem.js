@@ -27,6 +27,7 @@ const EDIT_FIELDS = [
   { key: 'GOODREADS', label: 'GoodReads URL' },
   { key: 'Price', label: 'Price' },
   { key: 'PAGINATION', label: 'Pagination' },
+  { key: 'PublicationYear', label: 'Work Publication Year' },
   { key: 'BINDING', label: 'Binding' },
   { key: 'PCversion', label: 'PC Version' },
   { key: 'PublicationDate', label: 'Publication Date' },
@@ -67,7 +68,10 @@ const BookItem = ({
   onBookClick,
   bookAriaLabel,
   readOnly = false,
-  compactMetadata = false
+  compactMetadata = false,
+  showEditButton = false,
+  onOpenSpineCrop,
+  disableBookHover = false
 }) => {
 
   const pagination = Number(book?.PAGINATION || 300);
@@ -75,6 +79,7 @@ const BookItem = ({
   const seriesId = (book?.SeriesId || book?.Series || 'GEN').toString().replace(/\s+/g, '-').replace(/[^A-Za-z0-9-_]/g, '').toLowerCase();
 
   const seriesMeta = seriesOptions.find((option) => option.id === (book?.SeriesId || ''));
+  const canOpenSpineCrop = seriesMeta?.spineMode === 'pcd-crop';
   const seriesSize = PHYSICAL_SERIES_SIZES[seriesId] || (Number(seriesMeta?.heightWidthRatio) > 0
     ? { width: 5.25, height: 5.25 * Number(seriesMeta.heightWidthRatio) }
     : null);
@@ -249,7 +254,7 @@ const BookItem = ({
           tabIndex={onBookClick ? 0 : undefined}
           aria-label={onBookClick ? bookAriaLabel : undefined}
         >
-          <div className="book-container" style={containerPaddingStyle}>
+          <div className={`book-container${disableBookHover ? ' book-container-no-hover' : ''}`} style={containerPaddingStyle}>
             <div
               ref={bookRef}
               className={`book series-${seriesId}`}
@@ -302,15 +307,17 @@ const BookItem = ({
           )}
         </div>
         {footer}
-        {!readOnly && !compactMetadata && <div className="d-flex gap-2 mt-2">
-          <Button
-            size="sm"
-            variant="outline-primary"
-            onClick={() => setShowEditModal(true)}
-          >
-            Edit
-          </Button>
-          {typeof onDeleteBook === 'function' && (
+        {!readOnly && (!compactMetadata || showEditButton) && <div className="d-flex gap-2 mt-2">
+          {(!compactMetadata || showEditButton) && (
+            <Button
+              size="sm"
+              variant="outline-primary"
+              onClick={() => setShowEditModal(true)}
+            >
+              Edit
+            </Button>
+          )}
+          {!compactMetadata && typeof onDeleteBook === 'function' && (
             <Button
               size="sm"
               variant="outline-danger"
@@ -375,6 +382,11 @@ const BookItem = ({
           <Button variant="outline-secondary" onClick={() => setShowEditModal(false)}>
             Cancel
           </Button>
+          {canOpenSpineCrop && typeof onOpenSpineCrop === 'function' && (
+            <Button variant="outline-primary" onClick={() => onOpenSpineCrop(book?._uid || book?.ISBN || book?.EAN || book?.Title)}>
+              Open Spine Crop Tool
+            </Button>
+          )}
           <Button variant="primary" onClick={saveEditedBook}>
             Save Changes
           </Button>

@@ -15,6 +15,7 @@ test('sorts authors by surname', () => {
 
 test('shows author Works grouped by type, first edition covers, and the edition summary modal', async () => {
   const originalFetch = global.fetch;
+  const onOpenSpineCrop = jest.fn();
   const works = [
     {
       id: 'later',
@@ -35,7 +36,7 @@ test('shows author Works grouped by type, first edition covers, and the edition 
       sourceUrl: 'https://en.wikipedia.org/wiki/A_Christmas_Carol',
       authors: [author],
       books: [
-        { uid: 'edition-first', title: 'Earlier Work First Edition', isbn: '111', image: 'first-cover.jpg', publicationDate: '1843' },
+        { uid: 'edition-first', title: 'Earlier Work First Edition', isbn: '111', image: 'first-cover.jpg', publicationDate: '1843', book: { SeriesId: 'PCD', PublicationYear: '1843/1845' } },
         { uid: 'edition-reprint', title: 'Earlier Work Reprint', isbn: '333', image: 'reprint-cover.jpg', publicationDate: '1900' }
       ]
     }
@@ -54,7 +55,13 @@ test('shows author Works grouped by type, first edition covers, and the edition 
   });
 
   try {
-    render(<AuthorWorksView author={author} />);
+    render(
+      <AuthorWorksView
+        author={author}
+        onOpenSpineCrop={onOpenSpineCrop}
+        seriesOptions={[{ id: 'PCD', spineMode: 'pcd-crop' }]}
+      />
+    );
 
     expect(await screen.findByText('Author biography.')).toBeInTheDocument();
     expect(screen.getByText('Author biography.')).toHaveClass('is-collapsed');
@@ -73,9 +80,14 @@ test('shows author Works grouped by type, first edition covers, and the edition 
     expect(screen.getByText('Linked editions (2)')).toBeInTheDocument();
     const dialog = screen.getByRole('dialog');
     expect(dialog.querySelectorAll('.book')).toHaveLength(2);
+    expect(dialog.querySelectorAll('.book-container-no-hover')).toHaveLength(2);
+    expect(within(dialog).getByText('Work publication year: 1843/1845')).toBeInTheDocument();
     expect(within(dialog).getAllByText('Earlier Work First Edition')).not.toHaveLength(0);
     expect(within(dialog).getAllByText('Earlier Work Reprint')).not.toHaveLength(0);
-    expect(within(dialog).queryByRole('button', { name: 'Edit' })).not.toBeInTheDocument();
+    fireEvent.click(within(dialog).getAllByRole('button', { name: 'Edit' })[0]);
+    expect(await screen.findByRole('dialog', { name: 'Edit Book' })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Open Spine Crop Tool' }));
+    expect(onOpenSpineCrop).toHaveBeenCalledWith('edition-first');
     expect(within(dialog).getByText('ISBN 111')).toBeInTheDocument();
     await waitFor(() => expect(global.fetch).toHaveBeenCalledWith('/api/catalog/wikipedia/summary?pageTitle=A%20Christmas%20Carol'));
   } finally {

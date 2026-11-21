@@ -9,6 +9,7 @@ const { fetchAllSupabaseRows } = require('../../../backend/supabasePagination');
 const {
   createWorkRecord,
   getEditionAuthorNames,
+  syncBookPublicationYears,
   getWikipediaAuthorCandidates,
   getWikipediaPageSummary,
   getWikipediaWorks,
@@ -151,7 +152,7 @@ test('stores reviewed Works with many authors and many edition links without cha
   const db = new Database(':memory:');
   db.exec(`
     PRAGMA foreign_keys = ON;
-    CREATE TABLE books (uid TEXT PRIMARY KEY, title TEXT NOT NULL, isbn TEXT);
+    CREATE TABLE books (uid TEXT PRIMARY KEY, title TEXT NOT NULL, isbn TEXT, raw_json TEXT NOT NULL DEFAULT '{}');
     INSERT INTO books (uid, title, isbn) VALUES
       ('edition-1', 'Collected Poems', '111'),
       ('edition-2', 'Collected Poems', '222'),
@@ -178,6 +179,7 @@ test('stores reviewed Works with many authors and many edition links without cha
   expect(db.prepare('SELECT work_type FROM works WHERE id = ?').get(id)).toEqual({ work_type: 'Novel' });
   expect(db.prepare('SELECT COUNT(*) AS count FROM author_works WHERE work_id = ?').get(id).count).toBe(2);
   expect(db.prepare('SELECT COUNT(*) AS count FROM book_works WHERE work_id = ?').get(id).count).toBe(2);
+  expect(JSON.parse(db.prepare('SELECT raw_json FROM books WHERE uid = ?').get('edition-1').raw_json).PublicationYear).toBe('1900');
   expect(db.prepare('SELECT COUNT(*) AS count FROM books').get().count).toBe(3);
   expect(createWorkRecord(db, {
     wikidataQid: 'Q123',
@@ -191,6 +193,18 @@ test('stores reviewed Works with many authors and many edition links without cha
   expect(db.prepare('SELECT work_type FROM works WHERE id = ?').get(id)).toEqual({ work_type: 'Short Story' });
   expect(db.prepare('SELECT COUNT(*) AS count FROM author_works WHERE work_id = ?').get(id).count).toBe(3);
   expect(db.prepare('SELECT COUNT(*) AS count FROM book_works WHERE work_id = ?').get(id).count).toBe(3);
+  const secondWorkId = createWorkRecord(db, {
+    wikidataQid: 'Q456',
+    title: 'Another Collected Work',
+    releaseDate: '+1893-00-00T00:00:00Z',
+    datePrecision: 9,
+    authorIds: ['author-1'],
+    bookUids: ['edition-1']
+  });
+  expect(JSON.parse(db.prepare('SELECT raw_json FROM books WHERE uid = ?').get('edition-1').raw_json).PublicationYear).toBe('1893/1900');
+  db.prepare('DELETE FROM works WHERE id = ?').run(secondWorkId);
+  syncBookPublicationYears(db, ['edition-1']);
+  expect(JSON.parse(db.prepare('SELECT raw_json FROM books WHERE uid = ?').get('edition-1').raw_json).PublicationYear).toBe('1900');
   expect(() => createWorkRecord(db, {
     wikidataQid: 'Q789',
     title: 'Invalid category',

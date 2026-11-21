@@ -47,7 +47,7 @@ const getComparableImageSource = (source) => {
   }
 };
 
-const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
+const SpineCropEditor = ({ books, setBooks, seriesOptions = [], initialSelectedBookId = '' }) => {
   const cropSeriesIds = useMemo(
     () => new Set(seriesOptions.filter((series) => series.spineMode === 'pcd-crop').map((series) => series.id)),
     [seriesOptions]
@@ -59,6 +59,7 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
   );
 
   const [selectedId, setSelectedId] = useState('');
+  const initialBookSelectionApplied = useRef(false);
   const [imageSrc, setImageSrc] = useState('');
   const [selectedImagePath, setSelectedImagePath] = useState('');
   const [storageImages, setStorageImages] = useState([]);
@@ -333,6 +334,13 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
       : 0);
     setPreviewRotation(Number(savedCrop.outputRotation) || 0);
   };
+
+  useEffect(() => {
+    if (initialBookSelectionApplied.current || !initialSelectedBookId) return;
+    if (!pcdBooks.some((book) => getBookUid(book) === initialSelectedBookId)) return;
+    initialBookSelectionApplied.current = true;
+    selectBook(initialSelectedBookId);
+  }, [initialSelectedBookId, pcdBooks]);
 
   const cropSourceCoords = useMemo(() => {
     if (!cropDisplay || !imgRendered.width || !imgRendered.height || !imgNatural.width || !imgNatural.height) {
@@ -629,6 +637,7 @@ const SpineCropEditor = ({ books, setBooks, seriesOptions = [] }) => {
         points: cropSourceCoords.points || undefined
       }
     };
+
     setIsSavingCrop(true);
     setSaveStatus(`Saving crop for ${selectedBook.Title || 'selected book'}...`);
     try {
