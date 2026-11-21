@@ -439,9 +439,9 @@ const App = () => {
                   <hr></hr>
                   <Row className="d-flex">
                     {!isLoadingBooks && !booksError && effectiveSortOption.startsWith('author') ? (
-                      <AuthorView books={currentPageBooks} pageIndex={page * pageSize} setBooks={setBooks} seriesOptions={seriesOptions} onDeleteBook={deleteBookRecord} />
+                      <AuthorView books={currentPageBooks} pageIndex={page * pageSize} setBooks={setBooks} seriesOptions={seriesOptions} onDeleteBook={deleteBookRecord} onOpenSpineCrop={openSpineCropPage} />
                     ) : !isLoadingBooks && !booksError ? (
-                          <TitleView books={currentPageBooks} pageIndex={page * pageSize} mobileResetKey={mobileResetKey} setBooks={setBooks} seriesOptions={seriesOptions} onDeleteBook={deleteBookRecord} />
+                          <TitleView books={currentPageBooks} pageIndex={page * pageSize} mobileResetKey={mobileResetKey} setBooks={setBooks} seriesOptions={seriesOptions} onDeleteBook={deleteBookRecord} onOpenSpineCrop={openSpineCropPage} />
                     ) : null}
                   </Row>
                   </>

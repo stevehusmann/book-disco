@@ -17,7 +17,7 @@ const getBookKey = (book, fallbackIndex) => {
   );
 };
 
-const AuthorView = ({ books, pageIndex = 0, setBooks, seriesOptions = [], onDeleteBook }) => {
+const AuthorView = ({ books, pageIndex = 0, setBooks, seriesOptions = [], onDeleteBook, onOpenSpineCrop }) => {
   const formatAuthor = (name) => {
     if (!name) return 'Unknown';
     const s = name.trim();
@@ -61,7 +61,7 @@ const AuthorView = ({ books, pageIndex = 0, setBooks, seriesOptions = [], onDele
           const bounds = authorBounds[key] || { first: -1, last: -1 };
           const header = i === bounds.first ? formatAuthor(key) : null;
           return (
-            <BookItem key={getBookKey(book, i)} book={book} index={i} pageIndex={pageIndex} header={header} layout="author" setBooks={setBooks} seriesOptions={seriesOptions} onDeleteBook={onDeleteBook} />
+            <BookItem key={getBookKey(book, i)} book={book} index={i} pageIndex={pageIndex} header={header} layout="author" setBooks={setBooks} seriesOptions={seriesOptions} onDeleteBook={onDeleteBook} onOpenSpineCrop={onOpenSpineCrop} />
           );
         })}
       </Row>
@@ -83,6 +83,7 @@ const AuthorView = ({ books, pageIndex = 0, setBooks, seriesOptions = [], onDele
                   setBooks={setBooks}
                   seriesOptions={seriesOptions}
                   onDeleteBook={onDeleteBook}
+                  onOpenSpineCrop={onOpenSpineCrop}
                 />
               ))}
             </Row>

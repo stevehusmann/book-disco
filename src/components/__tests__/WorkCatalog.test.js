@@ -148,7 +148,7 @@ test('searches Wikipedia using the selected author name when Search Wikipedia ag
   }
 });
 
-test('stores reviewed Works with many authors and many edition links without changing editions', () => {
+test('stores publication years on editions linked to multiple reviewed Works', () => {
   const db = new Database(':memory:');
   db.exec(`
     PRAGMA foreign_keys = ON;

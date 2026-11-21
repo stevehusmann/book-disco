@@ -526,7 +526,8 @@ const getWorkPublicationYearMap = (works) => {
 const withPublicationYear = (book, publicationYear) => {
   if (!book) return book;
   if (!publicationYear) {
-    const { PublicationYear: _publicationYear, ...bookWithoutPublicationYear } = book;
+    const bookWithoutPublicationYear = { ...book };
+    delete bookWithoutPublicationYear.PublicationYear;
     return bookWithoutPublicationYear;
   }
   return { ...book, PublicationYear: publicationYear };
@@ -534,7 +535,7 @@ const withPublicationYear = (book, publicationYear) => {
 const syncSupabaseBookPublicationYears = async (bookUids) => {
   const uids = [...new Set((bookUids || []).map((uid) => String(uid).trim()).filter(Boolean))];
   if (!uids.length) return;
-  const uidFilter = `in.(${uids.join(',')})`;
+  const uidFilter = `in.(${uids.map((uid) => `"${uid.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`).join(',')})`;
   const relationParams = new URLSearchParams({
     select: 'book_uid,work:works(release_date)',
     book_uid: uidFilter
@@ -1199,9 +1200,10 @@ app.get('/api/catalog/works', async (_req, res) => {
       JOIN book_works ON book_works.book_uid = books.uid
       WHERE book_works.work_id = ? ORDER BY books.title COLLATE NOCASE
     `);
+    const booksByWork = new Map(works.map((work) => [work.id, getBooks.all(work.id)]));
     const publicationYears = getWorkPublicationYearMap(works.map((work) => ({
       releaseDate: work.release_date,
-      books: getBooks.all(work.id).map((book) => ({ uid: book.uid }))
+      books: booksByWork.get(work.id).map((book) => ({ uid: book.uid }))
     })));
     return res.json(works.map((work) => ({
       id: work.id,
@@ -1214,7 +1216,7 @@ app.get('/api/catalog/works', async (_req, res) => {
       datePrecision: work.date_precision,
       sourceUrl: work.source_url,
       authors: getAuthors.all(work.id),
-      books: getBooks.all(work.id).map((book) => ({
+      books: booksByWork.get(work.id).map((book) => ({
         uid: book.uid,
         title: book.title,
         isbn: book.isbn,

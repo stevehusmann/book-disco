@@ -79,7 +79,8 @@ const BookItem = ({
   const seriesId = (book?.SeriesId || book?.Series || 'GEN').toString().replace(/\s+/g, '-').replace(/[^A-Za-z0-9-_]/g, '').toLowerCase();
 
   const seriesMeta = seriesOptions.find((option) => option.id === (book?.SeriesId || ''));
-  const canOpenSpineCrop = seriesMeta?.spineMode === 'pcd-crop';
+  const canOpenSpineCrop = seriesMeta?.spineMode === 'pcd-crop'
+    || (!seriesOptions.length && series.toUpperCase() === 'PCD');
   const seriesSize = PHYSICAL_SERIES_SIZES[seriesId] || (Number(seriesMeta?.heightWidthRatio) > 0
     ? { width: 5.25, height: 5.25 * Number(seriesMeta.heightWidthRatio) }
     : null);

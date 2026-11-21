@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import AuthorView from '../AuthorView';
 
 test('groups mobile book tiles by author in a two-column grid', () => {
@@ -20,4 +20,20 @@ test('groups mobile book tiles by author in a two-column grid', () => {
   const annGroup = screen.getByLabelText('Books by Ann Smith');
   expect(within(annGroup).getByRole('img', { name: 'Ann Book' })).toBeInTheDocument();
   expect(annGroup.querySelectorAll('.author-mobile-col')).toHaveLength(1);
+});
+
+test('offers the spine crop tool from an eligible book edit dialog', () => {
+  const onOpenSpineCrop = jest.fn();
+  render(
+    <AuthorView
+      books={[{ _uid: 'pcd-book', Title: 'PCD Book', Author: 'Doe, Jane', SeriesId: 'PCD' }]}
+      seriesOptions={[{ id: 'PCD', spineMode: 'pcd-crop' }]}
+      onOpenSpineCrop={onOpenSpineCrop}
+    />
+  );
+
+  fireEvent.click(screen.getAllByRole('button', { name: 'Edit' })[0]);
+  fireEvent.click(screen.getByRole('button', { name: 'Open Spine Crop Tool' }));
+
+  expect(onOpenSpineCrop).toHaveBeenCalledWith('pcd-book');
 });
