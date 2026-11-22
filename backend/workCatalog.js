@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const fs = require('fs');
 
-const WORK_TYPES = ['Novel', 'Nonfiction', 'Short Story'];
+const DEFAULT_WORK_TYPES = ['Novel', 'Nonfiction', 'Short Story'];
 
 const initializeWorkCatalog = (db) => {
   db.exec(`
@@ -25,7 +25,7 @@ const initializeWorkCatalog = (db) => {
       source_type TEXT NOT NULL DEFAULT 'wikidata',
       source_id TEXT,
       source_statement TEXT,
-      work_type TEXT CHECK (work_type IN ('Novel', 'Nonfiction', 'Short Story') OR work_type IS NULL),
+      work_type TEXT,
       updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
       CHECK (date_precision IS NULL OR date_precision BETWEEN 6 AND 11)
     );
@@ -44,6 +44,10 @@ const initializeWorkCatalog = (db) => {
 
     CREATE INDEX IF NOT EXISTS author_works_work_idx ON author_works(work_id);
     CREATE INDEX IF NOT EXISTS book_works_work_idx ON book_works(work_id);
+    CREATE TABLE IF NOT EXISTS work_categories (
+      name TEXT PRIMARY KEY,
+      sort_order INTEGER NOT NULL DEFAULT 0
+    );
   `);
   const authorColumns = db.prepare('PRAGMA table_info(authors)').all().map((column) => column.name);
   if (!authorColumns.includes('wikidata_qid')) db.exec('ALTER TABLE authors ADD COLUMN wikidata_qid TEXT');
@@ -62,10 +66,79 @@ const initializeWorkCatalog = (db) => {
     db.exec('ALTER TABLE works ADD COLUMN source_id TEXT');
   }
   if (!workColumns.includes('work_type')) {
-    db.exec("ALTER TABLE works ADD COLUMN work_type TEXT CHECK (work_type IN ('Novel', 'Nonfiction', 'Short Story') OR work_type IS NULL)");
+    db.exec('ALTER TABLE works ADD COLUMN work_type TEXT');
   }
+  const worksSchema = db.prepare("SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'works'").get()?.sql || '';
+  if (/work_type\s+IN\s*\(/i.test(worksSchema)) {
+    db.pragma('foreign_keys = OFF');
+    try {
+      db.exec(`
+        BEGIN;
+        CREATE TABLE works_rebuild (
+          id TEXT PRIMARY KEY,
+          wikidata_qid TEXT UNIQUE,
+          title TEXT NOT NULL,
+          release_date TEXT NOT NULL,
+          date_precision INTEGER NOT NULL CHECK (date_precision BETWEEN 6 AND 11),
+          source_url TEXT,
+          source_type TEXT NOT NULL DEFAULT 'wikidata',
+          source_id TEXT,
+          source_statement TEXT,
+          work_type TEXT,
+          updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          CHECK (date_precision IS NULL OR date_precision BETWEEN 6 AND 11)
+        );
+        INSERT INTO works_rebuild (
+          id, wikidata_qid, title, release_date, date_precision, source_url,
+          source_type, source_id, source_statement, work_type, updated_at
+        )
+        SELECT id, wikidata_qid, title, release_date, date_precision, source_url,
+          source_type, source_id, source_statement, work_type, updated_at
+        FROM works;
+        DROP TABLE works;
+        ALTER TABLE works_rebuild RENAME TO works;
+        COMMIT;
+      `);
+    } catch (error) {
+      db.exec('ROLLBACK');
+      throw error;
+    } finally {
+      db.pragma('foreign_keys = ON');
+    }
+  }
+  const insertCategory = db.prepare('INSERT OR IGNORE INTO work_categories (name, sort_order) VALUES (?, ?)');
+  DEFAULT_WORK_TYPES.forEach((name, index) => insertCategory.run(name, index));
   db.exec("UPDATE works SET source_id = wikidata_qid WHERE source_id IS NULL AND wikidata_qid IS NOT NULL");
   db.exec('CREATE UNIQUE INDEX IF NOT EXISTS works_source_id_idx ON works(source_type, source_id)');
+};
+
+const getWorkCategories = (db) => db.prepare('SELECT name FROM work_categories ORDER BY sort_order, name COLLATE NOCASE').all()
+  .map((category) => category.name);
+
+const normalizeWorkCategory = (value) => {
+  const name = String(value || '').trim().replace(/\s+/g, ' ');
+  if (!name || name.length > 40 || /^uncategorized$/i.test(name)) {
+    throw new Error('Enter a category name up to 40 characters; Uncategorized is reserved.');
+  }
+  return name;
+};
+
+const addWorkCategory = (db, value) => {
+  const name = normalizeWorkCategory(value);
+  const sortOrder = db.prepare('SELECT COALESCE(MAX(sort_order), -1) + 1 AS next_order FROM work_categories').get().next_order;
+  db.prepare('INSERT INTO work_categories (name, sort_order) VALUES (?, ?)').run(name, sortOrder);
+  return name;
+};
+
+const removeWorkCategory = (db, name) => {
+  const remove = db.transaction(() => {
+    const category = db.prepare('SELECT name FROM work_categories WHERE name = ?').get(name);
+    if (!category) throw new Error('Work category not found.');
+    const uncategorized = db.prepare('UPDATE works SET work_type = NULL, updated_at = CURRENT_TIMESTAMP WHERE work_type = ?').run(name);
+    db.prepare('DELETE FROM work_categories WHERE name = ?').run(name);
+    return uncategorized.changes;
+  });
+  return remove();
 };
 
 const stableAuthorId = (author) => {
@@ -388,8 +461,8 @@ const createWorkRecord = (db, input) => {
   if (!releaseDate || !Number.isInteger(datePrecision)) {
     throw new Error('A release date and its precision are required.');
   }
-  if (workType && !WORK_TYPES.includes(workType)) {
-    throw new Error('Work type must be Novel, Nonfiction, or Short Story.');
+  if (workType && !getWorkCategories(db).includes(workType)) {
+    throw new Error('Select a category from the Work category list.');
   }
   if (sourceType === 'wikidata' && !/^[+-]\d{4,}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(releaseDate)) {
     throw new Error('Release dates must use the Wikidata time format.');
@@ -426,7 +499,8 @@ const createWorkRecord = (db, input) => {
 };
 
 module.exports = {
-  WORK_TYPES,
+  DEFAULT_WORK_TYPES,
+  addWorkCategory,
   createWorkRecord,
   getPublicationYear,
   getWikipediaAuthorCandidates,
@@ -434,9 +508,12 @@ module.exports = {
   getWikipediaWorks,
   getEditionAuthorNames,
   initializeWorkCatalog,
+  getWorkCategories,
   syncEditionAuthors,
   seedAuthorsFromList,
   stableAuthorId,
+  normalizeWorkCategory,
+  removeWorkCategory,
   addWorkRelationships,
   syncBookPublicationYears
 };

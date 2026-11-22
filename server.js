@@ -11,6 +11,10 @@ const {
   getWikipediaPageSummary,
   getWikipediaWorks,
   initializeWorkCatalog,
+  getWorkCategories,
+  addWorkCategory,
+  normalizeWorkCategory,
+  removeWorkCategory,
   seedAuthorsFromList
 } = require('./backend/workCatalog');
 
@@ -451,6 +455,52 @@ app.get('/api/catalog/authors', (_req, res) => {
   })));
 });
 
+app.put('/api/catalog/authors/:id', (req, res) => {
+  const authorIds = [...new Set((Array.isArray(req.body?.authorIds) ? req.body.authorIds : [req.params.id])
+    .map((id) => String(id || '').trim()).filter(Boolean))];
+  const name = String(req.body?.name || '').trim().replace(/\s+/g, ' ');
+  const sortName = String(req.body?.sortName || '').trim().replace(/\s+/g, ' ');
+  if (!name || name.length > 200 || sortName.length > 200 || !authorIds.includes(req.params.id)) {
+    return res.status(400).json({ error: 'A valid author name and author IDs are required.' });
+  }
+  const update = db.transaction(() => {
+    const placeholders = authorIds.map(() => '?').join(', ');
+    const existing = db.prepare(`SELECT id FROM authors WHERE id IN (${placeholders})`).all(...authorIds);
+    if (existing.length !== authorIds.length) throw new Error('One or more authors were not found.');
+    db.prepare(`UPDATE authors SET name = ?, sort_name = ?, updated_at = CURRENT_TIMESTAMP WHERE id IN (${placeholders})`)
+      .run(name, sortName, ...authorIds);
+  });
+  try {
+    update();
+    return res.json({ id: req.params.id, name, sortName });
+  } catch (error) {
+    return res.status(error.message.includes('not found') ? 404 : 400).json({ error: error.message });
+  }
+});
+
+app.get('/api/catalog/work-types', (_req, res) => {
+  return res.json(getWorkCategories(db));
+});
+
+app.post('/api/catalog/work-types', (req, res) => {
+  try {
+    return res.status(201).json({ name: addWorkCategory(db, req.body?.name) });
+  } catch (error) {
+    const duplicate = /UNIQUE constraint failed/i.test(error.message);
+    return res.status(duplicate ? 409 : 400).json({ error: duplicate ? 'That Work category already exists.' : error.message });
+  }
+});
+
+app.delete('/api/catalog/work-types/:name', (req, res) => {
+  try {
+    const name = normalizeWorkCategory(req.params.name);
+    const uncategorizedCount = removeWorkCategory(db, name);
+    return res.json({ name, uncategorizedCount });
+  } catch (error) {
+    return res.status(error.message.includes('not found') ? 404 : 400).json({ error: error.message });
+  }
+});
+
 app.put('/api/catalog/authors/:id/wikipedia', (req, res) => {
   const pageTitle = String(req.body?.wikipediaPageTitle || '').trim();
   if (!pageTitle) return res.status(400).json({ error: 'A Wikipedia page title is required.' });
@@ -592,6 +642,17 @@ app.post('/api/catalog/works', (req, res) => {
     const isConflict = error.code === 'SQLITE_CONSTRAINT_UNIQUE';
     return res.status(isConflict ? 409 : 400).json({ error: isConflict ? 'This source Work has already been imported.' : error.message });
   }
+});
+
+app.put('/api/catalog/works/:id', (req, res) => {
+  const workType = String(req.body?.workType || '').trim() || null;
+  if (workType && !getWorkCategories(db).includes(workType)) {
+    return res.status(400).json({ error: 'Select a category from the Work category list.' });
+  }
+  const result = db.prepare('UPDATE works SET work_type = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
+    .run(workType, req.params.id);
+  if (!result.changes) return res.status(404).json({ error: 'Work not found.' });
+  return res.json({ id: req.params.id, workType });
 });
 
 app.post('/api/catalog/works/:id/relationships', (req, res) => {

@@ -393,7 +393,6 @@ transform: rotate3d(0.2, -10, 0, 12deg) scale3d(1, 1, 1);
 .author-summary-text.is-collapsed {
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 6;
   overflow: hidden;
 }
 

@@ -158,6 +158,13 @@ const App = () => {
 
   const currentPageBooks = books;
   const selectedCatalogAuthor = catalogAuthors.find((author) => author.id === selectedCatalogAuthorId);
+  const updateCatalogAuthor = (updatedAuthor) => {
+    setCatalogAuthors((current) => current.map((author) => (
+      author.id === updatedAuthor.id
+        ? { ...author, name: updatedAuthor.name, sortName: updatedAuthor.sortName }
+        : author
+    )));
+  };
   const orderedCatalogAuthors = catalogAuthors
     .filter((author) => author.hasLinkedWorks && author.hasLinkedEditions)
     .sort((left, right) => (
@@ -422,7 +429,7 @@ const App = () => {
                 </Col>
                 <Col xs={12} lg={10}>
                   {selectedCatalogAuthor ? (
-                    <AuthorWorksView author={selectedCatalogAuthor} setBooks={setBooks} seriesOptions={seriesOptions} onOpenSpineCrop={openSpineCropPage} />
+                    <AuthorWorksView author={selectedCatalogAuthor} setBooks={setBooks} seriesOptions={seriesOptions} onOpenSpineCrop={openSpineCropPage} onAuthorUpdated={updateCatalogAuthor} />
                   ) : (
                   <>
                   <Row className="d-flex justify-content-between align-items-center mb-3">

@@ -16,7 +16,7 @@ const getSurname = (author) => {
   return name.split(/\s+/).at(-1) || name;
 };
 
-const WORK_TYPE_ORDER = ['Novel', 'Nonfiction', 'Short Story', 'Uncategorized'];
+const DEFAULT_WORK_TYPES = ['Novel', 'Nonfiction', 'Short Story'];
 
 const compareByYear = (left, right, dateKey) => {
   const leftYear = getYear(left[dateKey]);
@@ -39,17 +39,24 @@ const getWikipediaPageTitle = (sourceUrl, fallbackTitle) => {
   return fallbackTitle;
 };
 
-const fetchJson = async (path) => {
-  const response = await fetch(apiUrl(path));
+const fetchJson = async (path, options) => {
+  const response = options ? await fetch(apiUrl(path), options) : await fetch(apiUrl(path));
   const result = response.status === 204 ? null : await response.json();
   if (!response.ok) throw new Error(result?.error || `Request failed (${response.status}).`);
   return result;
 };
 
-const AuthorWorksView = ({ author, setBooks, seriesOptions = [], onOpenSpineCrop }) => {
+const AuthorWorksView = ({ author, setBooks, seriesOptions = [], onOpenSpineCrop, onAuthorUpdated }) => {
   const [works, setWorks] = useState([]);
+  const [workTypes, setWorkTypes] = useState(DEFAULT_WORK_TYPES);
   const [authorSummary, setAuthorSummary] = useState(null);
   const [selectedWork, setSelectedWork] = useState(null);
+  const [editingAuthor, setEditingAuthor] = useState(false);
+  const [authorForm, setAuthorForm] = useState({ name: '', sortName: '' });
+  const [editingWork, setEditingWork] = useState(null);
+  const [editingWorkType, setEditingWorkType] = useState('');
+  const [savingEdit, setSavingEdit] = useState(false);
+  const [editError, setEditError] = useState('');
   const [workSummary, setWorkSummary] = useState(null);
   const [loadingWorks, setLoadingWorks] = useState(false);
   const [loadingWorkSummary, setLoadingWorkSummary] = useState(false);
@@ -74,6 +81,13 @@ const AuthorWorksView = ({ author, setBooks, seriesOptions = [], onOpenSpineCrop
         if (!response.ok) throw new Error(result?.error || `Request failed (${response.status}).`);
         return result;
       });
+    const workTypesRequest = fetch(apiUrl('/api/catalog/work-types'), { signal: controller.signal })
+      .then(async (response) => {
+        const result = await response.json();
+        if (!response.ok) throw new Error(result?.error || `Request failed (${response.status}).`);
+        return Array.isArray(result) ? result : DEFAULT_WORK_TYPES;
+      })
+      .catch(() => DEFAULT_WORK_TYPES);
     const summaryRequest = author.wikipediaPageTitle
       ? fetch(apiUrl(`/api/catalog/wikipedia/summary?pageTitle=${encodeURIComponent(author.wikipediaPageTitle)}`), { signal: controller.signal })
         .then(async (response) => {
@@ -91,12 +105,14 @@ const AuthorWorksView = ({ author, setBooks, seriesOptions = [], onOpenSpineCrop
 
     Promise.all([
       worksRequest,
-      summaryRequest
+      summaryRequest,
+      workTypesRequest
     ])
-      .then(([allWorks, summary]) => {
+      .then(([allWorks, summary, workTypeOptions]) => {
         const authorIds = new Set(author.aliasIds || [author.id]);
         setWorks(allWorks.filter((work) => (work.authors || []).some((workAuthor) => authorIds.has(workAuthor.id))));
         setAuthorSummary(summary);
+        setWorkTypes(workTypeOptions);
       })
       .catch((loadError) => {
         if (loadError.name !== 'AbortError') setError(loadError.message || 'Unable to load this author’s Works.');
@@ -108,12 +124,12 @@ const AuthorWorksView = ({ author, setBooks, seriesOptions = [], onOpenSpineCrop
   }, [author]);
 
   const orderedWorks = useMemo(() => [...works].sort((left, right) => compareByYear(left, right, 'releaseDate')), [works]);
-  const workGroups = useMemo(() => WORK_TYPE_ORDER
+  const workGroups = useMemo(() => [...workTypes, 'Uncategorized']
     .map((type) => ({
       type,
       works: orderedWorks.filter((work) => (work.workType || 'Uncategorized') === type)
     }))
-    .filter((group) => group.works.length), [orderedWorks]);
+    .filter((group) => group.works.length), [orderedWorks, workTypes]);
   const orderedEditions = useMemo(() => [...(selectedWork?.books || [])].sort((left, right) => (
     compareByYear(left, right, 'publicationDate')
   )), [selectedWork]);
@@ -145,7 +161,22 @@ const AuthorWorksView = ({ author, setBooks, seriesOptions = [], onOpenSpineCrop
         bookAriaLabel={`Open ${work.title}, ${getYear(work.releaseDate) || 'publication year unknown'}`}
         readOnly
         compactMetadata
-        footer={<div className="text-muted">{getYear(work.releaseDate) || 'Year unknown'}</div>}
+        footer={(
+          <div className="d-flex justify-content-between align-items-center gap-2 text-muted">
+            <span>{getYear(work.releaseDate) || 'Year unknown'}</span>
+            <button
+              className="btn btn-outline-secondary btn-sm"
+              type="button"
+              aria-label={`Edit ${work.title} category`}
+              onClick={(event) => {
+                event.stopPropagation();
+                beginWorkEdit(work);
+              }}
+            >
+              Edit
+            </button>
+          </div>
+        )}
       />
     );
   };
@@ -165,6 +196,59 @@ const AuthorWorksView = ({ author, setBooks, seriesOptions = [], onOpenSpineCrop
     }
   };
 
+  const beginAuthorEdit = () => {
+    setAuthorForm({ name: author.name || '', sortName: author.sortName || '' });
+    setEditError('');
+    setEditingAuthor(true);
+  };
+
+  const saveAuthor = async () => {
+    setSavingEdit(true);
+    setEditError('');
+    try {
+      const name = authorForm.name.trim();
+      const sortName = authorForm.sortName.trim();
+      await fetchJson(`/api/catalog/authors/${encodeURIComponent(author.id)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ authorIds: author.aliasIds || [author.id], name, sortName })
+      });
+      onAuthorUpdated?.({ ...author, name, sortName });
+      setEditingAuthor(false);
+    } catch (saveError) {
+      setEditError(saveError.message || 'Unable to save the author.');
+    } finally {
+      setSavingEdit(false);
+    }
+  };
+
+  const beginWorkEdit = (work) => {
+    setEditingWork(work);
+    setEditingWorkType(work.workType || '');
+    setEditError('');
+  };
+
+  const saveWorkCategory = async () => {
+    setSavingEdit(true);
+    setEditError('');
+    try {
+      const workType = editingWorkType || null;
+      await fetchJson(`/api/catalog/works/${encodeURIComponent(editingWork.id)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ workType })
+      });
+      setWorks((current) => current.map((work) => (
+        work.id === editingWork.id ? { ...work, workType } : work
+      )));
+      setEditingWork(null);
+    } catch (saveError) {
+      setEditError(saveError.message || 'Unable to update the Work category.');
+    } finally {
+      setSavingEdit(false);
+    }
+  };
+
   if (!author) return null;
 
   return (
@@ -180,7 +264,12 @@ const AuthorWorksView = ({ author, setBooks, seriesOptions = [], onOpenSpineCrop
           )}
         </div>
         <div className="author-profile-summary">
-          <h2>{author.name}</h2>
+          <div className="d-flex align-items-center gap-2">
+            <h2 className="mb-0">{author.name}</h2>
+            <button className="btn btn-outline-secondary btn-sm" type="button" onClick={beginAuthorEdit}>
+              Edit author
+            </button>
+          </div>
           {authorSummary?.extract && (
             <>
               <p className={`mb-1 author-summary-text${authorSummaryExpanded ? ' is-expanded' : ' is-collapsed'}`}>
@@ -202,6 +291,7 @@ const AuthorWorksView = ({ author, setBooks, seriesOptions = [], onOpenSpineCrop
 
       {authorSummaryError && <div className="alert alert-warning" role="alert">{authorSummaryError}</div>}
       {error && <div className="alert alert-danger" role="alert">{error}</div>}
+      {editError && <div className="alert alert-danger" role="alert">{editError}</div>}
       {loadingWorks ? <p>Loading Works…</p> : orderedWorks.length ? (
         workGroups.map((group) => (
           <section key={group.type} aria-label={`${group.type} works by ${author.name}`} className="mb-4">
@@ -260,6 +350,59 @@ const AuthorWorksView = ({ author, setBooks, seriesOptions = [], onOpenSpineCrop
             </div>
           ) : <p className="text-muted">No book editions have been linked to this Work yet.</p>}
         </Modal.Body>
+      </Modal>
+
+      <Modal show={editingAuthor} onHide={() => setEditingAuthor(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Author</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <label className="form-label" htmlFor="edit-author-name">Author name</label>
+          <input
+            id="edit-author-name"
+            className="form-control mb-3"
+            value={authorForm.name}
+            onChange={(event) => setAuthorForm((current) => ({ ...current, name: event.target.value }))}
+          />
+          <label className="form-label" htmlFor="edit-author-sort-name">Sort name</label>
+          <input
+            id="edit-author-sort-name"
+            className="form-control"
+            value={authorForm.sortName}
+            onChange={(event) => setAuthorForm((current) => ({ ...current, sortName: event.target.value }))}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <button className="btn btn-outline-secondary" type="button" onClick={() => setEditingAuthor(false)}>Cancel</button>
+          <button className="btn btn-primary" type="button" onClick={saveAuthor} disabled={savingEdit || !authorForm.name.trim()}>
+            {savingEdit ? 'Saving...' : 'Save author'}
+          </button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={Boolean(editingWork)} onHide={() => setEditingWork(null)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Work category</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p className="mb-2">{editingWork?.title}</p>
+          <label className="form-label" htmlFor="edit-work-category">Category</label>
+          <select
+            id="edit-work-category"
+            className="form-select"
+            value={editingWorkType}
+            onChange={(event) => setEditingWorkType(event.target.value)}
+          >
+            <option value="">Uncategorized</option>
+            {workTypes.map((type) => <option key={type} value={type}>{type}</option>)}
+          </select>
+        </Modal.Body>
+        <Modal.Footer>
+          <button className="btn btn-outline-secondary" type="button" onClick={() => setEditingWork(null)}>Cancel</button>
+          <button className="btn btn-primary" type="button" onClick={saveWorkCategory} disabled={savingEdit}>
+            {savingEdit ? 'Saving...' : 'Save category'}
+          </button>
+        </Modal.Footer>
       </Modal>
     </section>
   );

@@ -9,6 +9,9 @@ const { fetchAllSupabaseRows } = require('../../../backend/supabasePagination');
 const {
   createWorkRecord,
   getEditionAuthorNames,
+  addWorkCategory,
+  getWorkCategories,
+  removeWorkCategory,
   syncBookPublicationYears,
   getWikipediaAuthorCandidates,
   getWikipediaPageSummary,
@@ -212,12 +215,24 @@ test('stores publication years on editions linked to multiple reviewed Works', (
     releaseDate: '+1900-00-00T00:00:00Z',
     datePrecision: 9,
     authorIds: ['author-1']
-  })).toThrow('Work type must be Novel, Nonfiction, or Short Story.');
+  })).toThrow('Select a category from the Work category list.');
   expect(() => createWorkRecord(db, {
     wikidataQid: 'Q456',
     title: 'Missing Date',
     authorIds: ['author-1']
   })).toThrow('A release date and its precision are required.');
+  expect(getWorkCategories(db)).toEqual(['Novel', 'Nonfiction', 'Short Story']);
+  expect(addWorkCategory(db, 'Poetry')).toBe('Poetry');
+  const poetryWorkId = createWorkRecord(db, {
+    wikidataQid: 'Q999',
+    title: 'Collected Poems',
+    workType: 'Poetry',
+    releaseDate: '+1901-00-00T00:00:00Z',
+    datePrecision: 9,
+    authorIds: ['author-1']
+  });
+  expect(removeWorkCategory(db, 'Poetry')).toBe(1);
+  expect(db.prepare('SELECT work_type FROM works WHERE id = ?').get(poetryWorkId)).toEqual({ work_type: null });
   db.close();
 });
 
@@ -247,6 +262,39 @@ test('upgrades existing catalog rows with a stable legacy source identifier', ()
     .toContain('wikipedia_page_title');
   expect(db.prepare('PRAGMA table_info(works)').all().map((column) => column.name))
     .toContain('work_type');
+  db.close();
+});
+
+test('migrates constrained Work categories while preserving author links', () => {
+  const db = new Database(':memory:');
+  db.exec(`
+    PRAGMA foreign_keys = ON;
+    CREATE TABLE books (uid TEXT PRIMARY KEY, title TEXT NOT NULL);
+    CREATE TABLE authors (id TEXT PRIMARY KEY, name TEXT NOT NULL, sort_name TEXT NOT NULL DEFAULT '');
+    CREATE TABLE works (
+      id TEXT PRIMARY KEY, wikidata_qid TEXT UNIQUE, title TEXT NOT NULL,
+      release_date TEXT NOT NULL, date_precision INTEGER NOT NULL,
+      source_url TEXT, source_type TEXT NOT NULL DEFAULT 'wikidata', source_id TEXT,
+      source_statement TEXT,
+      work_type TEXT CHECK (work_type IN ('Novel', 'Nonfiction', 'Short Story') OR work_type IS NULL),
+      updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE TABLE author_works (
+      author_id TEXT NOT NULL REFERENCES authors(id) ON DELETE CASCADE,
+      work_id TEXT NOT NULL REFERENCES works(id) ON DELETE CASCADE,
+      PRIMARY KEY (author_id, work_id)
+    );
+    INSERT INTO authors (id, name) VALUES ('author-1', 'Author One');
+    INSERT INTO works (id, title, release_date, date_precision, work_type)
+    VALUES ('work-1', 'Existing Work', '+1900-00-00T00:00:00Z', 9, 'Novel');
+    INSERT INTO author_works (author_id, work_id) VALUES ('author-1', 'work-1');
+  `);
+
+  initializeWorkCatalog(db);
+  db.prepare('UPDATE works SET work_type = ? WHERE id = ?').run('Poetry', 'work-1');
+  expect(db.prepare('SELECT work_type FROM works WHERE id = ?').get('work-1')).toEqual({ work_type: 'Poetry' });
+  expect(db.prepare('SELECT work_id FROM author_works WHERE author_id = ?').get('author-1')).toEqual({ work_id: 'work-1' });
+  expect(db.prepare('PRAGMA foreign_key_check').all()).toEqual([]);
   db.close();
 });
 
@@ -676,7 +724,7 @@ test('deletes a linked book edition from the Author Catalog while keeping its Wo
     render(<WorkCatalog onBack={jest.fn()} />);
     await clickAuthorAction('Herman Melville');
     const deleteButton = await screen.findByRole('button', { name: 'Delete Linked Edition from database' });
-    expect(deleteButton).toBeEnabled();
+    await waitFor(() => expect(deleteButton).toBeEnabled());
     fireEvent.click(deleteButton);
 
     await waitFor(() => expect(confirm).toHaveBeenCalled());
@@ -685,7 +733,7 @@ test('deletes a linked book edition from the Author Catalog while keeping its Wo
       url: '/api/books/edition-to-delete',
       options: expect.objectContaining({ method: 'DELETE' })
     });
-    expect(screen.getByText('Work Kept')).toBeInTheDocument();
+    expect(screen.getAllByText('Work Kept')).not.toHaveLength(0);
     expect(screen.queryByText('Linked Edition (12345)')).not.toBeInTheDocument();
     expect(confirm).toHaveBeenCalledWith(expect.stringContaining('the Works will remain'));
   } finally {
@@ -771,5 +819,53 @@ test('matches Wikipedia works with parenthetical work types to edition titles', 
     expect(screen.getByLabelText('Search book editions')).toHaveValue('The Red Badge of Courage');
   } finally {
     global.fetch = originalFetch;
+  }
+});
+
+test('edits a reviewed Work category and adds or removes Work category types', async () => {
+  const originalFetch = global.fetch;
+  const confirm = jest.spyOn(window, 'confirm').mockReturnValue(true);
+  const calls = [];
+  const work = { id: 'work-1', title: 'Collected Poems', workType: 'Novel', releaseDate: '1900', authors: [author], books: [] };
+  global.fetch = jest.fn(async (url, options = {}) => {
+    calls.push({ url, options });
+    if (url === '/api/catalog/authors') return { ok: true, json: async () => [author] };
+    if (url === '/api/catalog/works') return { ok: true, json: async () => [work] };
+    if (url === '/api/catalog/work-types' && options.method === 'POST') return { ok: true, json: async () => ({ name: 'Drama' }) };
+    if (url === '/api/catalog/work-types') return { ok: true, json: async () => ['Novel', 'Poetry'] };
+    if (url === '/api/catalog/works/work-1') return { ok: true, json: async () => ({}) };
+    if (url === '/api/catalog/work-types/Poetry' && options.method === 'DELETE') {
+      return { ok: true, json: async () => ({ uncategorizedCount: 1 }) };
+    }
+    throw new Error(`Unexpected request: ${url}`);
+  });
+
+  try {
+    render(<WorkCatalog onBack={jest.fn()} />);
+    fireEvent.click(await screen.findByRole('button', { name: 'Edit category' }));
+    fireEvent.change(screen.getByLabelText('Category'), { target: { value: 'Poetry' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Save category' }));
+    await waitFor(() => expect(calls).toContainEqual(expect.objectContaining({
+      url: '/api/catalog/works/work-1',
+      options: expect.objectContaining({ method: 'PUT', body: JSON.stringify({ workType: 'Poetry' }) })
+    })));
+
+    fireEvent.change(screen.getByLabelText('New Work category'), { target: { value: 'Drama' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Add' }));
+    await waitFor(() => expect(calls).toContainEqual(expect.objectContaining({
+      url: '/api/catalog/work-types',
+      options: expect.objectContaining({ method: 'POST', body: JSON.stringify({ name: 'Drama' }) })
+    })));
+
+    fireEvent.click(screen.getByRole('button', { name: 'Remove Poetry category' }));
+    await waitFor(() => expect(calls).toContainEqual(expect.objectContaining({
+      url: '/api/catalog/work-types/Poetry',
+      options: expect.objectContaining({ method: 'DELETE' })
+    })));
+    expect(await screen.findByText('Removed “Poetry”. 1 Work(s) are now Uncategorized.')).toBeInTheDocument();
+    expect(confirm).toHaveBeenCalledWith(expect.stringContaining('will become Uncategorized'));
+  } finally {
+    global.fetch = originalFetch;
+    confirm.mockRestore();
   }
 });

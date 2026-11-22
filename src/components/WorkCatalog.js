@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import Modal from 'react-bootstrap/Modal';
 import { apiUrl } from '../apiUrl';
 import { groupCatalogAuthors } from '../authorCatalog';
 import { getSurname } from './AuthorWorksView';
@@ -64,9 +65,15 @@ const fetchJson = async (path, options) => {
   return payload;
 };
 
+const DEFAULT_WORK_TYPES = ['Novel', 'Nonfiction', 'Short Story'];
+
 const WorkCatalog = ({ onBack }) => {
   const [authors, setAuthors] = useState([]);
   const [works, setWorks] = useState([]);
+  const [workTypes, setWorkTypes] = useState(DEFAULT_WORK_TYPES);
+  const [newWorkType, setNewWorkType] = useState('');
+  const [editingExistingWork, setEditingExistingWork] = useState(null);
+  const [editingExistingWorkType, setEditingExistingWorkType] = useState('');
   const [selectedAuthorId, setSelectedAuthorId] = useState('');
   const [authorFilter, setAuthorFilter] = useState('');
   const [wikipediaCandidates, setWikipediaCandidates] = useState([]);
@@ -125,6 +132,13 @@ const WorkCatalog = ({ onBack }) => {
 
   useEffect(() => {
     loadCatalog().catch((loadError) => setError(loadError.message || 'Unable to load the work catalog.'));
+    fetchJson('/api/catalog/work-types')
+      .then((categories) => {
+        if (Array.isArray(categories) && categories.every((category) => typeof category === 'string')) {
+          setWorkTypes(categories);
+        }
+      })
+      .catch(() => {});
   }, []);
 
   const searchWikipediaAuthors = async (author = selectedAuthor) => {
@@ -427,6 +441,76 @@ const WorkCatalog = ({ onBack }) => {
     }
   };
 
+  const beginExistingWorkEdit = (work) => {
+    setEditingExistingWork(work);
+    setEditingExistingWorkType(work.workType || '');
+    setError('');
+  };
+
+  const saveExistingWorkEdit = async () => {
+    if (!editingExistingWork) return;
+    setLoading(true);
+    setError('');
+    try {
+      const workType = editingExistingWorkType || null;
+      await fetchJson(`/api/catalog/works/${encodeURIComponent(editingExistingWork.id)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ workType })
+      });
+      setWorks((current) => current.map((work) => (
+        work.id === editingExistingWork.id ? { ...work, workType } : work
+      )));
+      setEditingExistingWork(null);
+    } catch (saveError) {
+      setError(saveError.message || 'Unable to update the Work category.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const addWorkType = async (event) => {
+    event.preventDefault();
+    const name = newWorkType.trim().replace(/\s+/g, ' ');
+    if (!name) return;
+    setLoading(true);
+    setError('');
+    setStatus('');
+    try {
+      const result = await fetchJson('/api/catalog/work-types', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name })
+      });
+      setWorkTypes((current) => current.includes(result.name) ? current : [...current, result.name]);
+      setNewWorkType('');
+      setStatus(`Added Work category “${result.name}”.`);
+    } catch (saveError) {
+      setError(saveError.message || 'Unable to add the Work category.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const removeWorkType = async (name) => {
+    if (!window.confirm(`Remove “${name}” from Work categories? Works in this category will become Uncategorized.`)) return;
+    setLoading(true);
+    setError('');
+    setStatus('');
+    try {
+      const result = await fetchJson(`/api/catalog/work-types/${encodeURIComponent(name)}`, { method: 'DELETE' });
+      setWorkTypes((current) => current.filter((category) => category !== name));
+      setWorks((current) => current.map((work) => (
+        work.workType === name ? { ...work, workType: null } : work
+      )));
+      setStatus(`Removed “${name}”. ${result.uncategorizedCount || 0} Work(s) are now Uncategorized.`);
+    } catch (removeError) {
+      setError(removeError.message || 'Unable to remove the Work category.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const deleteBook = async (book) => {
     if (!book.uid) {
       setError('Cannot delete this edition because it is missing a stable identifier.');
@@ -656,9 +740,7 @@ const WorkCatalog = ({ onBack }) => {
                 onChange={(event) => setWorkType(event.target.value)}
               >
                 <option value="">Uncategorized</option>
-                <option value="Novel">Novel</option>
-                <option value="Nonfiction">Nonfiction</option>
-                <option value="Short Story">Short Story</option>
+                {workTypes.map((type) => <option key={type} value={type}>{type}</option>)}
               </select>
               <fieldset className="mb-3">
                 <legend className="form-label">Publication year</legend>
@@ -788,6 +870,39 @@ const WorkCatalog = ({ onBack }) => {
           )}
 
           <div className="border rounded bg-white p-3">
+            <h5>Work categories</h5>
+            <form className="input-group mb-3" onSubmit={addWorkType}>
+              <input
+                className="form-control"
+                aria-label="New Work category"
+                value={newWorkType}
+                maxLength={40}
+                onChange={(event) => setNewWorkType(event.target.value)}
+                placeholder="Add a category"
+              />
+              <button className="btn btn-outline-primary" type="submit" disabled={loading || !newWorkType.trim()}>
+                Add
+              </button>
+            </form>
+            <ul className="list-group mb-3" aria-label="Work categories">
+              {workTypes.map((type) => (
+                <li className="list-group-item d-flex justify-content-between align-items-center gap-2" key={type}>
+                  <span>{type}</span>
+                  <button
+                    className="btn btn-sm btn-outline-danger"
+                    type="button"
+                    aria-label={`Remove ${type} category`}
+                    onClick={() => removeWorkType(type)}
+                    disabled={loading}
+                  >
+                    Remove
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="border rounded bg-white p-3">
             <h5>Reviewed Works ({works.length})</h5>
             {works.length ? (
               <div className="list-group">
@@ -826,6 +941,9 @@ const WorkCatalog = ({ onBack }) => {
                         )}
                       </div>
                       <div className="d-flex flex-column gap-1 align-self-start">
+                        <button className="btn btn-sm btn-outline-primary" type="button" onClick={() => beginExistingWorkEdit(work)} disabled={loading}>
+                          Edit category
+                        </button>
                         <button
                           className="btn btn-sm btn-outline-primary"
                           type="button"
@@ -879,6 +997,31 @@ const WorkCatalog = ({ onBack }) => {
           </div>
         </div>
       </div>
+
+      <Modal show={Boolean(editingExistingWork)} onHide={() => setEditingExistingWork(null)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Work category</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p className="mb-2">{editingExistingWork?.title}</p>
+          <label className="form-label" htmlFor="catalog-edit-work-type">Category</label>
+          <select
+            id="catalog-edit-work-type"
+            className="form-select"
+            value={editingExistingWorkType}
+            onChange={(event) => setEditingExistingWorkType(event.target.value)}
+          >
+            <option value="">Uncategorized</option>
+            {workTypes.map((type) => <option key={type} value={type}>{type}</option>)}
+          </select>
+        </Modal.Body>
+        <Modal.Footer>
+          <button className="btn btn-outline-secondary" type="button" onClick={() => setEditingExistingWork(null)}>Cancel</button>
+          <button className="btn btn-primary" type="button" onClick={saveExistingWorkEdit} disabled={loading}>
+            {loading ? 'Saving...' : 'Save category'}
+          </button>
+        </Modal.Footer>
+      </Modal>
     </section>
   );
 };

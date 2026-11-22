@@ -94,3 +94,51 @@ test('shows author Works grouped by type, first edition covers, and the edition 
     global.fetch = originalFetch;
   }
 });
+
+test('edits author details and recategorizes a Work using saved category types', async () => {
+  const originalFetch = global.fetch;
+  const calls = [];
+  const work = {
+    id: 'work-edit',
+    title: 'The Raven',
+    workType: 'Novel',
+    releaseDate: '1845',
+    authors: [author],
+    books: []
+  };
+  global.fetch = jest.fn(async (url, options = {}) => {
+    calls.push({ url, options });
+    if (url === '/api/catalog/works') return { ok: true, json: async () => [work] };
+    if (url === '/api/catalog/work-types') return { ok: true, json: async () => ['Novel', 'Poetry'] };
+    if (url.startsWith('/api/catalog/wikipedia/summary')) return { ok: true, json: async () => ({}) };
+    if (url === '/api/catalog/authors/author-1' || url === '/api/catalog/works/work-edit') {
+      return { ok: true, json: async () => ({}) };
+    }
+    throw new Error(`Unexpected request: ${url}`);
+  });
+
+  try {
+    render(<AuthorWorksView author={author} />);
+    fireEvent.click(await screen.findByRole('button', { name: 'Edit author' }));
+    fireEvent.change(screen.getByLabelText('Author name'), { target: { value: 'Edgar Allan Poe' } });
+    fireEvent.change(screen.getByLabelText('Sort name'), { target: { value: 'Poe, Edgar Allan' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Save author' }));
+    await waitFor(() => expect(calls).toContainEqual(expect.objectContaining({
+      url: '/api/catalog/authors/author-1',
+      options: expect.objectContaining({
+        method: 'PUT',
+        body: JSON.stringify({ authorIds: ['author-1'], name: 'Edgar Allan Poe', sortName: 'Poe, Edgar Allan' })
+      })
+    })));
+
+    fireEvent.click((await screen.findAllByRole('button', { name: 'Edit The Raven category' }))[0]);
+    fireEvent.change(screen.getByLabelText('Category'), { target: { value: 'Poetry' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Save category' }));
+    await waitFor(() => expect(calls).toContainEqual(expect.objectContaining({
+      url: '/api/catalog/works/work-edit',
+      options: expect.objectContaining({ method: 'PUT', body: JSON.stringify({ workType: 'Poetry' }) })
+    })));
+  } finally {
+    global.fetch = originalFetch;
+  }
+});

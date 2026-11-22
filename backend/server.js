@@ -15,7 +15,10 @@ const {
   getEditionAuthorNames,
   syncEditionAuthors,
   syncBookPublicationYears,
-  WORK_TYPES
+  getWorkCategories,
+  addWorkCategory,
+  normalizeWorkCategory,
+  removeWorkCategory
 } = require('./workCatalog');
 const { fetchAllSupabaseRows } = require('./supabasePagination');
 
@@ -1007,6 +1010,94 @@ app.get('/api/catalog/authors', async (_req, res) => {
   }
 });
 
+app.put('/api/catalog/authors/:id', async (req, res) => {
+  const authorIds = [...new Set((Array.isArray(req.body?.authorIds) ? req.body.authorIds : [req.params.id])
+    .map((id) => String(id || '').trim()).filter(Boolean))];
+  const name = String(req.body?.name || '').trim().replace(/\s+/g, ' ');
+  const sortName = String(req.body?.sortName || '').trim().replace(/\s+/g, ' ');
+  if (!name || name.length > 200 || sortName.length > 200 || !authorIds.includes(req.params.id)) {
+    return res.status(400).json({ error: 'A valid author name and author IDs are required.' });
+  }
+  try {
+    if (useSupabase) {
+      const filter = encodeURIComponent(`in.(${authorIds.join(',')})`);
+      const existing = await supabaseRequest(`authors?id=${filter}&select=id`);
+      if (existing.length !== authorIds.length) return res.status(404).json({ error: 'One or more authors were not found.' });
+      await supabaseRequest(`authors?id=${filter}`, {
+        method: 'PATCH',
+        headers: { Prefer: 'return=minimal' },
+        body: JSON.stringify({ name, sort_name: sortName, updated_at: new Date().toISOString() })
+      });
+      return res.json({ id: req.params.id, name, sortName });
+    }
+    const placeholders = authorIds.map(() => '?').join(', ');
+    const existing = db.prepare(`SELECT id FROM authors WHERE id IN (${placeholders})`).all(...authorIds);
+    if (existing.length !== authorIds.length) return res.status(404).json({ error: 'One or more authors were not found.' });
+    db.prepare(`UPDATE authors SET name = ?, sort_name = ?, updated_at = CURRENT_TIMESTAMP WHERE id IN (${placeholders})`)
+      .run(name, sortName, ...authorIds);
+    return res.json({ id: req.params.id, name, sortName });
+  } catch (error) {
+    if (useSupabase && /authors/i.test(error.message)) return res.status(503).json({ error: supabaseWorkCatalogMigrationMessage });
+    console.error('Failed to update catalog author:', error);
+    return res.status(502).json({ error: 'Failed to update catalog author.' });
+  }
+});
+
+app.get('/api/catalog/work-types', async (_req, res) => {
+  try {
+    if (useSupabase) {
+      const rows = await supabaseRequest('work_types?select=name&order=sort_order.asc,name.asc');
+      return res.json(rows.map((row) => row.name));
+    }
+    return res.json(getWorkCategories(db));
+  } catch (error) {
+    if (useSupabase && /work_types/i.test(error.message)) return res.status(503).json({ error: supabaseWorkCatalogMigrationMessage });
+    console.error('Failed to load Work categories:', error);
+    return res.status(502).json({ error: 'Failed to load Work categories.' });
+  }
+});
+
+app.post('/api/catalog/work-types', async (req, res) => {
+  try {
+    const name = normalizeWorkCategory(req.body?.name);
+    if (useSupabase) {
+      const existing = await supabaseRequest('work_types?select=sort_order&order=sort_order.desc&limit=1');
+      const rows = await supabaseRequest('work_types', {
+        method: 'POST',
+        headers: { Prefer: 'return=representation' },
+        body: JSON.stringify({ name, sort_order: (existing[0]?.sort_order ?? -1) + 1 })
+      });
+      return res.status(201).json({ name: rows[0]?.name || name });
+    }
+    return res.status(201).json({ name: addWorkCategory(db, name) });
+  } catch (error) {
+    if (/duplicate key|unique constraint|SQLITE_CONSTRAINT_UNIQUE/i.test(error.message)) {
+      return res.status(409).json({ error: 'That Work category already exists.' });
+    }
+    if (useSupabase && /work_types/i.test(error.message)) return res.status(503).json({ error: supabaseWorkCatalogMigrationMessage });
+    return res.status(400).json({ error: error.message || 'Unable to add Work category.' });
+  }
+});
+
+app.delete('/api/catalog/work-types/:name', async (req, res) => {
+  try {
+    const name = normalizeWorkCategory(req.params.name);
+    if (useSupabase) {
+      const removed = await supabaseRequest('rpc/remove_work_category', {
+        method: 'POST',
+        body: JSON.stringify({ p_name: name })
+      });
+      if (removed == null) return res.status(404).json({ error: 'Work category not found.' });
+      return res.json({ name, uncategorizedCount: Number(removed) || 0 });
+    }
+    return res.json({ name, uncategorizedCount: removeWorkCategory(db, name) });
+  } catch (error) {
+    if (/not found/i.test(error.message)) return res.status(404).json({ error: error.message });
+    if (useSupabase && /work_types|remove_work_category/i.test(error.message)) return res.status(503).json({ error: supabaseWorkCatalogMigrationMessage });
+    return res.status(400).json({ error: error.message || 'Unable to remove Work category.' });
+  }
+});
+
 app.delete('/api/catalog/authors', async (req, res) => {
   const authorIds = [...new Set(
     (Array.isArray(req.body?.authorIds) ? req.body.authorIds : [])
@@ -1250,8 +1341,16 @@ app.post('/api/catalog/works', async (req, res) => {
   if (!releaseDate || !Number.isInteger(datePrecision) || datePrecision < 6 || datePrecision > 11) {
     return res.status(400).json({ error: 'The release year must include valid source precision between 6 and 11.' });
   }
-  if (workType && !WORK_TYPES.includes(workType)) {
-    return res.status(400).json({ error: 'Work type must be Novel, Nonfiction, or Short Story.' });
+  try {
+    const categories = useSupabase
+      ? (await supabaseRequest('work_types?select=name')).map((category) => category.name)
+      : getWorkCategories(db);
+    if (workType && !categories.includes(workType)) {
+      return res.status(400).json({ error: 'Select a category from the Work category list.' });
+    }
+  } catch (error) {
+    if (useSupabase && /work_types/i.test(error.message)) return res.status(503).json({ error: supabaseWorkCatalogMigrationMessage });
+    return res.status(502).json({ error: 'Failed to load Work categories.' });
   }
   if (sourceType === 'wikidata' && !/^[+-]\d{4,}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(releaseDate)) {
     return res.status(400).json({ error: 'Release dates must use the Wikidata time format.' });
@@ -1356,6 +1455,35 @@ app.post('/api/catalog/works/:id/relationships', async (req, res) => {
     if (/not found/i.test(error.message)) return res.status(404).json({ error: error.message });
     console.error('Failed to link authors or editions to a Work:', error);
     return res.status(400).json({ error: error.message || 'Unable to link the selected records.' });
+  }
+});
+
+app.put('/api/catalog/works/:id', async (req, res) => {
+  const workType = String(req.body?.workType || '').trim() || null;
+  try {
+    const categories = useSupabase
+      ? (await supabaseRequest('work_types?select=name')).map((category) => category.name)
+      : getWorkCategories(db);
+    if (workType && !categories.includes(workType)) {
+      return res.status(400).json({ error: 'Select a category from the Work category list.' });
+    }
+    if (useSupabase) {
+      const rows = await supabaseRequest(`works?id=eq.${encodeURIComponent(req.params.id)}&select=id`, {
+        method: 'PATCH',
+        headers: { Prefer: 'return=representation' },
+        body: JSON.stringify({ work_type: workType, updated_at: new Date().toISOString() })
+      });
+      if (!rows.length) return res.status(404).json({ error: 'Work not found.' });
+      return res.json({ id: req.params.id, workType });
+    }
+    const result = db.prepare('UPDATE works SET work_type = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
+      .run(workType, req.params.id);
+    if (!result.changes) return res.status(404).json({ error: 'Work not found.' });
+    return res.json({ id: req.params.id, workType });
+  } catch (error) {
+    if (useSupabase && /work_types|works/i.test(error.message)) return res.status(503).json({ error: supabaseWorkCatalogMigrationMessage });
+    console.error('Failed to update Work category:', error);
+    return res.status(502).json({ error: 'Failed to update Work category.' });
   }
 });
 
