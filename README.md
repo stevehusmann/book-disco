@@ -2,6 +2,17 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Local Development With Supabase
+
+The Supabase-backed API and React frontend can both run locally:
+
+1. Set `REACT_APP_SUPABASE_URL` and `REACT_APP_SUPABASE_ANON_KEY` in the repository-root `.env.local`. The URL should be your Supabase project URL; the key is the public anon/publishable key. The frontend uses these for Supabase Storage.
+2. Copy `backend/.env.example` to `backend/.env`, then set `SUPABASE_URL` to the same project URL and `SUPABASE_SERVICE_ROLE_KEY` to your private server-side key. Never put this private key in frontend environment variables.
+3. Ensure the required Supabase database migrations are applied; see [backend/README.md](./backend/README.md).
+4. Run `npm run dev:supabase` from the repository root.
+
+Open the frontend at [http://localhost:3000](http://localhost:3000). It proxies API requests to the local backend on port 4000. The existing `npm run dev` command still starts the SQLite-backed root server.
+
 ## Available Scripts
 
 In the project directory, you can run:

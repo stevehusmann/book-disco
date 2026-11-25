@@ -59,7 +59,8 @@ test('shows author Works grouped by type, first edition covers, and the edition 
       <AuthorWorksView
         author={author}
         onOpenSpineCrop={onOpenSpineCrop}
-        seriesOptions={[{ id: 'PCD', spineMode: 'pcd-crop' }]}
+        editMode={false}
+        seriesOptions={[{ id: 'PCD', name: 'Penguin Classics Deluxe', spineMode: 'pcd-crop' }]}
       />
     );
 
@@ -81,6 +82,7 @@ test('shows author Works grouped by type, first edition covers, and the edition 
     const dialog = screen.getByRole('dialog');
     expect(dialog.querySelectorAll('.book')).toHaveLength(2);
     expect(dialog.querySelectorAll('.book-container-no-hover')).toHaveLength(2);
+    expect(within(dialog).getByText('Series: Penguin Classics Deluxe')).toBeInTheDocument();
     expect(within(dialog).getByText('Work publication year: 1843/1845')).toBeInTheDocument();
     expect(within(dialog).getAllByText('Earlier Work First Edition')).not.toHaveLength(0);
     expect(within(dialog).getAllByText('Earlier Work Reprint')).not.toHaveLength(0);
@@ -90,6 +92,56 @@ test('shows author Works grouped by type, first edition covers, and the edition 
     expect(onOpenSpineCrop).toHaveBeenCalledWith('edition-first');
     expect(within(dialog).getByText('ISBN 111')).toBeInTheDocument();
     await waitFor(() => expect(global.fetch).toHaveBeenCalledWith('/api/catalog/wikipedia/summary?pageTitle=A%20Christmas%20Carol'));
+  } finally {
+    global.fetch = originalFetch;
+  }
+});
+
+test('hides edition date, Work year, and ISBN in Edit Mode but keeps Series visible', async () => {
+  const originalFetch = global.fetch;
+  const edition = {
+    uid: 'edition-edit-mode',
+    title: 'Linked Edition',
+    isbn: '9781234567890',
+    image: 'linked-edition.jpg',
+    publicationDate: 'Sep-20',
+    book: {
+      Series: 'Oxford Worlds Classics',
+      SeriesId: 'OWC',
+      PublicationYear: '1847'
+    }
+  };
+  const work = {
+    id: 'work-edit-mode',
+    title: 'Linked Work',
+    releaseDate: '1847',
+    authors: [author],
+    books: [edition]
+  };
+  global.fetch = jest.fn(async (url) => {
+    if (url === '/api/catalog/works') return { ok: true, json: async () => [work] };
+    if (url === '/api/catalog/work-types') return { ok: true, json: async () => ['Novel'] };
+    if (url === '/api/catalog/wikipedia/summary?pageTitle=Linked%20Work') {
+      return { ok: true, json: async () => ({}) };
+    }
+    throw new Error(`Unexpected request: ${url}`);
+  });
+
+  try {
+    render(
+      <AuthorWorksView
+        author={author}
+        editMode
+        seriesOptions={[{ id: 'OWC', name: 'Oxford Worlds Classics' }]}
+      />
+    );
+
+    fireEvent.click(await screen.findByRole('button', { name: 'Open Linked Work, 1847' }));
+    const dialog = await screen.findByRole('dialog');
+    expect(await within(dialog).findByText('Series: Oxford Worlds Classics')).toBeInTheDocument();
+    expect(within(dialog).queryByText('Sep-20')).not.toBeInTheDocument();
+    expect(within(dialog).queryByText('Work publication year: 1847')).not.toBeInTheDocument();
+    expect(within(dialog).queryByText('ISBN 9781234567890')).not.toBeInTheDocument();
   } finally {
     global.fetch = originalFetch;
   }

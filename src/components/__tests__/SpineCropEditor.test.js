@@ -2,6 +2,7 @@ import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { getSupabaseClient } from '../../supabaseClient';
 import SpineCropEditor from '../SpineCropEditor';
+import { getBookSpineThickness } from '../bookSpineSizing';
 
 jest.mock('../../supabaseClient', () => ({
   getSupabaseClient: jest.fn()
@@ -25,6 +26,20 @@ beforeEach(() => {
 });
 
 describe('SpineCropEditor save feedback', () => {
+  test('curves high-page spine thickness to 60% of linear at 2,000 pages', () => {
+    const coverWidth = 100;
+    const linearThickness = coverWidth * 2000 * 0.000497;
+    const curvedThickness = getBookSpineThickness({
+      coverWidth,
+      pagination: 2000,
+      seriesId: 'pc'
+    });
+
+    expect(curvedThickness / linearThickness).toBeCloseTo(0.6, 1);
+    expect(getBookSpineThickness({ coverWidth, pagination: 4000, seriesId: 'pc' }))
+      .toBeGreaterThan(curvedThickness);
+  });
+
   test('shows saved state for each book and the current session total', () => {
     const books = [
       { ISBN: 'saved-book', Title: 'Saved Book', SeriesId: 'PCD', SpineCrop: { src: '/cover.jpg' } },
@@ -132,10 +147,10 @@ describe('SpineCropEditor save feedback', () => {
     expect(previewBook).toHaveClass('book', 'series-pcd');
     expect(previewBook).toHaveStyle('width: 226px');
     expect(previewBook).toHaveStyle({
-      transform: 'rotateY(30deg) translateZ(30px) translateX(0) translateZ(-47px)',
+      transform: 'rotateY(30deg) translateZ(30px) translateX(0) translateZ(-46px)',
       height: '339px'
     });
-    expect(previewBook.querySelector('.spine-crop-preview-front')).toHaveStyle('transform: translateZ(46px)');
+    expect(previewBook.querySelector('.spine-crop-preview-front')).toHaveStyle('transform: translateZ(45px)');
   });
 
   test('matches the main book aspect ratio for built-in and configured series', () => {

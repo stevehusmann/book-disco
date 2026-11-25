@@ -1,4 +1,3 @@
-import './App.css';
 import { useState, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -7,6 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css';
 
 import TitleView from './components/TitleView';
 import AuthorView from './components/AuthorView';
@@ -60,6 +60,7 @@ const App = () => {
   const [spineBooks, setSpineBooks] = useState([]);
   const [spineCropBookId, setSpineCropBookId] = useState('');
   const [view, setView] = useState('library');
+  const [isEditMode, setIsEditMode] = useState(false);
   const [page, setPage] = useState(0);
   const pageSize = 80;
   const [pageCount, setPageCount] = useState(1);
@@ -76,6 +77,8 @@ const App = () => {
   const [seriesOptions, setSeriesOptions] = useState([]);
   const [catalogAuthors, setCatalogAuthors] = useState([]);
   const [selectedCatalogAuthorId, setSelectedCatalogAuthorId] = useState('');
+  const [bookWorkLinks, setBookWorkLinks] = useState(() => new Map());
+  const [initialWorkId, setInitialWorkId] = useState('');
   const [catalogAuthorsError, setCatalogAuthorsError] = useState('');
   const [showAddBookModal, setShowAddBookModal] = useState(false);
   const [showUndisplayedBooksModal, setShowUndisplayedBooksModal] = useState(false);
@@ -149,6 +152,31 @@ const App = () => {
     return () => controller.abort();
   }, [view]);
 
+  useEffect(() => {
+    if (view !== 'library') return undefined;
+    const controller = new AbortController();
+    fetch(apiUrl('/api/catalog/book-work-links'), { signal: controller.signal })
+      .then(async (response) => {
+        const result = await response.json();
+        if (!response.ok) throw new Error(result?.error || `Work link query failed (${response.status}).`);
+        return result;
+      })
+      .then((result) => {
+        const linksByBook = new Map();
+        (Array.isArray(result) ? result : []).forEach(({ bookUid, workId, authorId }) => {
+          if (!bookUid || !workId || !authorId) return;
+          const links = linksByBook.get(String(bookUid)) || [];
+          links.push({ workId, authorId });
+          linksByBook.set(String(bookUid), links);
+        });
+        setBookWorkLinks(linksByBook);
+      })
+      .catch((error) => {
+        if (error.name !== 'AbortError') setBookWorkLinks(new Map());
+      });
+    return () => controller.abort();
+  }, [view]);
+
   const refreshSeriesOptions = async () => {
     const response = await fetch(apiUrl('/api/series'));
     if (!response.ok) throw new Error(`Series query failed (${response.status}).`);
@@ -158,6 +186,14 @@ const App = () => {
 
   const currentPageBooks = books;
   const selectedCatalogAuthor = catalogAuthors.find((author) => author.id === selectedCatalogAuthorId);
+  const openLinkedWork = ({ workId, authorId }) => {
+    const workAuthor = catalogAuthors.find((author) => (
+      author.id === authorId || (author.aliasIds || []).includes(authorId)
+    ));
+    if (!workId || !workAuthor) return;
+    setInitialWorkId(workId);
+    setSelectedCatalogAuthorId(workAuthor.id);
+  };
   const updateCatalogAuthor = (updatedAuthor) => {
     setCatalogAuthors((current) => current.map((author) => (
       author.id === updatedAuthor.id
@@ -355,8 +391,8 @@ const App = () => {
 
   return (
     <>
-      <Container fluid className="bg-gray px-0">
-        <Container className="pt-5 bg-gray">
+      <Container fluid className="library-app px-0">
+        <Container className="library-shell">
             {view === 'spine-crop' ? (
               <Row>
                 <Col xs={12}>
@@ -372,8 +408,16 @@ const App = () => {
             ) : view === 'work-catalog' ? (
               <WorkCatalog onBack={() => setView('library')} />
             ) : (
-              <Row>
-                <Col xs={12} lg={2} className="d-flex flex-column align-items-stretch">
+              <Row className="library-layout">
+                <Col xs={12} lg={2} className="library-sidebar d-flex flex-column align-items-stretch">
+                  <button
+                    type="button"
+                    className={`btn edit-mode-toggle ${isEditMode ? 'btn-primary' : 'btn-outline-primary'} mb-3`}
+                    aria-pressed={isEditMode}
+                    onClick={() => setIsEditMode((current) => !current)}
+                  >
+                    Edit Mode: {isEditMode ? 'On' : 'Off'}
+                  </button>
                   <div className="">
                     <Form onSubmit={handleSearchSubmit} className="mb-3">
                       <Form.Label htmlFor="searchInput">Search:</Form.Label>
@@ -406,7 +450,10 @@ const App = () => {
                         id="catalogAuthorSelect"
                         className="form-select form-select-sm"
                         value={selectedCatalogAuthorId}
-                        onChange={(event) => setSelectedCatalogAuthorId(event.target.value)}
+                        onChange={(event) => {
+                          setInitialWorkId('');
+                          setSelectedCatalogAuthorId(event.target.value);
+                        }}
                       >
                         <option value="">Select an author</option>
                         {orderedCatalogAuthors.map((author) => (
@@ -417,38 +464,40 @@ const App = () => {
                     </div>
                   </div>
                   <div>
-                    <div className="d-grid gap-2 mb-3">
+                    {isEditMode && <div className="library-actions d-grid gap-2 mb-3">
                       <button className="btn btn-outline-primary" onClick={openSpineCropPage} disabled={isLoadingSpineBooks}>{isLoadingSpineBooks ? 'Loading Spine Books...' : 'Open Spine Crop Tool'}</button>
                       {spineBooksError && <div className="small text-danger">{spineBooksError}</div>}
                       <button className="btn btn-outline-secondary" onClick={openSeriesManager}>Manage Series</button>
                       <button className="btn btn-outline-primary" onClick={() => setView('work-catalog')}>Manage Author / Work Catalog</button>
                       <button className="btn btn-outline-danger" onClick={openUndisplayedBooksPanel}>Manage Undisplayed Books</button>
                       <button className="btn btn-outline-success" onClick={openAddBookModal}>Add Book</button>
-                    </div>
+                    </div>}
                   </div>
                 </Col>
-                <Col xs={12} lg={10}>
+                <Col xs={12} lg={10} className="library-content">
                   {selectedCatalogAuthor ? (
-                    <AuthorWorksView author={selectedCatalogAuthor} setBooks={setBooks} seriesOptions={seriesOptions} onOpenSpineCrop={openSpineCropPage} onAuthorUpdated={updateCatalogAuthor} />
+                    <AuthorWorksView author={selectedCatalogAuthor} setBooks={setBooks} seriesOptions={seriesOptions} onOpenSpineCrop={openSpineCropPage} onAuthorUpdated={updateCatalogAuthor} initialWorkId={initialWorkId} editMode={isEditMode} onClearAuthor={() => { setInitialWorkId(''); setSelectedCatalogAuthorId(''); }} />
                   ) : (
                   <>
-                  <Row className="d-flex justify-content-between align-items-center mb-3">
+                  <Row className="library-page-toolbar d-flex justify-content-between align-items-center mb-3">
                     <Col xs={12} lg={6} className="d-flex align-items-center">
                       <h4 className="mb-0">{isLoadingBooks ? 'Loading books...' : `${totalBooks} Books`}</h4>
                     </Col>
                     <Col xs={12} lg={6} className="d-flex justify-content-end align-items-center">
-                      <button className="btn btn-secondary me-2" onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0 || isLoadingBooks}>Back</button>
-                      <span className="me-2">Page {page + 1} / {pageCount}</span>
-                      <button className="btn btn-secondary" onClick={() => setPage(p => Math.min(pageCount - 1, p + 1))} disabled={page >= pageCount - 1 || isLoadingBooks}>Next</button>
+                      <div className="library-toolbar-actions d-flex justify-content-end align-items-center flex-wrap gap-2">
+                        <button className="btn btn-secondary" onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0 || isLoadingBooks}>Back</button>
+                        <span>Page {page + 1} / {pageCount}</span>
+                        <button className="btn btn-secondary" onClick={() => setPage(p => Math.min(pageCount - 1, p + 1))} disabled={page >= pageCount - 1 || isLoadingBooks}>Next</button>
+                      </div>
                     </Col>
                   </Row>
                   {booksError && <div className="alert alert-danger" role="alert">{booksError}</div>}
                   <hr></hr>
                   <Row className="d-flex">
                     {!isLoadingBooks && !booksError && effectiveSortOption.startsWith('author') ? (
-                      <AuthorView books={currentPageBooks} pageIndex={page * pageSize} setBooks={setBooks} seriesOptions={seriesOptions} onDeleteBook={deleteBookRecord} onOpenSpineCrop={openSpineCropPage} />
+                      <AuthorView books={currentPageBooks} pageIndex={page * pageSize} setBooks={setBooks} seriesOptions={seriesOptions} onDeleteBook={deleteBookRecord} onOpenSpineCrop={openSpineCropPage} bookWorkLinks={bookWorkLinks} onOpenLinkedWork={openLinkedWork} editMode={isEditMode} />
                     ) : !isLoadingBooks && !booksError ? (
-                          <TitleView books={currentPageBooks} pageIndex={page * pageSize} mobileResetKey={mobileResetKey} setBooks={setBooks} seriesOptions={seriesOptions} onDeleteBook={deleteBookRecord} onOpenSpineCrop={openSpineCropPage} />
+                          <TitleView books={currentPageBooks} pageIndex={page * pageSize} mobileResetKey={mobileResetKey} setBooks={setBooks} seriesOptions={seriesOptions} onDeleteBook={deleteBookRecord} onOpenSpineCrop={openSpineCropPage} bookWorkLinks={bookWorkLinks} onOpenLinkedWork={openLinkedWork} editMode={isEditMode} />
                     ) : null}
                   </Row>
                   </>

@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "dev:supabase": "node --env-file=.env server.js"
   },
   "dependencies": {
     "better-sqlite3": "^12.11.1",

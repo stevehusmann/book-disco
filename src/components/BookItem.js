@@ -64,11 +64,14 @@ const BookItem = ({
   setBooks,
   onDeleteBook,
   seriesOptions = [],
+  bookWorkLinks = new Map(),
+  onOpenLinkedWork,
   footer = null,
   onBookClick,
   bookAriaLabel,
   readOnly = false,
   compactMetadata = false,
+  editMode = true,
   showEditButton = false,
   onOpenSpineCrop,
   disableBookHover = false
@@ -77,6 +80,12 @@ const BookItem = ({
   const pagination = Number(book?.PAGINATION || 300);
   const series = (book?.SeriesId || book?.Series || '').toString();
   const seriesId = (book?.SeriesId || book?.Series || 'GEN').toString().replace(/\s+/g, '-').replace(/[^A-Za-z0-9-_]/g, '').toLowerCase();
+  const bookUid = String(book?._uid || book?.uid || book?.ISBN || book?.EAN || book?.Title || '');
+  const linkedWork = bookWorkLinks.get(bookUid)?.[0];
+  const handleBookClick = onBookClick || (linkedWork && onOpenLinkedWork
+    ? () => onOpenLinkedWork(linkedWork)
+    : undefined);
+  const linkedWorkAriaLabel = linkedWork ? `Open Work view for ${book.Title || 'this book'}` : undefined;
 
   const seriesMeta = seriesOptions.find((option) => option.id === (book?.SeriesId || ''));
   const canOpenSpineCrop = seriesMeta?.spineMode === 'pcd-crop'
@@ -87,6 +96,7 @@ const BookItem = ({
 
   const bookRef = useRef(null);
   const [thicknessWidth, setThicknessWidth] = useState(null);
+  const [bookLeftOffset, setBookLeftOffset] = useState(0);
   const [horizontalPadding, setHorizontalPadding] = useState(0);
   const [topPadding, setTopPadding] = useState(0);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -149,6 +159,22 @@ const BookItem = ({
         setHorizontalPadding(hPad);
         setTopPadding(tPad);
         setThicknessWidth(availableWidth - 2 * hPad);
+
+        const spineElement = el.querySelector('.book-spine');
+        const metadataElement = outerEl.parentElement?.querySelector('.book-meta');
+        if (spineElement && metadataElement) {
+          const spineRect = spineElement.getBoundingClientRect();
+          const metadataRect = metadataElement.getBoundingClientRect();
+          const currentOffset = Number.parseFloat(el.style.left) || 0;
+          el.style.left = `${currentOffset + 1}px`;
+          const shiftedSpineLeft = spineElement.getBoundingClientRect().left;
+          el.style.left = `${currentOffset}px`;
+          const horizontalScale = shiftedSpineLeft - spineRect.left;
+          if (Math.abs(horizontalScale) > 0.01) {
+            const nextOffset = currentOffset + (metadataRect.left - spineRect.left) / horizontalScale;
+            if (Math.abs(nextOffset - bookLeftOffset) > 0.25) setBookLeftOffset(nextOffset);
+          }
+        }
       } catch (e) {
         // ignore
       }
@@ -164,7 +190,7 @@ const BookItem = ({
     return () => {
       if (ro) ro.disconnect(); else window.removeEventListener('resize', measure);
     };
-  }, [seriesId, series, horizontalPaddingRatio, topPaddingRatio]);
+  }, [seriesId, series, horizontalPaddingRatio, topPaddingRatio, thickness, bookLeftOffset]);
 
 
 
@@ -243,23 +269,24 @@ const BookItem = ({
           {header ? header : <span style={{ visibility: 'hidden' }}>placeholder</span>}
         </div>)}
         <div
-          className={`book-stage-link${onBookClick ? ' book-stage-link-interactive' : ''}`}
-          onClick={onBookClick}
-          onKeyDown={onBookClick ? (event) => {
+          className={`book-stage-link${handleBookClick ? ' book-stage-link-interactive' : ''}`}
+          onClick={handleBookClick}
+          onKeyDown={handleBookClick ? (event) => {
             if (event.key === 'Enter' || event.key === ' ') {
               event.preventDefault();
-              onBookClick();
+              handleBookClick();
             }
           } : undefined}
-          role={onBookClick ? 'button' : undefined}
-          tabIndex={onBookClick ? 0 : undefined}
-          aria-label={onBookClick ? bookAriaLabel : undefined}
+          role={handleBookClick ? 'button' : undefined}
+          tabIndex={handleBookClick ? 0 : undefined}
+          aria-label={handleBookClick ? (bookAriaLabel || linkedWorkAriaLabel) : undefined}
         >
           <div className={`book-container${disableBookHover ? ' book-container-no-hover' : ''}`} style={containerPaddingStyle}>
             <div
               ref={bookRef}
               className={`book series-${seriesId}`}
               style={{
+                left: `${bookLeftOffset}px`,
                 aspectRatio: Number(seriesMeta?.heightWidthRatio) > 0 ? `1 / ${seriesMeta.heightWidthRatio}` : undefined,
                 '--book-depth-offset': `-${thickness || 0}px`
               }}
@@ -294,13 +321,13 @@ const BookItem = ({
           {!compactMetadata && book.Website && (
             <a target="_blank" href={book?.Website} rel="noopener noreferrer">Website</a>
           )}
-          {!compactMetadata && book.PAGINATION && (
+          {editMode && !compactMetadata && book.PAGINATION && (
             <div>{book.PAGINATION}p</div>
           )}
-          {!compactMetadata && book.PCversion && (
+          {editMode && !compactMetadata && book.PCversion && (
             <div>{book.PCversion}</div>
           )}
-          {!compactMetadata && thickness && (
+          {editMode && !compactMetadata && thickness && (
             <div>Thickness: {thickness}px</div>
           )}
           {!compactMetadata && hasBookDimensionOverride && (
@@ -308,7 +335,7 @@ const BookItem = ({
           )}
         </div>
         {footer}
-        {!readOnly && (!compactMetadata || showEditButton) && <div className="d-flex gap-2 mt-2">
+        {editMode && !readOnly && (!compactMetadata || showEditButton) && <div className="d-flex gap-2 mt-2">
           {(!compactMetadata || showEditButton) && (
             <Button
               type="button"

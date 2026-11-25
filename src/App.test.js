@@ -1,6 +1,10 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import App from './App';
 
+const enableEditMode = () => {
+  fireEvent.click(screen.getByRole('button', { name: 'Edit Mode: Off' }));
+};
+
 test('opens series management settings', async () => {
   const originalFetch = global.fetch;
   global.fetch = jest.fn((url) => Promise.resolve({
@@ -8,6 +12,7 @@ test('opens series management settings', async () => {
     json: async () => url === '/api/series' ? [] : { books: [], total: 0, pageCount: 1 }
   }));
   render(<App />);
+  enableEditMode();
   fireEvent.click(screen.getByRole('button', { name: 'Manage Series' }));
   expect(await screen.findByLabelText('Height / width ratio')).toBeInTheDocument();
   expect(screen.getByLabelText('Thickness multiplier')).toHaveValue(1);
@@ -37,6 +42,7 @@ test('lists and deletes books that are not displayed', async () => {
 
   try {
     render(<App />);
+    enableEditMode();
     fireEvent.click(screen.getByRole('button', { name: 'Manage Undisplayed Books' }));
     expect(await screen.findByText('Hidden Hardcover')).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Delete' }));
@@ -69,6 +75,7 @@ test('deletes a book record from the main library', async () => {
 
   try {
     render(<App />);
+    enableEditMode();
     fireEvent.click((await screen.findAllByRole('button', { name: 'Delete Example Library Book from database' }))[0]);
     expect(await screen.findByText('0 Books')).toBeInTheDocument();
     expect(global.fetch).toHaveBeenCalledWith('/api/books/library-book', { method: 'DELETE' });
@@ -76,6 +83,68 @@ test('deletes a book record from the main library', async () => {
   } finally {
     global.fetch = originalFetch;
     confirm.mockRestore();
+  }
+});
+
+test('opens the linked Work when an edition is clicked', async () => {
+  const author = {
+    id: 'dickens',
+    name: 'Charles Dickens',
+    sortName: 'Dickens, Charles',
+    hasLinkedWorks: true,
+    hasLinkedEditions: true
+  };
+  const book = {
+    _uid: 'edition-great-expectations',
+    Title: 'Great Expectations',
+    Author: 'Charles Dickens',
+    AlphaAuthor: 'Dickens',
+    Image: 'great-expectations.jpg',
+    SeriesId: 'PC',
+    BINDING: 'pbk',
+    PAGINATION: 500
+  };
+  const work = {
+    id: 'work-great-expectations',
+    title: 'Great Expectations',
+    releaseDate: '1861',
+    sourceUrl: 'https://en.wikipedia.org/wiki/Great_Expectations',
+    authors: [{ id: author.id, name: author.name }],
+    books: [{
+      uid: book._uid,
+      title: book.Title,
+      isbn: '111',
+      image: book.Image,
+      publicationDate: '1861',
+      book
+    }]
+  };
+  const originalFetch = global.fetch;
+  global.fetch = jest.fn((url) => {
+    if (url === '/api/catalog/book-work-links') {
+      return Promise.resolve({ ok: true, json: async () => [{ bookUid: book._uid, workId: work.id, authorId: author.id }] });
+    }
+    if (url === '/api/catalog/authors') return Promise.resolve({ ok: true, json: async () => [author] });
+    if (url === '/api/catalog/works') return Promise.resolve({ ok: true, json: async () => [work] });
+    if (url === '/api/catalog/work-types') return Promise.resolve({ ok: true, json: async () => ['Novel'] });
+    if (url.startsWith('/api/catalog/wikipedia/summary?pageTitle=')) {
+      return Promise.resolve({ ok: true, json: async () => ({ extract: 'A novel by Charles Dickens.' }) });
+    }
+    if (url === '/api/series') return Promise.resolve({ ok: true, json: async () => [] });
+    if (url.startsWith('/api/books?')) {
+      return Promise.resolve({ ok: true, json: async () => ({ books: [book], total: 1, pageCount: 1 }) });
+    }
+    return Promise.resolve({ ok: true, json: async () => ({}) });
+  });
+
+  try {
+    render(<App />);
+    await screen.findByRole('option', { name: 'Charles Dickens' });
+    fireEvent.click((await screen.findAllByRole('button', { name: 'Open Work view for Great Expectations' }))[0]);
+    expect(await screen.findByText('Linked editions (1)')).toBeInTheDocument();
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+  } finally {
+    global.fetch = originalFetch;
   }
 });
 
@@ -113,12 +182,17 @@ test('lists authors with linked editions alphabetically by surname and shows the
     render(<App />);
     expect(screen.getByLabelText('Sort:')).toHaveValue('author-asc');
     const authorSelect = await screen.findByLabelText('Authors:');
+    await screen.findByRole('option', { name: 'Charles Dickens' });
     const options = within(authorSelect).getAllByRole('option').map((option) => option.textContent);
     expect(options).toEqual(['Select an author', 'Charles Dickens', 'Herman Melville']);
 
     fireEvent.change(authorSelect, { target: { value: 'dickens' } });
     expect(await screen.findAllByText('Great Expectations')).not.toHaveLength(0);
     expect(await screen.findByAltText('Charles Dickens')).toHaveAttribute('src', 'dickens.jpg');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Clear author selection' }));
+    expect(screen.getByLabelText('Authors:')).toHaveValue('');
+    expect(await screen.findByText('0 Books')).toBeInTheDocument();
   } finally {
     global.fetch = originalFetch;
   }

@@ -17,7 +17,7 @@ const getBookKey = (book, fallbackIndex) => {
   );
 };
 
-const AuthorView = ({ books, pageIndex = 0, setBooks, seriesOptions = [], onDeleteBook, onOpenSpineCrop }) => {
+const AuthorView = ({ books, pageIndex = 0, setBooks, seriesOptions = [], onDeleteBook, onOpenSpineCrop, bookWorkLinks, onOpenLinkedWork, editMode = true }) => {
   const formatAuthor = (name) => {
     if (!name) return 'Unknown';
     const s = name.trim();
@@ -61,7 +61,7 @@ const AuthorView = ({ books, pageIndex = 0, setBooks, seriesOptions = [], onDele
           const bounds = authorBounds[key] || { first: -1, last: -1 };
           const header = i === bounds.first ? formatAuthor(key) : null;
           return (
-            <BookItem key={getBookKey(book, i)} book={book} index={i} pageIndex={pageIndex} header={header} layout="author" setBooks={setBooks} seriesOptions={seriesOptions} onDeleteBook={onDeleteBook} onOpenSpineCrop={onOpenSpineCrop} />
+            <BookItem key={getBookKey(book, i)} book={book} index={i} pageIndex={pageIndex} header={header} layout="author" setBooks={setBooks} seriesOptions={seriesOptions} bookWorkLinks={bookWorkLinks} onOpenLinkedWork={onOpenLinkedWork} onDeleteBook={onDeleteBook} onOpenSpineCrop={onOpenSpineCrop} editMode={editMode} />
           );
         })}
       </Row>
@@ -82,8 +82,11 @@ const AuthorView = ({ books, pageIndex = 0, setBooks, seriesOptions = [], onDele
                   colClass="author-mobile-col"
                   setBooks={setBooks}
                   seriesOptions={seriesOptions}
+                  bookWorkLinks={bookWorkLinks}
+                  onOpenLinkedWork={onOpenLinkedWork}
                   onDeleteBook={onDeleteBook}
                   onOpenSpineCrop={onOpenSpineCrop}
+                  editMode={editMode}
                 />
               ))}
             </Row>

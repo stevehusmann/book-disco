@@ -2,6 +2,9 @@ const OWC_PER_PAGE_REL = 0.00049;
 const BNC_PER_PAGE_REL = 0.00069;
 const PC_PER_PAGE_REL = 0.000497;
 const PCD_PER_PAGE_REL = 0.000684;
+const PAGE_THICKNESS_REFERENCE_PAGES = 2000;
+const PAGE_THICKNESS_FLOOR = 0.4;
+const PAGE_THICKNESS_CURVE_STRENGTH = 2;
 
 export const PHYSICAL_SERIES_SIZES = {
   container: { width: 7, height: 9 },
@@ -33,7 +36,12 @@ export const getBookSpineThickness = ({
           ? PC_PER_PAGE_REL
           : PC_PER_PAGE_REL;
 
-  return Math.ceil(coverWidth * pagination * thicknessPerPage * thicknessMultiplier);
+    const pageCount = Math.max(0, Number(pagination) || 0);
+    const pageRatio = pageCount / PAGE_THICKNESS_REFERENCE_PAGES;
+    const pageThicknessRatio = PAGE_THICKNESS_FLOOR
+      + (1 - PAGE_THICKNESS_FLOOR) / (1 + PAGE_THICKNESS_CURVE_STRENGTH * pageRatio ** 2);
+
+    return Math.ceil(coverWidth * pageCount * thicknessPerPage * thicknessMultiplier * pageThicknessRatio);
 };
 
 export const getMainBookRenderDimensions = (book, seriesOptions = [], stageWidth = 280) => {

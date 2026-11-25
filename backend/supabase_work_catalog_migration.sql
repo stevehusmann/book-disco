@@ -33,10 +33,22 @@ alter table public.works alter column wikidata_qid drop not null;
 alter table public.works add column if not exists source_type text not null default 'wikidata';
 alter table public.works add column if not exists source_id text;
 alter table public.works add column if not exists work_type text check (work_type in ('Novel', 'Nonfiction', 'Short Story') or work_type is null);
+alter table public.works drop constraint if exists works_work_type_check;
 update public.works set source_id = wikidata_qid where source_id is null and wikidata_qid is not null;
 alter table public.works alter column source_id set not null;
 create unique index if not exists works_source_id_idx
   on public.works (source_type, source_id);
+
+create table if not exists public.work_types (
+  name text primary key,
+  sort_order integer not null default 0
+);
+
+insert into public.work_types (name, sort_order) values
+  ('Novel', 0),
+  ('Nonfiction', 1),
+  ('Short Story', 2)
+on conflict (name) do nothing;
 
 create table if not exists public.author_works (
   author_id text not null references public.authors(id) on delete cascade,
@@ -57,8 +69,10 @@ alter table public.authors enable row level security;
 alter table public.works enable row level security;
 alter table public.author_works enable row level security;
 alter table public.book_works enable row level security;
+alter table public.work_types enable row level security;
 
 grant select, insert, update, delete on public.authors, public.works, public.author_works, public.book_works to service_role;
+grant select, insert, update, delete on public.work_types to service_role;
 
 create or replace function public.create_reviewed_work(
   p_work jsonb,
@@ -161,5 +175,31 @@ $$;
 
 revoke all on function public.add_work_relationships(uuid, text[], text[]) from public;
 grant execute on function public.add_work_relationships(uuid, text[], text[]) to service_role;
+
+create or replace function public.remove_work_category(p_name text)
+returns integer
+language plpgsql
+security invoker
+set search_path = public
+as $$
+declare
+  uncategorized_count integer;
+begin
+  if not exists (select 1 from public.work_types where name = p_name) then
+    return null;
+  end if;
+
+  update public.works
+  set work_type = null, updated_at = now()
+  where work_type = p_name;
+  get diagnostics uncategorized_count = row_count;
+
+  delete from public.work_types where name = p_name;
+  return uncategorized_count;
+end;
+$$;
+
+revoke all on function public.remove_work_category(text) from public;
+grant execute on function public.remove_work_category(text) to service_role;
 
 notify pgrst, 'reload schema';

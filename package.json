@@ -26,6 +26,7 @@
     "start": "react-scripts start",
     "server": "node server.js",
     "dev": "concurrently \"npm run server\" \"npm start\"",
+    "dev:supabase": "concurrently \"npm --prefix backend run dev:supabase\" \"npm start\"",
     "build": "react-scripts build",
     "precompute:pcversion": "node scripts/precompute_pc_version.js --limit=50",
     "precompute:pcversion:apply": "node scripts/precompute_pc_version.js --limit=50 --apply",

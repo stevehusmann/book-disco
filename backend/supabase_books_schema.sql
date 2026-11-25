@@ -74,13 +74,14 @@ as $$
       uid,
       book,
       lower(coalesce(nullif(book ->> 'AlphaTitle', ''), book ->> 'Title', '')) as sort_title,
-      lower(coalesce(nullif(book ->> 'AlphaAuthor', ''), book ->> 'Author', '')) as sort_author
+      lower(coalesce(nullif(btrim(book ->> 'AlphaAuthor'), ''), nullif(btrim(book ->> 'Author'), ''), '')) as sort_author
     from filtered
   ),
   page_rows as (
     select uid, book, sort_title, sort_author
     from sortable_rows
     order by
+      case when p_sort in ('author-asc', 'author-desc') and sort_author = '' then 1 else 0 end asc,
       case when p_sort = 'title-asc' then sort_title end asc,
       case when p_sort = 'title-desc' then sort_title end desc,
       case when p_sort = 'author-asc' then sort_author end asc,
@@ -95,6 +96,7 @@ as $$
       (select jsonb_agg(
         jsonb_set(page_rows.book, '{_uid}', to_jsonb(page_rows.uid), true)
         order by
+          case when p_sort in ('author-asc', 'author-desc') and page_rows.sort_author = '' then 1 else 0 end asc,
           case when p_sort = 'title-asc' then page_rows.sort_title end asc,
           case when p_sort = 'title-desc' then page_rows.sort_title end desc,
           case when p_sort = 'author-asc' then page_rows.sort_author end asc,

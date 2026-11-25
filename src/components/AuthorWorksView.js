@@ -46,7 +46,7 @@ const fetchJson = async (path, options) => {
   return result;
 };
 
-const AuthorWorksView = ({ author, setBooks, seriesOptions = [], onOpenSpineCrop, onAuthorUpdated }) => {
+const AuthorWorksView = ({ author, setBooks, seriesOptions = [], onOpenSpineCrop, onAuthorUpdated, onClearAuthor, initialWorkId = '', editMode = true }) => {
   const [works, setWorks] = useState([]);
   const [workTypes, setWorkTypes] = useState(DEFAULT_WORK_TYPES);
   const [authorSummary, setAuthorSummary] = useState(null);
@@ -71,9 +71,13 @@ const AuthorWorksView = ({ author, setBooks, seriesOptions = [], onOpenSpineCrop
     setLoadingWorks(true);
     setError('');
     setWorks([]);
+    setSelectedWork(null);
     setAuthorSummary(null);
     setAuthorSummaryError('');
     setAuthorSummaryExpanded(false);
+    setWorkSummary(null);
+    setSummaryError('');
+    setLoadingWorkSummary(false);
 
     const worksRequest = fetch(apiUrl('/api/catalog/works'), { signal: controller.signal })
       .then(async (response) => {
@@ -110,9 +114,26 @@ const AuthorWorksView = ({ author, setBooks, seriesOptions = [], onOpenSpineCrop
     ])
       .then(([allWorks, summary, workTypeOptions]) => {
         const authorIds = new Set(author.aliasIds || [author.id]);
-        setWorks(allWorks.filter((work) => (work.authors || []).some((workAuthor) => authorIds.has(workAuthor.id))));
+        const authorWorks = allWorks.filter((work) => (work.authors || []).some((workAuthor) => authorIds.has(workAuthor.id)));
+        setWorks(authorWorks);
         setAuthorSummary(summary);
         setWorkTypes(workTypeOptions);
+        const initialWork = authorWorks.find((work) => work.id === initialWorkId);
+        if (initialWork) {
+          setSelectedWork(initialWork);
+          setLoadingWorkSummary(true);
+          const pageTitle = getWikipediaPageTitle(initialWork.sourceUrl, initialWork.title);
+          fetchJson(`/api/catalog/wikipedia/summary?pageTitle=${encodeURIComponent(pageTitle)}`, { signal: controller.signal })
+            .then(setWorkSummary)
+            .catch((summaryLoadError) => {
+              if (summaryLoadError.name !== 'AbortError') {
+                setSummaryError(summaryLoadError.message || 'Unable to load the Wikipedia summary.');
+              }
+            })
+            .finally(() => {
+              if (!controller.signal.aborted) setLoadingWorkSummary(false);
+            });
+        }
       })
       .catch((loadError) => {
         if (loadError.name !== 'AbortError') setError(loadError.message || 'Unable to load this author’s Works.');
@@ -121,7 +142,7 @@ const AuthorWorksView = ({ author, setBooks, seriesOptions = [], onOpenSpineCrop
         if (!controller.signal.aborted) setLoadingWorks(false);
       });
     return () => controller.abort();
-  }, [author]);
+  }, [author, initialWorkId]);
 
   const orderedWorks = useMemo(() => [...works].sort((left, right) => compareByYear(left, right, 'releaseDate')), [works]);
   const workGroups = useMemo(() => [...workTypes, 'Uncategorized']
@@ -164,7 +185,7 @@ const AuthorWorksView = ({ author, setBooks, seriesOptions = [], onOpenSpineCrop
         footer={(
           <div className="d-flex justify-content-between align-items-center gap-2 text-muted">
             <span>{getYear(work.releaseDate) || 'Year unknown'}</span>
-            <button
+            {editMode && <button
               className="btn btn-outline-secondary btn-sm"
               type="button"
               aria-label={`Edit ${work.title} category`}
@@ -174,7 +195,7 @@ const AuthorWorksView = ({ author, setBooks, seriesOptions = [], onOpenSpineCrop
               }}
             >
               Edit
-            </button>
+            </button>}
           </div>
         )}
       />
@@ -252,8 +273,17 @@ const AuthorWorksView = ({ author, setBooks, seriesOptions = [], onOpenSpineCrop
   if (!author) return null;
 
   return (
-    <section aria-label={`Works by ${author.name}`}>
-      <div className="d-flex align-items-start gap-3 mb-4">
+    <section className="author-detail-view" aria-label={`Works by ${author.name}`}>
+      <button
+        className="author-view-close"
+        type="button"
+        aria-label="Clear author selection"
+        title="Show all books"
+        onClick={onClearAuthor}
+      >
+        <span aria-hidden="true">×</span>
+      </button>
+      <div className="author-detail-header d-flex align-items-start gap-3 mb-4">
         <div className="author-profile-image">
           {authorSummary?.thumbnail && (
           <img
@@ -266,9 +296,9 @@ const AuthorWorksView = ({ author, setBooks, seriesOptions = [], onOpenSpineCrop
         <div className="author-profile-summary">
           <div className="d-flex align-items-center gap-2">
             <h2 className="mb-0">{author.name}</h2>
-            <button className="btn btn-outline-secondary btn-sm" type="button" onClick={beginAuthorEdit}>
+            {editMode && <button className="btn btn-outline-secondary btn-sm" type="button" onClick={beginAuthorEdit}>
               Edit author
-            </button>
+            </button>}
           </div>
           {authorSummary?.extract && (
             <>
@@ -320,33 +350,44 @@ const AuthorWorksView = ({ author, setBooks, seriesOptions = [], onOpenSpineCrop
           <h5>Linked editions ({orderedEditions.length})</h5>
           {orderedEditions.length ? (
             <div className="row row-cols-1 row-cols-md-2 g-3">
-              {orderedEditions.map((edition, index) => (
-                <BookItem
-                  key={edition.uid}
-                  book={{
-                    ...(edition.book || {}),
-                    _uid: edition.uid,
-                    Title: edition.title || edition.book?.Title || selectedWork.title,
-                    Author: edition.book?.Author || author.name,
-                    ISBN: edition.isbn || edition.book?.ISBN || '',
-                    Image: edition.image || edition.book?.Image || ''
-                  }}
-                  index={index}
-                  pageIndex={0}
-                  compactMetadata
-                  showEditButton
-                  disableBookHover
-                  seriesOptions={seriesOptions}
-                  onOpenSpineCrop={onOpenSpineCrop}
-                  footer={(
-                    <div className="text-muted">
-                      <div>{edition.publicationDate || 'Publication date unknown'}</div>
-                      {edition.book?.PublicationYear && <div>Work publication year: {edition.book.PublicationYear}</div>}
-                      {edition.isbn && <div>ISBN {edition.isbn}</div>}
-                    </div>
-                  )}
-                />
-              ))}
+              {orderedEditions.map((edition, index) => {
+                const seriesName = edition.book?.Series
+                  || seriesOptions.find((seriesOption) => seriesOption.id === edition.book?.SeriesId)?.name
+                  || edition.book?.SeriesId;
+                return (
+                  <BookItem
+                    key={edition.uid}
+                    book={{
+                      ...(edition.book || {}),
+                      _uid: edition.uid,
+                      Title: edition.title || edition.book?.Title || selectedWork.title,
+                      Author: edition.book?.Author || author.name,
+                      ISBN: edition.isbn || edition.book?.ISBN || '',
+                      Image: edition.image || edition.book?.Image || ''
+                    }}
+                    index={index}
+                    pageIndex={0}
+                    compactMetadata
+                    showEditButton
+                    editMode={editMode}
+                    disableBookHover
+                    seriesOptions={seriesOptions}
+                    onOpenSpineCrop={onOpenSpineCrop}
+                    footer={(
+                      <div className="text-muted">
+                        {seriesName && <div>Series: {seriesName}</div>}
+                        {!editMode && (
+                          <>
+                            <div>{edition.publicationDate || 'Publication date unknown'}</div>
+                            {edition.book?.PublicationYear && <div>Work publication year: {edition.book.PublicationYear}</div>}
+                            {edition.isbn && <div>ISBN {edition.isbn}</div>}
+                          </>
+                        )}
+                      </div>
+                    )}
+                  />
+                );
+              })}
             </div>
           ) : <p className="text-muted">No book editions have been linked to this Work yet.</p>}
         </Modal.Body>

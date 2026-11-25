@@ -686,11 +686,12 @@ const parsePageQuery = (query) => {
   };
 };
 
+const authorSortKey = "COALESCE(NULLIF(TRIM(alpha_author), ''), NULLIF(TRIM(author), ''), '')";
 const sortColumns = {
   'title-asc': 'COALESCE(NULLIF(alpha_title, \'\'), title) COLLATE NOCASE ASC, title COLLATE NOCASE ASC',
   'title-desc': 'COALESCE(NULLIF(alpha_title, \'\'), title) COLLATE NOCASE DESC, title COLLATE NOCASE DESC',
-  'author-asc': 'COALESCE(NULLIF(alpha_author, \'\'), author) COLLATE NOCASE ASC, COALESCE(NULLIF(alpha_title, \'\'), title) COLLATE NOCASE ASC',
-  'author-desc': 'COALESCE(NULLIF(alpha_author, \'\'), author) COLLATE NOCASE DESC, COALESCE(NULLIF(alpha_title, \'\'), title) COLLATE NOCASE DESC'
+  'author-asc': `CASE WHEN ${authorSortKey} = '' THEN 1 ELSE 0 END ASC, ${authorSortKey} COLLATE NOCASE ASC, COALESCE(NULLIF(alpha_title, ''), title) COLLATE NOCASE ASC`,
+  'author-desc': `CASE WHEN ${authorSortKey} = '' THEN 1 ELSE 0 END ASC, ${authorSortKey} COLLATE NOCASE DESC, COALESCE(NULLIF(alpha_title, ''), title) COLLATE NOCASE DESC`
 };
 
 if (allowedOrigins.length > 0) {
@@ -1243,6 +1244,40 @@ app.get('/api/catalog/books', async (req, res) => {
   } catch (error) {
     console.error('Failed to search book editions for work linking:', error);
     return res.status(502).json({ error: 'Failed to search book editions.' });
+  }
+});
+
+app.get('/api/catalog/book-work-links', async (_req, res) => {
+  try {
+    if (useSupabase) {
+      const [bookWorks, authorWorks] = await Promise.all([
+        fetchAllSupabaseRows(supabaseRequest, 'book_works?select=book_uid,work_id&order=book_uid.asc,work_id.asc'),
+        fetchAllSupabaseRows(supabaseRequest, 'author_works?select=author_id,work_id&order=work_id.asc,author_id.asc')
+      ]);
+      const authorByWork = new Map();
+      authorWorks.forEach(({ author_id, work_id }) => {
+        if (!authorByWork.has(work_id)) authorByWork.set(work_id, author_id);
+      });
+      return res.json(bookWorks.flatMap(({ book_uid, work_id }) => {
+        const authorId = authorByWork.get(work_id);
+        return authorId ? [{ bookUid: book_uid, workId: work_id, authorId }] : [];
+      }));
+    }
+
+    const links = db.prepare(`
+      SELECT book_works.book_uid AS bookUid, book_works.work_id AS workId,
+        (SELECT author_works.author_id
+         FROM author_works
+         WHERE author_works.work_id = book_works.work_id
+         ORDER BY author_works.author_id
+         LIMIT 1) AS authorId
+      FROM book_works
+      ORDER BY book_works.book_uid, book_works.work_id
+    `).all();
+    return res.json(links.filter((link) => link.authorId));
+  } catch (error) {
+    console.error('Failed to load book Work links:', error);
+    return res.status(502).json({ error: 'Failed to load book Work links.' });
   }
 });
 
